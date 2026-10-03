@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #0A0A0A;
+    --surface-primary: #151515;
+    --surface-secondary: #1F1F1F;
+    --border-color: #303030;
+    --accent-primary: #FACC15;
+    --accent-secondary: #EAB308;
+    --text-primary: #E5E7EB;
+    --text-muted: #737373;
+    --status-success: #22C55E;
+    --status-error: #EF4444;
+  }
+
+  body {
+    background-color: #0A0A0A;
+    color: #E5E7EB;
+    font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  code, kbd, samp, pre, .font-mono {
+    font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Custom Tactical & Industrial Utilities */
+.tactical-border {
+  border: 1px solid #303030;
+}
+
+.tactical-border-accent {
+  border: 1px solid #FACC15;
+}
+
+.surface-panel {
+  background-color: #151515;
+  border: 1px solid #303030;
+}
+
+.surface-card {
+  background-color: #1F1F1F;
+  border: 1px solid #303030;
+}
+
+/* Hazard striping subtle */
+.hazard-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    #FACC15,
+    #FACC15 10px,
+    #0A0A0A 10px,
+    #0A0A0A 20px
+  );
+}
+
+.hazard-stripe-muted {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(250, 204, 21, 0.3),
+    rgba(250, 204, 21, 0.3) 8px,
+    rgba(10, 10, 10, 0.8) 8px,
+    rgba(10, 10, 10, 0.8) 16px
+  );
+}
+
+/* Industrial Grid Pattern */
+.bg-tactical-grid {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(48, 48, 48, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(48, 48, 48, 0.25) 1px, transparent 1px);
+}
+
+.bg-tactical-dots {
+  background-size: 16px 16px;
+  background-image: radial-gradient(rgba(240, 200, 20, 0.15) 1px, transparent 1px);
+}
+
+/* CRT Scanline effect (subtle) */
+.scanlines {
+  position: relative;
+}
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 20;
+  background-size: 100% 3px, 6px 100%;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #303030;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4B5563;
+}
