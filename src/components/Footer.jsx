@@ -6,7 +6,7 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
   const { setActiveTab } = useGame();
 
   return (
-    <footer className="bg-[#0A0A0A] border-t border-[#222222] font-mono text-xs select-none relative">
+    <footer className="bg-[#0A0A0A] border-t border-[#222222] font-mono text-xs select-none relative pb-16 md:pb-0">
       
       {/* Bottom Bar: Copyright & Legal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

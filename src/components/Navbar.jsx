@@ -44,9 +44,6 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
               alt="CEC HEIST - Digital Heist" 
               className="h-8 sm:h-9 object-contain group-hover:brightness-110 transition-all"
             />
-            <span className="hidden xl:inline text-[10px] font-mono text-[#8D98A8] border-l border-[#263140] pl-3 uppercase tracking-widest">
-              DIGITAL HEIST OPERATIONS
-            </span>
           </div>
 
           {/* Desktop Navigation Links */}
