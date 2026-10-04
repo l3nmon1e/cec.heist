@@ -32,6 +32,14 @@
   code, kbd, samp, pre, .font-mono {
     font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
+
+  /* Make every button edges curved */
+  button:not(.rounded-full),
+  input[type="submit"],
+  input[type="button"],
+  .btn {
+    border-radius: 8px !important;
+  }
 }
 
 /* Blueprint grid texture background */
@@ -139,6 +147,27 @@
   background: #3B4B61;
 }
 
+/* Caution Marquee Infinite Track */
+@keyframes caution-marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-33.333333%, 0, 0);
+  }
+}
+
+.caution-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: caution-marquee-scroll 30s linear infinite;
+}
+
+.caution-marquee-container:hover .caution-marquee-track {
+  animation-play-state: paused;
+}
+
 /* Respect user's reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -147,4 +176,9 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .caution-marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
 }
+

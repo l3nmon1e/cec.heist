@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/formatters';
+import CautionMarquee from './CautionMarquee';
 
 export default function HomePageView({ onOpenRegister, onOpenFaq }) {
   const { setActiveTab, setSelectedMissionId } = useGame();
@@ -124,7 +125,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
                   sound.playClick();
                   onOpenRegister();
                 }}
-                className="px-8 py-3.5 sm:py-4 bg-[#FACC15] hover:bg-[#EAB308] text-black font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#FACC15]/25 hover:scale-[1.02]"
+                className="px-8 py-3.5 sm:py-4 bg-[#FACC15] hover:bg-[#EAB308] text-black font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#FACC15]/25 hover:scale-[1.02] rounded-lg"
               >
                 <span>REGISTER NOW</span>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -136,7 +137,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
                   const el = document.getElementById('about-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-6 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#D4D4D4] hover:text-[#FACC15] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer"
+                className="px-6 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#D4D4D4] hover:text-[#FACC15] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer rounded-lg"
               >
                 <span>LEARN MORE</span>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#737373] group-hover:text-[#FACC15]" />
@@ -146,6 +147,9 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
           </div>
         </div>
       </section>
+
+      {/* CAUTION MARQUEE: Facility Security Warning Strip */}
+      <CautionMarquee />
 
       {/* SUBSEQUENT SECTIONS CONTAINER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-24 py-16 sm:py-20">

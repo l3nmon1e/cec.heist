@@ -1,25 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useGame } from '../context/GameContext';
-import { formatScore, getAssetUrl } from '../utils/formatters';
+import { formatScore } from '../utils/formatters';
+import { HEIST_STAGES } from '../data/heistStages';
 import { 
   User, 
   Shield, 
   Trophy, 
   Target, 
-  CheckCircle, 
-  Clock, 
-  Activity, 
-  Layers, 
-  HardDrive, 
-  Eye, 
+  CheckCircle2, 
+  ArrowRight, 
   RotateCcw,
-  Key,
-  Calendar,
-  Terminal as TerminalIcon,
-  X
+  Layers,
+  Lock,
+  Unlock,
+  Activity
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
+/**
+ * Minimal & User-Friendly Operator Profile View
+ * Centered on the core CEC HEIST narrative:
+ * 1. Operator & Crew Identity
+ * 2. Key Heist Performance Metrics (Rank, Score, Vault Clearance, Accuracy)
+ * 3. Heist Stage Progression (Recon -> Access -> Infiltration -> Network -> Security -> Vault)
+ * 4. Recent Objective Breaches / Activity
+ */
 export default function ProfileView() {
   const { 
     currentPlayer, 
@@ -30,9 +35,9 @@ export default function ProfileView() {
     setActiveTab
   } = useGame();
 
-  const [activeEvidenceModal, setActiveEvidenceModal] = useState(null);
-
   const solvedMissions = missions.filter(m => m.status === 'SOLVED');
+  const totalMissionsCount = missions.length || 1;
+  const progressPercent = Math.round((solvedMissions.length / totalMissionsCount) * 100);
 
   const handleInspectMission = (mId) => {
     sound.playClick();
@@ -40,108 +45,187 @@ export default function ProfileView() {
     setActiveTab('missions');
   };
 
+  const handleContinueHeist = () => {
+    sound.playClick();
+    setActiveTab('missions');
+  };
+
   return (
-    <div className="space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6 pb-12 font-sans">
       
-      {/* Top Banner: Operator Dossier */}
-      <div className="bg-[#151515] border border-[#303030] p-4 sm:p-5 font-mono">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#2A2A2A] gap-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-[#0A0A0A] border border-[#FACC15] flex items-center justify-center">
-              <User className="w-6 h-6 text-[#FACC15]" />
-            </div>
-            <div>
-              <div className="flex items-center space-x-2 text-xs">
-                <span className="text-[#FACC15] font-bold">OPERATOR PROFILE</span>
-                <span className="text-[#737373]">/</span>
-                <span className="text-[#22C55E]">STATUS: ACTIVE ENGAGEMENT</span>
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-[#E5E7EB] uppercase">
-                {currentPlayer.id} // {currentPlayer.callsign}
-              </h1>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <span className="text-xs px-2.5 py-1 bg-[#1F1F1F] border border-[#303030] text-[#737373]">
-              CLEARANCE: <span className="text-[#FACC15] font-bold">{currentPlayer.securityClearance}</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Tactical Key Metrics Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-4">
+      {/* 1. OPERATOR DOSSIER CARD */}
+      <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-5 sm:p-6 shadow-lg">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <span className="text-[10px] text-[#737373] block">CALLSIGN TEAM</span>
-            <span className="text-sm font-bold text-[#E5E7EB]">{currentPlayer.callsign}</span>
+          <div className="flex items-center space-x-4">
+            {/* Operator Avatar */}
+            <div className="w-14 h-14 rounded-lg bg-[#121923] border border-[#C8A96B]/30 flex items-center justify-center text-[#C8A96B] shrink-0">
+              <User className="w-7 h-7" />
+            </div>
+
+            <div>
+              <div className="flex items-center space-x-2 text-xs mb-1">
+                <span className="flex items-center space-x-1.5 text-[#4FB286] font-mono text-[11px] font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-[#4FB286] animate-pulse" />
+                  <span>ACTIVE OPERATIVE</span>
+                </span>
+                <span className="text-[#263140]">•</span>
+                <span className="text-[#8D98A8] font-mono text-[11px]">{currentPlayer.id}</span>
+              </div>
+
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#F4F5F7]">
+                {currentPlayer.callsign}
+              </h1>
+              
+              <p className="text-xs text-[#8D98A8] mt-0.5">
+                {currentPlayer.affiliation} <span className="text-[#566375]">— Clearance:</span> <span className="text-[#C8A96B] font-mono font-medium">{currentPlayer.securityClearance}</span>
+              </p>
+            </div>
           </div>
 
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <span className="text-[10px] text-[#737373] block">CURRENT RANK</span>
-            <span className="text-sm font-bold text-[#FACC15]">#{currentPlayer.rank}</span>
-          </div>
-
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <span className="text-[10px] text-[#737373] block">TOTAL SCORE</span>
-            <span className="text-sm font-bold text-[#FACC15]">{formatScore(currentPlayer.score)} PTS</span>
-          </div>
-
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <span className="text-[10px] text-[#737373] block">OBJECTIVES SECURED</span>
-            <span className="text-sm font-bold text-[#E5E7EB]">{solvedMissions.length} / {missions.length}</span>
-          </div>
-
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <span className="text-[10px] text-[#737373] block">CAPTURE ACCURACY</span>
-            <span className="text-sm font-bold text-[#22C55E]">{currentPlayer.accuracy}</span>
-          </div>
-
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <span className="text-[10px] text-[#737373] block">TIME IN FIELD</span>
-            <span className="text-sm font-bold text-[#E5E7EB]">{currentPlayer.timePlayed}</span>
+          {/* Quick Action Button */}
+          <div className="flex items-center sm:self-center">
+            <button
+              onClick={handleContinueHeist}
+              className="w-full sm:w-auto px-5 py-2.5 bg-[#C8A96B] hover:bg-[#E5D0A0] text-[#070B12] font-semibold text-xs tracking-wider uppercase flex items-center justify-center space-x-2 rounded-lg transition-all shadow-md cursor-pointer group"
+            >
+              <span>RESUME HEIST</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            </button>
           </div>
 
         </div>
       </div>
 
-      {/* Two Column Layout: Category Mastery & Physical Facility Evidence */}
+      {/* 2. CORE HEIST METRICS (Minimal 4-Card Grid) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        
+        {/* Metric 1: Current Rank */}
+        <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-4 sm:p-5">
+          <div className="flex items-center justify-between text-[#8D98A8] mb-2">
+            <span className="text-xs uppercase tracking-wider font-mono">Current Rank</span>
+            <Trophy className="w-4 h-4 text-[#C8A96B]" />
+          </div>
+          <div className="text-2xl sm:text-3xl font-bold font-mono text-[#F4F5F7]">
+            #{currentPlayer.rank}
+          </div>
+          <div className="text-[11px] text-[#8D98A8] mt-1 font-sans">
+            In competition leaderboard
+          </div>
+        </div>
+
+        {/* Metric 2: Total Loot / Score */}
+        <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-4 sm:p-5">
+          <div className="flex items-center justify-between text-[#8D98A8] mb-2">
+            <span className="text-xs uppercase tracking-wider font-mono">Loot Acquired</span>
+            <Shield className="w-4 h-4 text-[#C8A96B]" />
+          </div>
+          <div className="text-2xl sm:text-3xl font-bold font-mono text-[#C8A96B]">
+            {formatScore(currentPlayer.score)} <span className="text-xs font-normal text-[#8D98A8]">PTS</span>
+          </div>
+          <div className="text-[11px] text-[#8D98A8] mt-1 font-sans">
+            Accumulated challenge bounty
+          </div>
+        </div>
+
+        {/* Metric 3: Objectives Breached */}
+        <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-4 sm:p-5">
+          <div className="flex items-center justify-between text-[#8D98A8] mb-2">
+            <span className="text-xs uppercase tracking-wider font-mono">Vault Infiltration</span>
+            <span className="text-xs font-mono font-bold text-[#F4F5F7]">{progressPercent}%</span>
+          </div>
+          <div className="text-2xl sm:text-3xl font-bold font-mono text-[#F4F5F7]">
+            {solvedMissions.length} <span className="text-sm font-normal text-[#8D98A8]">/ {missions.length}</span>
+          </div>
+          {/* Subtle Progress Bar */}
+          <div className="w-full bg-[#121923] h-1.5 rounded-full mt-2 overflow-hidden border border-[#263140]">
+            <div 
+              className="bg-[#C8A96B] h-full rounded-full transition-all duration-500"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Metric 4: Infiltration Accuracy */}
+        <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-4 sm:p-5">
+          <div className="flex items-center justify-between text-[#8D98A8] mb-2">
+            <span className="text-xs uppercase tracking-wider font-mono">Accuracy</span>
+            <Target className="w-4 h-4 text-[#4FB286]" />
+          </div>
+          <div className="text-2xl sm:text-3xl font-bold font-mono text-[#4FB286]">
+            {currentPlayer.accuracy}
+          </div>
+          <div className="text-[11px] text-[#8D98A8] mt-1 font-sans">
+            Flag submission precision
+          </div>
+        </div>
+
+      </div>
+
+      {/* 3. TWO CLEAN SECTIONS: HEIST STAGE PROGRESSION & RECENT BREACHES */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
-        {/* Left Column: Category Breakdown & Mission History (7 cols) */}
-        <div className="lg:col-span-7 space-y-6">
-          
-          {/* Category Completion Breakdown */}
-          <div className="bg-[#151515] border border-[#303030] p-5 font-mono">
-            <h3 className="text-xs font-bold tracking-widest text-[#FACC15] uppercase mb-4 flex items-center space-x-2">
-              <Layers className="w-4 h-4 text-[#FACC15]" />
-              <span>DISCIPLINE PENETRATION METRICS</span>
-            </h3>
+        {/* Left: Heist Stage Progression (5 cols) */}
+        <div className="lg:col-span-5 space-y-4">
+          <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#263140] mb-4">
+              <div className="flex items-center space-x-2">
+                <Layers className="w-4 h-4 text-[#C8A96B]" />
+                <h2 className="text-xs font-bold uppercase tracking-wider font-mono text-[#F4F5F7]">
+                  Heist Progression
+                </h2>
+              </div>
+              <span className="text-[11px] text-[#8D98A8] font-mono">
+                {HEIST_STAGES.filter(stage => {
+                  const sMissions = stage.missionIds.map(id => missions.find(m => m.id === id)).filter(Boolean);
+                  return sMissions.length > 0 && sMissions.every(m => m.status === 'SOLVED');
+                }).length} / {HEIST_STAGES.length} STAGES CLEARED
+              </span>
+            </div>
 
-            <div className="space-y-3">
-              {[
-                { cat: 'WEB', name: 'Web Exploitation', total: 4 },
-                { cat: 'CRYPTO', name: 'Cryptography', total: 3 },
-                { cat: 'FORENSICS', name: 'Digital Forensics', total: 3 },
-                { cat: 'REVERSE ENGINEERING', name: 'Reverse Engineering', total: 3 },
-                { cat: 'OSINT', name: 'Open Source Intelligence', total: 3 },
-                { cat: 'NETWORK', name: 'Network Analysis', total: 3 }
-              ].map(item => {
-                const solvedInCat = missions.filter(m => m.category === item.cat && m.status === 'SOLVED').length;
-                const percent = Math.round((solvedInCat / item.total) * 100);
+            {/* Stages Stack */}
+            <div className="space-y-2.5">
+              {HEIST_STAGES.map((stage) => {
+                const stageMissions = stage.missionIds.map(id => missions.find(m => m.id === id)).filter(Boolean);
+                const solvedCount = stageMissions.filter(m => m.status === 'SOLVED').length;
+                const totalCount = stageMissions.length;
+                const isCleared = solvedCount === totalCount && totalCount > 0;
+                const isStarted = solvedCount > 0 && !isCleared;
 
                 return (
-                  <div key={item.cat} className="space-y-1">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-[#E5E7EB]">{item.name}</span>
-                      <span className="text-[#737373]">
-                        {solvedInCat} / {item.total} <span className="text-[#FACC15]">({percent}%)</span>
+                  <div 
+                    key={stage.id}
+                    className={`p-3 rounded-lg border transition-all ${
+                      isCleared 
+                        ? 'bg-[#121923] border-[#C8A96B]/30' 
+                        : isStarted
+                        ? 'bg-[#121923]/60 border-[#263140]'
+                        : 'bg-[#070B12]/40 border-[#1C2633]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between text-xs mb-1.5">
+                      <div className="flex items-center space-x-2">
+                        {isCleared ? (
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#C8A96B] shrink-0" />
+                        ) : isStarted ? (
+                          <Unlock className="w-3.5 h-3.5 text-[#E5D0A0] shrink-0" />
+                        ) : (
+                          <Lock className="w-3.5 h-3.5 text-[#566375] shrink-0" />
+                        )}
+                        <span className={`font-mono font-medium ${isCleared ? 'text-[#F4F5F7]' : isStarted ? 'text-[#E5D0A0]' : 'text-[#8D98A8]'}`}>
+                          {stage.name}
+                        </span>
+                      </div>
+                      <span className="text-[11px] font-mono text-[#8D98A8]">
+                        {solvedCount} / {totalCount}
                       </span>
                     </div>
-                    <div className="h-1.5 w-full bg-[#0A0A0A] border border-[#262626] overflow-hidden">
-                      <div
-                        className="h-full bg-[#FACC15] transition-all"
-                        style={{ width: `${percent}%` }}
+
+                    {/* Stage Mini Bar */}
+                    <div className="w-full bg-[#070B12] h-1 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full transition-all ${isCleared ? 'bg-[#C8A96B]' : 'bg-[#C8A96B]/50'}`}
+                        style={{ width: `${totalCount > 0 ? (solvedCount / totalCount) * 100 : 0}%` }}
                       />
                     </div>
                   </div>
@@ -149,194 +233,104 @@ export default function ProfileView() {
               })}
             </div>
           </div>
+        </div>
 
-          {/* Mission History Log */}
-          <div className="bg-[#151515] border border-[#303030] p-5 font-mono">
-            <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#2A2A2A]">
-              <h3 className="text-xs font-bold tracking-widest text-[#FACC15] uppercase flex items-center space-x-2">
-                <CheckCircle className="w-4 h-4 text-[#22C55E]" />
-                <span>MISSION HISTORY // RECENT ARTIFACT CAPTURES</span>
-              </h3>
-              <span className="text-[11px] text-[#737373]">
-                {submissions.length} EVENTS LOGGED
+        {/* Right: Solved Objectives & Submission History (7 cols) */}
+        <div className="lg:col-span-7 space-y-4">
+          <div className="bg-[#0C111A] border border-[#263140] rounded-xl p-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#263140] mb-4">
+              <div className="flex items-center space-x-2">
+                <Activity className="w-4 h-4 text-[#C8A96B]" />
+                <h2 className="text-xs font-bold uppercase tracking-wider font-mono text-[#F4F5F7]">
+                  Secured Objectives
+                </h2>
+              </div>
+              <span className="text-[11px] text-[#8D98A8] font-mono">
+                {submissions.filter(s => s.status === 'VALID').length} FLAGS CAPTURED
               </span>
             </div>
 
             {submissions.length === 0 ? (
-              <div className="text-center py-8 text-xs text-[#737373]">
-                No flags submitted yet. Engage targets in the Mission Grid to register activity.
+              <div className="text-center py-12 px-4 rounded-lg bg-[#121923]/40 border border-dashed border-[#263140]">
+                <Target className="w-8 h-8 text-[#566375] mx-auto mb-2" />
+                <p className="text-sm font-medium text-[#F4F5F7]">No objectives breached yet</p>
+                <p className="text-xs text-[#8D98A8] mt-1 max-w-sm mx-auto">
+                  Access the heist mission grid to crack terminals, bypass authentication, and capture loot flags.
+                </p>
+                <button
+                  onClick={handleContinueHeist}
+                  className="mt-4 px-4 py-2 bg-[#121923] hover:bg-[#16202D] text-[#C8A96B] border border-[#C8A96B]/30 hover:border-[#C8A96B] rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                >
+                  Open Mission Grid →
+                </button>
               </div>
             ) : (
-              <div className="space-y-2">
-                {submissions.map((sub) => (
-                  <div
-                    key={sub.id}
-                    className={`p-3 border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs transition-colors ${
-                      sub.status === 'VALID'
-                        ? 'bg-[#0A0A0A] border-[#22C55E]/30 text-[#E5E7EB]'
-                        : 'bg-[#0A0A0A] border-[#EF4444]/30 text-[#9CA3AF]'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-center space-x-2 mb-0.5">
-                        <span className={`text-[10px] font-bold px-1.5 py-0.2 ${
-                          sub.status === 'VALID' ? 'bg-[#22C55E]/20 text-[#4ADE80]' : 'bg-[#EF4444]/20 text-[#F87171]'
+              <div className="space-y-2.5 max-h-[460px] overflow-y-auto pr-1">
+                {submissions.map((sub) => {
+                  const isValid = sub.status === 'VALID';
+                  return (
+                    <div
+                      key={sub.id}
+                      className="p-3 bg-[#121923] hover:bg-[#16202D] border border-[#263140] rounded-lg flex items-center justify-between gap-3 text-xs transition-colors"
+                    >
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <div className={`w-7 h-7 rounded flex items-center justify-center shrink-0 ${
+                          isValid ? 'bg-[#4FB286]/10 text-[#4FB286]' : 'bg-[#B85C5C]/10 text-[#B85C5C]'
                         }`}>
-                          {sub.status}
-                        </span>
-                        <span className="font-bold text-xs">{sub.title}</span>
+                          <CheckCircle2 className="w-4 h-4" />
+                        </div>
+                        
+                        <div className="min-w-0">
+                          <div className="font-semibold text-[#F4F5F7] truncate">
+                            {sub.title}
+                          </div>
+                          <div className="text-[11px] text-[#8D98A8] font-mono">
+                            {sub.timestamp} IST • {isValid ? 'SUCCESSFUL BREACH' : 'FAILED ATTEMPT'}
+                          </div>
+                        </div>
                       </div>
-                      <span className="text-[10px] text-[#737373]">TIMESTAMP: {sub.timestamp} IST</span>
-                    </div>
 
-                    <div className="flex items-center space-x-3 sm:justify-end">
-                      {sub.points > 0 && (
-                        <span className="text-xs font-bold text-[#FACC15]">+{sub.points} PTS</span>
-                      )}
-                      <button
-                        onClick={() => handleInspectMission(sub.missionId)}
-                        className="text-[10px] text-[#737373] hover:text-[#FACC15] underline decoration-dotted"
-                      >
-                        RE-INSPECT →
-                      </button>
+                      <div className="flex items-center space-x-3 shrink-0">
+                        {sub.points > 0 && (
+                          <span className="text-xs font-bold font-mono text-[#C8A96B]">
+                            +{sub.points} PTS
+                          </span>
+                        )}
+                        <button
+                          onClick={() => handleInspectMission(sub.missionId)}
+                          className="text-[11px] text-[#8D98A8] hover:text-[#C8A96B] px-2 py-1 rounded bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B]/40 transition-colors cursor-pointer"
+                        >
+                          View →
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
-
-        </div>
-
-        {/* Right Column: Physical Facility Evidence & Investigation Board (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          
-          {/* Tactical Investigation Board Preview */}
-          <div className="bg-[#151515] border border-[#303030] p-5 font-mono">
-            <h3 className="text-xs font-bold tracking-widest text-[#FACC15] uppercase mb-3 flex items-center space-x-2">
-              <Eye className="w-4 h-4 text-[#FACC15]" />
-              <span>INCIDENT EVIDENCE BOARD</span>
-            </h3>
-
-            <div 
-              onClick={() => setActiveEvidenceModal('investigation_board')}
-              className="relative aspect-video bg-[#0A0A0A] border border-[#303030] cursor-pointer group overflow-hidden"
-            >
-              <img
-                src={getAssetUrl('/images/investigation_board.jpg')}
-                alt="Tactical Investigation Board"
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-[#0A0A0A]/40 group-hover:bg-[#0A0A0A]/10 transition-colors" />
-              <div className="absolute bottom-2 left-2 right-2 p-2 bg-[#0A0A0A]/90 border border-[#303030] flex items-center justify-between text-xs">
-                <span className="text-[#E5E7EB] font-bold text-[11px]">BENJANAPADAVU SECTOR BOARD</span>
-                <span className="text-[#FACC15] text-[10px]">ENLARGE INTEL [↗]</span>
-              </div>
-            </div>
-
-            <p className="text-xs text-[#737373] font-sans mt-3 leading-relaxed">
-              Forensic evidence board compiled by campus security team. Cross-correlate yellow evidence markers (#01, #08, #14) with corresponding mission briefs.
-            </p>
-          </div>
-
-          {/* Analysis Workbench & Restricted Corridor Photo Dossiers */}
-          <div className="grid grid-cols-2 gap-3 font-mono">
-            
-            <div 
-              onClick={() => setActiveEvidenceModal('forensics')}
-              className="bg-[#151515] border border-[#303030] p-2.5 cursor-pointer group hover:border-[#FACC15] transition-colors"
-            >
-              <div className="aspect-video bg-[#0A0A0A] border border-[#262626] overflow-hidden mb-2">
-                <img
-                  src={getAssetUrl('/images/forensics.jpg')}
-                  alt="Forensic Rig"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
-              </div>
-              <span className="text-[10px] font-bold text-[#E5E7EB] block truncate">
-                BENCH: J-LINK RIG
-              </span>
-              <span className="text-[9px] text-[#737373]">FIRMWARE / REVERSE</span>
-            </div>
-
-            <div 
-              onClick={() => setActiveEvidenceModal('corridor')}
-              className="bg-[#151515] border border-[#303030] p-2.5 cursor-pointer group hover:border-[#FACC15] transition-colors"
-            >
-              <div className="aspect-video bg-[#0A0A0A] border border-[#262626] overflow-hidden mb-2">
-                <img
-                  src={getAssetUrl('/images/corridor.jpg')}
-                  alt="Restricted Corridor"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
-              </div>
-              <span className="text-[10px] font-bold text-[#E5E7EB] block truncate">
-                CORRIDOR 3B-2
-              </span>
-              <span className="text-[9px] text-[#737373]">AIRLOCK BLAST ACCESS</span>
-            </div>
-
-          </div>
-
-          {/* Reset / Diagnostic Controls */}
-          <div className="bg-[#151515] border border-[#303030] p-4 font-mono">
-            <div className="flex items-center justify-between text-xs">
-              <div>
-                <span className="text-[#E5E7EB] font-bold block">OPERATIONAL RESET</span>
-                <span className="text-[10px] text-[#737373]">Purge local cache and restart simulation state</span>
-              </div>
-              <button
-                onClick={() => {
-                  if (window.confirm("WARNING: Reset all mission progress, solved states, and score for this terminal?")) {
-                    resetAllProgress();
-                  }
-                }}
-                className="flex items-center space-x-1.5 px-3 py-1.5 bg-[#0A0A0A] hover:bg-[#1F1F1F] border border-[#303030] hover:border-[#EF4444] text-[#F87171] text-[11px] transition-colors cursor-pointer"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>PURGE STATE</span>
-              </button>
-            </div>
-          </div>
-
         </div>
 
       </div>
 
-      {/* Enlarged Evidence Modal */}
-      {activeEvidenceModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4">
-          <div className="bg-[#151515] border border-[#303030] max-w-4xl w-full p-4 font-mono space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#303030]">
-              <span className="text-xs font-bold text-[#FACC15]">
-                TACTICAL EVIDENCE DOSSIER // {activeEvidenceModal.toUpperCase()}
-              </span>
-              <button
-                onClick={() => setActiveEvidenceModal(null)}
-                className="p-1 hover:text-[#EF4444] text-[#737373]"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <div className="overflow-hidden border border-[#303030] bg-black">
-              <img
-                src={getAssetUrl(`/images/${activeEvidenceModal}.jpg`)}
-                alt="Enlarged Evidence"
-                className="w-full max-h-[70vh] object-contain mx-auto"
-              />
-            </div>
-            <div className="flex justify-between items-center text-[11px] text-[#737373] pt-1">
-              <span>SECURITY CLASSIFICATION: CEC-RESTRICTED-EYES-ONLY</span>
-              <button
-                onClick={() => setActiveEvidenceModal(null)}
-                className="px-3 py-1 bg-[#1F1F1F] text-[#E5E7EB] border border-[#303030]"
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* 4. MINIMAL UTILITY / RESET FOOTER */}
+      <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-[#566375] px-1 pt-2 gap-3">
+        <span>
+          Operative Session: <span className="font-mono text-[#8D98A8]">{currentPlayer.id}</span> // Gateway: <span className="font-mono text-[#8D98A8]">{currentPlayer.assignedGateway}</span>
+        </span>
+
+        <button
+          onClick={() => {
+            if (window.confirm("WARNING: Are you sure you want to reset all mission progress, solved states, and score on this terminal?")) {
+              resetAllProgress();
+            }
+          }}
+          className="flex items-center space-x-1.5 text-[#8D98A8] hover:text-[#B85C5C] text-[11px] transition-colors cursor-pointer"
+        >
+          <RotateCcw className="w-3 h-3" />
+          <span>Reset Simulation State</span>
+        </button>
+      </div>
 
     </div>
   );
