@@ -7,15 +7,25 @@ export default function StartingLoader({ onComplete }) {
   const [isDismissed, setIsDismissed] = useState(false);
 
   useEffect(() => {
-    // Smooth, rapid loader animation (~2.0 seconds)
-    const intervalTime = 20;
+    // Cinematic, smooth pacing (~3.4 - 3.8 seconds)
+    const intervalTime = 32;
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(timer);
           return 100;
         }
-        const step = Math.floor(Math.random() * 3) + 2; // 2-4% each tick
+        // Smooth, natural progress with organic variance
+        let step = 1;
+        if (prev < 40) {
+          step = Math.random() > 0.4 ? 1 : 2;
+        } else if (prev < 75) {
+          step = 1;
+        } else if (prev < 90) {
+          step = Math.random() > 0.3 ? 1 : 0; // brief tactical delay
+        } else {
+          step = 1;
+        }
         return Math.min(100, prev + step);
       });
     }, intervalTime);
@@ -34,7 +44,7 @@ export default function StartingLoader({ onComplete }) {
     };
   }, []);
 
-  // When progress reaches 100%, perform seamless exit
+  // When progress reaches 100%, hold briefly then perform seamless exit
   useEffect(() => {
     if (progress === 100 && !isFinishing) {
       const exitTimer = setTimeout(() => {
@@ -42,9 +52,9 @@ export default function StartingLoader({ onComplete }) {
         const finishTimer = setTimeout(() => {
           setIsDismissed(true);
           if (onComplete) onComplete();
-        }, 500);
+        }, 650);
         return () => clearTimeout(finishTimer);
-      }, 250);
+      }, 450);
 
       return () => clearTimeout(exitTimer);
     }
@@ -76,19 +86,13 @@ export default function StartingLoader({ onComplete }) {
       {/* Main Animated Logo Showcase */}
       <div className="relative flex flex-col items-center justify-center z-10 max-w-2xl w-full">
         
-        {/* Animated Logo Container with Shimmer Light Sheen */}
-        <div className="relative overflow-hidden p-3 sm:p-5 flex items-center justify-center">
-          
+        {/* Pure Transparent Logo with Alpha-Contour Glow */}
+        <div className="relative flex items-center justify-center select-none">
           <img
             src={getAssetUrl('/images/cec_heist_logo.png')}
             alt="CEC HEIST"
-            className="w-[300px] sm:w-[460px] md:w-[540px] h-auto object-contain animate-logo-glow drop-shadow-[0_0_25px_rgba(200,169,107,0.4)]"
+            className="w-[280px] sm:w-[440px] md:w-[520px] h-auto object-contain animate-logo-glow pointer-events-none"
           />
-
-          {/* Diagonal Laser Shimmer Sheen Beam Gliding Across Metallic Emblem */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-25deg] animate-loader-shimmer" />
-          </div>
         </div>
 
         {/* Minimalist Micro Progress Bar */}
