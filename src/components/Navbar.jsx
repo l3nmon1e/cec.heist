@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
-import { Crosshair, User, Terminal, Volume2, VolumeX, Shield, Key } from 'lucide-react';
+import { Crosshair, User, Terminal, Shield, Key } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/formatters';
 
@@ -9,8 +9,6 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
     activeTab, 
     setActiveTab, 
     currentPlayer, 
-    audioEnabled, 
-    toggleSound,
     setIsTerminalModalOpen
   } = useGame();
 
@@ -135,17 +133,8 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
 
           </nav>
 
-          {/* Right Side: Sound Toggle & LOGIN / Console Pod */}
+          {/* Right Side: LOGIN & Console Pod */}
           <div className="flex items-center space-x-3 font-mono">
-            
-            {/* Audio Toggle */}
-            <button
-              onClick={toggleSound}
-              title={audioEnabled ? "Audio: Active" : "Audio: Muted"}
-              className="p-1.5 text-[#8D98A8] hover:text-[#C8A96B] transition-colors cursor-pointer"
-            >
-              {audioEnabled ? <Volume2 className="w-4 h-4 text-[#C8A96B]" /> : <VolumeX className="w-4 h-4" />}
-            </button>
 
             {/* Tactical Console direct trigger */}
             <button
