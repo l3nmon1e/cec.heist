@@ -66,7 +66,6 @@ export function getStatusStyle(status) {
         badge: 'text-[#60A5FA] border-[#3B82F6]/40 bg-[#3B82F6]/10',
         label: 'IN PROGRESS'
       };
-    case 'LOCKED':
     default:
       return {
         badge: 'text-[#737373] border-[#303030] bg-[#151515]',
@@ -74,3 +73,11 @@ export function getStatusStyle(status) {
       };
   }
 }
+
+export function getAssetUrl(path) {
+  if (!path) return '';
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${import.meta.env.BASE_URL}${cleanPath}`;
+}
+
+

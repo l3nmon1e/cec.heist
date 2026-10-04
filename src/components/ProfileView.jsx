@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { formatScore } from '../utils/formatters';
+import { formatScore, getAssetUrl } from '../utils/formatters';
 import { 
   User, 
   Shield, 
@@ -223,7 +223,7 @@ export default function ProfileView() {
               className="relative aspect-video bg-[#0A0A0A] border border-[#303030] cursor-pointer group overflow-hidden"
             >
               <img
-                src="/images/investigation_board.jpg"
+                src={getAssetUrl('/images/investigation_board.jpg')}
                 alt="Tactical Investigation Board"
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
@@ -248,7 +248,7 @@ export default function ProfileView() {
             >
               <div className="aspect-video bg-[#0A0A0A] border border-[#262626] overflow-hidden mb-2">
                 <img
-                  src="/images/forensics.jpg"
+                  src={getAssetUrl('/images/forensics.jpg')}
                   alt="Forensic Rig"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
@@ -265,7 +265,7 @@ export default function ProfileView() {
             >
               <div className="aspect-video bg-[#0A0A0A] border border-[#262626] overflow-hidden mb-2">
                 <img
-                  src="/images/corridor.jpg"
+                  src={getAssetUrl('/images/corridor.jpg')}
                   alt="Restricted Corridor"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                 />
@@ -320,7 +320,7 @@ export default function ProfileView() {
             </div>
             <div className="overflow-hidden border border-[#303030] bg-black">
               <img
-                src={`/images/${activeEvidenceModal}.jpg`}
+                src={getAssetUrl(`/images/${activeEvidenceModal}.jpg`)}
                 alt="Enlarged Evidence"
                 className="w-full max-h-[70vh] object-contain mx-auto"
               />

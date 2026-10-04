@@ -17,6 +17,7 @@ import {
   X
 } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { getAssetUrl } from '../utils/formatters';
 
 export default function HomePageView({ onOpenRegister, onOpenFaq }) {
   const { setActiveTab, setSelectedMissionId } = useGame();
@@ -48,7 +49,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
         {/* Full-width Panoramic Background Image stretching 100vw edge to edge */}
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-right lg:bg-center transition-all duration-700"
-          style={{ backgroundImage: `url('/images/hero_bg_vault.jpg')` }}
+          style={{ backgroundImage: `url('${getAssetUrl('/images/hero_bg_vault.jpg')}')` }}
         />
 
         {/* Sophisticated dark gradient overlays ensuring high contrast text legibility on left */}
@@ -73,7 +74,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             {/* Official Brand Logo - Enlarged Size */}
             <div className="space-y-4">
               <img 
-                src="/images/logo.png" 
+                src={getAssetUrl('/images/logo.png')} 
                 alt="CEC HEIST - Cyber Security Challenge" 
                 className="w-full max-w-lg sm:max-w-xl lg:max-w-2xl object-contain py-1 drop-shadow-[0_0_35px_rgba(250,204,21,0.25)]"
               />
@@ -157,7 +158,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
           <div className="lg:col-span-6">
             <div className="relative bg-[#111111] border border-[#303030] overflow-hidden shadow-2xl group">
               <img
-                src="/images/target_map.jpg"
+                src={getAssetUrl('/images/target_map.jpg')}
                 alt="Target Campus Blueprint"
                 className="w-full h-full object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500"
               />
@@ -278,7 +279,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             >
               <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
                 <img
-                  src="/images/web_terminal.jpg"
+                  src={getAssetUrl('/images/web_terminal.jpg')}
                   alt="Web Exploitation"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -305,7 +306,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             >
               <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
                 <img
-                  src="/images/padlock.jpg"
+                  src={getAssetUrl('/images/padlock.jpg')}
                   alt="Cryptography"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -332,7 +333,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             >
               <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
                 <img
-                  src="/images/fingerprint.jpg"
+                  src={getAssetUrl('/images/fingerprint.jpg')}
                   alt="Forensics"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -359,7 +360,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             >
               <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
                 <img
-                  src="/images/server_racks.jpg"
+                  src={getAssetUrl('/images/server_racks.jpg')}
                   alt="Reverse Engineering"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -391,7 +392,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
           {/* Background Image of walking operator in corridor with "THE HEIST BEGINS" */}
           <div 
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('/images/heist_corridor.jpg')` }}
+            style={{ backgroundImage: `url('${getAssetUrl('/images/heist_corridor.jpg')}')` }}
           />
           <div className="absolute inset-0 bg-[#0A0A0A]/85 backdrop-blur-[2px]" />
 
@@ -472,7 +473,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
           {/* Left Brand Identity */}
           <div className="lg:col-span-4 space-y-2">
             <img 
-              src="/images/logo.png" 
+              src={getAssetUrl('/images/logo.png')} 
               alt="CEC HEIST" 
               className="h-9 sm:h-10 object-contain"
             />

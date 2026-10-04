@@ -2,6 +2,7 @@ import React from 'react';
 import { useGame } from '../context/GameContext';
 import { Crosshair, User, Terminal, Volume2, VolumeX } from 'lucide-react';
 import { sound } from '../utils/audio';
+import { getAssetUrl } from '../utils/formatters';
 
 export default function Navbar({ onOpenLogin, onOpenFaq }) {
   const { 
@@ -37,7 +38,7 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
             onClick={() => handleNav('home')}
           >
             <img 
-              src="/images/logo.png" 
+              src={getAssetUrl('/images/logo.png')} 
               alt="CEC HEIST - Cyber Security Challenge" 
               className="h-8 sm:h-9 md:h-10 max-w-[200px] sm:max-w-none object-contain hover:brightness-110 transition-all"
             />

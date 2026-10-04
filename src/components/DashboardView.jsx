@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
-import { formatTimer, formatScore, getDifficultyStyle, getStatusStyle } from '../utils/formatters';
+import { formatTimer, formatScore, getDifficultyStyle, getStatusStyle, getAssetUrl } from '../utils/formatters';
 import { 
   Terminal, 
   Clock, 
@@ -152,7 +152,7 @@ export default function DashboardView() {
         {/* Subtle realistic facility photograph background overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-15 mix-blend-luminosity pointer-events-none"
-          style={{ backgroundImage: `url('/images/facility.jpg')` }}
+          style={{ backgroundImage: `url('${getAssetUrl('/images/facility.jpg')}')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#151515] via-[#151515]/90 to-transparent pointer-events-none" />
 
@@ -377,7 +377,7 @@ export default function DashboardView() {
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 bg-[#0A0A0A] border border-[#303030] overflow-hidden shrink-0 hidden sm:block">
             <img 
-              src="/images/investigation_board.jpg" 
+              src={getAssetUrl('/images/investigation_board.jpg')} 
               alt="Investigation Board" 
               className="w-full h-full object-cover grayscale contrast-125"
             />
