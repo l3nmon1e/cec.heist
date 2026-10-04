@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { 
   Calendar, 
@@ -21,6 +22,7 @@ import { getAssetUrl } from '../utils/formatters';
 import CautionMarquee from './CautionMarquee';
 
 export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = true }) {
+  const navigate = useNavigate();
   const { setActiveTab, setSelectedMissionId, setSelectedCategory } = useGame();
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -146,18 +148,28 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
             </div>
 
             {/* Action Buttons */}
-            <div className={`flex flex-wrap items-center gap-4 sm:gap-6 pt-2 ${
+            <div className={`flex flex-wrap items-center gap-3 sm:gap-4 pt-2 ${
               isHeroReady ? 'animate-hero-actions' : 'opacity-0'
             }`}>
               <button
                 onClick={() => {
                   sound.playClick();
+                  navigate('/heist');
+                }}
+                className="w-full sm:w-auto px-8 py-3.5 sm:py-4 bg-[#C8A96B] hover:bg-[#E5D0A0] text-[#070B12] font-mono font-black text-sm sm:text-base tracking-[0.18em] uppercase flex items-center justify-center space-x-2.5 transition-all cursor-pointer shadow-[0_0_25px_rgba(200,169,107,0.35)] hover:shadow-[0_0_35px_rgba(200,169,107,0.5)] hover:scale-[1.02] rounded-lg"
+              >
+                <span>ENTER FACILITY // HEIST</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+
+              <button
+                onClick={() => {
+                  sound.playClick();
                   onOpenRegister();
                 }}
-                className="px-8 py-3.5 sm:py-4 bg-[#FACC15] hover:bg-[#EAB308] text-black font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#FACC15]/25 hover:scale-[1.02] rounded-lg"
+                className="hidden sm:flex px-6 py-3.5 sm:py-4 bg-[#121923] hover:bg-[#263140] border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] font-extrabold text-sm sm:text-base tracking-wider uppercase items-center space-x-2 transition-all cursor-pointer rounded-lg"
               >
-                <span>REGISTER NOW</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>REGISTER CREW</span>
               </button>
 
               <button
@@ -166,10 +178,10 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
                   const el = document.getElementById('about-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-6 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#D4D4D4] hover:text-[#FACC15] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer rounded-lg"
+                className="hidden sm:flex px-4 py-3.5 sm:py-4 text-xs sm:text-sm font-bold text-[#8D98A8] hover:text-[#C8A96B] tracking-wider uppercase items-center space-x-1.5 transition-colors cursor-pointer"
               >
-                <span>LEARN MORE</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#737373] group-hover:text-[#FACC15]" />
+                <span>FACILITY INTEL</span>
+                <ArrowRight className="w-4 h-4 text-[#566375] group-hover:text-[#C8A96B]" />
               </button>
             </div>
 

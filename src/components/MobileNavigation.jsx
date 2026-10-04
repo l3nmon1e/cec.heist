@@ -225,31 +225,43 @@ function VaultKeycardIcon({ active, className = "w-5 h-5" }) {
   );
 }
 
+import { useNavigate } from 'react-router-dom';
+
 /**
  * Mobile Navigation: The Bank Vault Mechanism
  * Heavy Metallurgy & Champagne Gold Brass Console
  */
 export default function MobileNavigation() {
+  const navigate = useNavigate();
   const { activeTab, setActiveTab, currentPlayer, secondsRemaining } = useGame();
 
-  const handleTab = (tab) => {
+  const handleTab = (item) => {
     sound.playClick();
-    setActiveTab(tab);
+    if (item.route) {
+      navigate(item.route);
+    } else {
+      setActiveTab(item.id);
+      if (item.id === 'missions') navigate('/missions');
+      else if (item.id === 'dashboard') navigate('/dashboard');
+      else if (item.id === 'leaderboard') navigate('/leaderboard');
+      else if (item.id === 'profile') navigate('/profile');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navItems = [
     { 
-      id: 'missions', 
-      label: 'FACILITY', 
-      code: 'ROTARY DIAL',
-      icon: VaultDialIcon,
+      id: 'heist', 
+      label: 'HEIST', 
+      code: 'OPERATION',
+      icon: VaultWheelIcon,
+      route: '/heist'
     },
     { 
       id: 'dashboard', 
-      label: 'HEIST', 
-      code: 'LOCK WHEEL',
-      icon: VaultWheelIcon,
+      label: 'OPS', 
+      code: 'DASHBOARD',
+      icon: VaultDialIcon,
     },
     { 
       id: 'leaderboard', 
@@ -273,14 +285,15 @@ export default function MobileNavigation() {
       {/* Top Precision Brass Inlaid Line */}
       <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#C8A96B]/50 to-transparent pointer-events-none" />
 
-      {/* 4 Compact Engraved Vault Mechanical Navigation Buttons */}
-      <div className="grid grid-cols-4 px-1 pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] font-mono">
-        {navItems.map(({ id, label, icon: IconComponent }) => {
+      {/* 5 Compact Engraved Vault Mechanical Navigation Buttons */}
+      <div className="grid grid-cols-5 px-1 pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] font-mono">
+        {navItems.map((item) => {
+          const { id, label, icon: IconComponent } = item;
           const isActive = activeTab === id;
           return (
             <button
               key={id}
-              onClick={() => handleTab(id)}
+              onClick={() => handleTab(item)}
               className={`relative flex flex-col items-center justify-center py-1.5 px-0.5 transition-all cursor-pointer group active:scale-95 border-r border-[#1C2633] last:border-r-0 ${
                 isActive 
                   ? 'bg-gradient-to-b from-[#C8A96B]/15 via-[#C8A96B]/5 to-transparent' 

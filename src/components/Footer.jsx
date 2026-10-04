@@ -17,9 +17,9 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
             © 2025 CEC HEIST. All rights reserved.
           </div>
 
-          {/* Credit Line: powered by Appvertex */}
+          {/* Credit Line: Powered by Appvertex */}
           <div className="flex items-center space-x-1.5 text-[#8D98A8]">
-            <span className="tracking-wide">powered by</span>
+            <span className="tracking-wide">Powered by</span>
             <a
               href="https://appvertex.in"
               target="_blank"

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { GameProvider, useGame } from './context/GameContext';
 import Navbar from './components/Navbar';
 import HomePageView from './components/HomePageView';
@@ -16,8 +17,47 @@ import ContactModal from './components/ContactModal';
 import PrivacyTermsModal from './components/PrivacyTermsModal';
 import StartingLoader from './components/StartingLoader';
 
-function AppContent() {
-  const { activeTab, setActiveTab, isTerminalModalOpen, setIsTerminalModalOpen, selectedMission } = useGame();
+// Video-Game-Like Heist Experience Components
+import GameShell from './components/heist/GameShell';
+import HeistEntrance from './components/heist/rooms/HeistEntrance';
+import ReconRoom from './components/heist/rooms/ReconRoom';
+import InitialAccessRoom from './components/heist/rooms/InitialAccessRoom';
+import InfiltrationRoom from './components/heist/rooms/InfiltrationRoom';
+import NetworkRoom from './components/heist/rooms/NetworkRoom';
+import SecurityRoom from './components/heist/rooms/SecurityRoom';
+import CoreRoom from './components/heist/rooms/CoreRoom';
+import VaultRoom from './components/heist/rooms/VaultRoom';
+import EscapeRoom from './components/heist/rooms/EscapeRoom';
+
+// Standard CTF Portal Wrapper
+function PortalLayout({ onOpenRegister, onOpenLogin, onOpenFaq, onOpenContact, onOpenLegal, isHeroReady, children }) {
+  return (
+    <div className="min-h-screen bg-[#070B12] text-[#F4F5F7] flex flex-col font-sans relative selection:bg-[#C8A96B] selection:text-[#070B12]">
+      {/* Subtle Background Blueprint Grid Pattern */}
+      <div className="fixed inset-0 bg-blueprint-grid opacity-35 pointer-events-none z-0" />
+
+      {/* Navigation */}
+      <Navbar onOpenLogin={onOpenLogin} onOpenFaq={onOpenFaq} />
+
+      {/* Main View Port */}
+      <main className="flex-1 w-full z-10">
+        {children}
+      </main>
+
+      {/* Bottom Command Dock on Mobile for Standard CTF Portal */}
+      <MobileNavigation />
+
+      {/* Minimal Industrial Footer */}
+      <Footer 
+        onOpenContact={onOpenContact} 
+        onOpenPrivacy={onOpenLegal} 
+      />
+    </div>
+  );
+}
+
+function MainAppRoutes() {
+  const { isTerminalModalOpen, setIsTerminalModalOpen, selectedMission } = useGame();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('register');
@@ -42,36 +82,10 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070B12] text-[#F4F5F7] flex flex-col font-sans relative selection:bg-[#C8A96B] selection:text-[#070B12]">
-      
+    <>
       {/* Starting Animated Fullscreen Loader */}
       {isLoading && (
         <StartingLoader onComplete={() => setIsLoading(false)} />
-      )}
-
-      {/* Subtle Background Blueprint Grid Pattern */}
-      <div className="fixed inset-0 bg-blueprint-grid opacity-35 pointer-events-none z-0" />
-
-      {/* Navigation matching reference mockup */}
-      <Navbar onOpenLogin={openLogin} onOpenFaq={() => setIsFaqModalOpen(true)} />
-
-      {/* Main View Port */}
-      {activeTab === 'home' ? (
-        <main className="flex-1 w-full z-10">
-          <HomePageView 
-            onOpenRegister={openRegister} 
-            onOpenFaq={() => setIsFaqModalOpen(true)} 
-            isHeroReady={!isLoading}
-          />
-        </main>
-      ) : (
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 z-10">
-          {activeTab === 'dashboard' && <DashboardView />}
-          {activeTab === 'missions' && <MissionsView />}
-          {activeTab === 'leaderboard' && <LeaderboardView />}
-          {activeTab === 'rules' && <RulesView />}
-          {activeTab === 'profile' && <ProfileView />}
-        </main>
       )}
 
       {/* Standalone Tactical Terminal Modal */}
@@ -85,7 +99,7 @@ function AppContent() {
         </div>
       )}
 
-      {/* Modals */}
+      {/* Common Modals */}
       <RegisterLoginModal 
         key={authMode}
         isOpen={isAuthModalOpen} 
@@ -109,22 +123,150 @@ function AppContent() {
         mode={legalMode} 
       />
 
-      {/* Bottom Command Dock on Mobile */}
-      <MobileNavigation />
+      <Routes>
+        {/* ==================================================== */}
+        {/* 1. VIDEO-GAME DIGITAL HEIST WORLD ROUTES */}
+        {/* ==================================================== */}
+        <Route path="/heist" element={<GameShell />}>
+          <Route index element={<HeistEntrance />} />
+          <Route path="recon" element={<ReconRoom />} />
+          <Route path="initial-access" element={<InitialAccessRoom />} />
+          <Route path="infiltration" element={<InfiltrationRoom />} />
+          <Route path="network" element={<NetworkRoom />} />
+          <Route path="security" element={<SecurityRoom />} />
+          <Route path="core" element={<CoreRoom />} />
+          <Route path="vault" element={<VaultRoom />} />
+          <Route path="escape" element={<EscapeRoom />} />
+        </Route>
 
-      {/* Minimal Industrial Footer matching mockup */}
-      <Footer 
-        onOpenContact={() => setIsContactModalOpen(true)} 
-        onOpenPrivacy={openLegal} 
-      />
-    </div>
+        {/* ==================================================== */}
+        {/* 2. STANDARD CTF PORTAL VIEWS */}
+        {/* ==================================================== */}
+        <Route 
+          path="/" 
+          element={
+            <PortalLayout
+              onOpenRegister={openRegister}
+              onOpenLogin={openLogin}
+              onOpenFaq={() => setIsFaqModalOpen(true)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+              onOpenLegal={openLegal}
+              isHeroReady={!isLoading}
+            >
+              <HomePageView 
+                onOpenRegister={openRegister} 
+                onOpenFaq={() => setIsFaqModalOpen(true)} 
+                isHeroReady={!isLoading}
+              />
+            </PortalLayout>
+          } 
+        />
+
+        <Route 
+          path="/dashboard" 
+          element={
+            <PortalLayout
+              onOpenRegister={openRegister}
+              onOpenLogin={openLogin}
+              onOpenFaq={() => setIsFaqModalOpen(true)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+              onOpenLegal={openLegal}
+              isHeroReady={!isLoading}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <DashboardView />
+              </div>
+            </PortalLayout>
+          } 
+        />
+
+        <Route 
+          path="/missions" 
+          element={
+            <PortalLayout
+              onOpenRegister={openRegister}
+              onOpenLogin={openLogin}
+              onOpenFaq={() => setIsFaqModalOpen(true)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+              onOpenLegal={openLegal}
+              isHeroReady={!isLoading}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <MissionsView />
+              </div>
+            </PortalLayout>
+          } 
+        />
+
+        <Route 
+          path="/leaderboard" 
+          element={
+            <PortalLayout
+              onOpenRegister={openRegister}
+              onOpenLogin={openLogin}
+              onOpenFaq={() => setIsFaqModalOpen(true)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+              onOpenLegal={openLegal}
+              isHeroReady={!isLoading}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <LeaderboardView />
+              </div>
+            </PortalLayout>
+          } 
+        />
+
+        <Route 
+          path="/rules" 
+          element={
+            <PortalLayout
+              onOpenRegister={openRegister}
+              onOpenLogin={openLogin}
+              onOpenFaq={() => setIsFaqModalOpen(true)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+              onOpenLegal={openLegal}
+              isHeroReady={!isLoading}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <RulesView />
+              </div>
+            </PortalLayout>
+          } 
+        />
+
+        <Route 
+          path="/profile" 
+          element={
+            <PortalLayout
+              onOpenRegister={openRegister}
+              onOpenLogin={openLogin}
+              onOpenFaq={() => setIsFaqModalOpen(true)}
+              onOpenContact={() => setIsContactModalOpen(true)}
+              onOpenLegal={openLegal}
+              isHeroReady={!isLoading}
+            >
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <ProfileView />
+              </div>
+            </PortalLayout>
+          } 
+        />
+
+        {/* Fallback to Home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 }
 
 export default function App() {
+  const base = import.meta.env.BASE_URL || '/';
+
   return (
-    <GameProvider>
-      <AppContent />
-    </GameProvider>
+    <BrowserRouter basename={base}>
+      <GameProvider>
+        <MainAppRoutes />
+      </GameProvider>
+    </BrowserRouter>
   );
 }

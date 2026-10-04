@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { HEIST_STAGES } from '../data/heistStages';
 import FacilityMap from './heist/FacilityMap';
@@ -33,6 +34,7 @@ const ANCHOR_MISSION_IMAGES = {
 const CATEGORIES = ['ALL', 'WEB', 'CRYPTO', 'FORENSICS', 'NETWORK', 'REVERSE'];
 
 export default function MissionsView() {
+  const navigate = useNavigate();
   const { 
     missions, 
     selectedMissionId, 
@@ -148,6 +150,34 @@ export default function MissionsView() {
 
         </div>
 
+      </div>
+
+      {/* TACTICAL HEIST GAMEPLAY BANNER */}
+      <div className="bg-[#121923] border-2 border-[#C8A96B]/50 p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_0_25px_rgba(200,169,107,0.15)]">
+        <div className="flex items-center space-x-3.5">
+          <div className="w-10 h-10 rounded bg-[#C8A96B]/15 border border-[#C8A96B] flex items-center justify-center text-[#C8A96B] shrink-0">
+            <Key className="w-5 h-5" />
+          </div>
+          <div className="space-y-0.5">
+            <div className="text-xs font-bold text-[#F4F5F7] tracking-wider uppercase">
+              TACTICAL HEIST EXPERIENCE ACTIVE
+            </div>
+            <p className="text-[11px] text-[#8D98A8] font-sans">
+              Move physically through the digital facility: Recon &rarr; Initial Access &rarr; Infiltration &rarr; Network &rarr; Security &rarr; Core &rarr; The Vault &rarr; Escape.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            sound.playClick();
+            navigate('/heist');
+          }}
+          className="shrink-0 px-6 py-2.5 bg-[#C8A96B] hover:bg-[#E5D0A0] text-[#070B12] text-xs font-bold tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(200,169,107,0.3)] flex items-center space-x-2 cursor-pointer"
+        >
+          <span>ENTER GAME WORLD</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
       </div>
 
       {/* 2. THREE DEDICATED VIEW TABS (Missions vs Map vs Vault) */}

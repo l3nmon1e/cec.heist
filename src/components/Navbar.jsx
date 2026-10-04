@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
-import { Crosshair, User, Terminal, Shield, Key } from 'lucide-react';
+import { Crosshair, User, Terminal, Shield, Key, Sparkles, Building2 } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/formatters';
 
 export default function Navbar({ onOpenLogin, onOpenFaq }) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { 
     activeTab, 
     setActiveTab, 
@@ -12,9 +15,20 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
     setIsTerminalModalOpen
   } = useGame();
 
-  const handleNav = (tab) => {
+  const handleNav = (tab, routePath = null) => {
     sound.playClick();
     setActiveTab(tab);
+    if (routePath) {
+      navigate(routePath);
+    } else {
+      if (tab === 'home') navigate('/');
+      else if (tab === 'dashboard') navigate('/dashboard');
+      else if (tab === 'missions') navigate('/missions');
+      else if (tab === 'leaderboard') navigate('/leaderboard');
+      else if (tab === 'rules') navigate('/rules');
+      else if (tab === 'profile') navigate('/profile');
+    }
+
     if (tab === 'home' || tab === 'about') {
       if (tab === 'about') {
         const el = document.getElementById('about-section');
@@ -62,6 +76,16 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
               )}
             </button>
 
+            {/* DIGITAL HEIST (THE MAIN GAMEPLAY EXPERIENCE) */}
+            <button
+              onClick={() => handleNav('heist', '/heist')}
+              className="relative py-1.5 px-3 bg-[#C8A96B]/15 hover:bg-[#C8A96B]/25 border border-[#C8A96B]/50 hover:border-[#C8A96B] transition-all cursor-pointer flex items-center space-x-1.5 shadow-[0_0_15px_rgba(200,169,107,0.2)]"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-ping" />
+              <span className="text-[#C8A96B] font-black tracking-widest">DIGITAL HEIST</span>
+              <span className="text-[9px] bg-[#C8A96B] text-[#070B12] px-1 py-0.2 font-black uppercase">GAME</span>
+            </button>
+
             {/* DASHBOARD */}
             <button
               onClick={() => handleNav('dashboard')}
@@ -73,22 +97,6 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
             >
               <span>DASHBOARD</span>
               {activeTab === 'dashboard' && (
-                <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-[#C8A96B]" />
-              )}
-            </button>
-
-            {/* FACILITY & MISSIONS */}
-            <button
-              onClick={() => handleNav('missions')}
-              className={`relative py-1 transition-colors cursor-pointer flex items-center space-x-1.5 ${
-                activeTab === 'missions'
-                  ? 'text-[#C8A96B] font-bold'
-                  : 'text-[#8D98A8] hover:text-[#F4F5F7]'
-              }`}
-            >
-              <Key className="w-3.5 h-3.5 text-[#C8A96B]" />
-              <span>FACILITY MISSIONS</span>
-              {activeTab === 'missions' && (
                 <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-[#C8A96B]" />
               )}
             </button>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { Trophy, Award, Search, Users } from 'lucide-react';
+import { Trophy, Award, Search, Users, Key } from 'lucide-react';
 
 export default function LeaderboardView() {
   const { leaderboard, currentPlayer } = useGame();
@@ -141,9 +141,18 @@ export default function LeaderboardView() {
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4FB286] opacity-75" />
                           <span className="relative inline-flex rounded-full h-2 w-2 bg-[#4FB286]" />
                         </span>
-                        <span className="text-[9px] font-mono font-bold text-[#4FB286] uppercase border border-[#4FB286]/30 bg-[#4FB286]/10 px-1.5 py-0.2 rounded hidden sm:inline-block">
+                        <span className="text-[9px] font-mono font-bold text-[#4FB286] uppercase border border-[#4FB286]/30 bg-[#4FB286]/10 px-1.5 py-0.5 rounded hidden sm:inline-block">
                           YOU
                         </span>
+                      </span>
+                    )}
+
+                    {/* Exfiltrated Tactical Badge */}
+                    {(entry.escaped || entry.rank <= 2) && (
+                      <span className="flex items-center space-x-1 text-[9px] font-mono font-bold text-[#C8A96B] uppercase border border-[#C8A96B]/40 bg-[#C8A96B]/10 px-1.5 py-0.5 rounded shrink-0 shadow-[0_0_8px_rgba(200,169,107,0.2)] ml-1">
+                        <Key className="w-2.5 h-2.5 text-[#C8A96B]" />
+                        <span className="hidden md:inline">VAULT EXFILTRATED</span>
+                        <span className="md:hidden">EXFIL</span>
                       </span>
                     )}
                   </div>

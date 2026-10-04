@@ -1,12 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MISSIONS_DATA } from '../data/missions';
 import { INITIAL_LEADERBOARD, ACTIVITY_FEED } from '../data/leaderboard';
+import { HEIST_STAGES_CONFIG } from '../data/heistGameData';
 import { sound } from '../utils/audio';
 import { formatTimer } from '../utils/formatters';
 
 const GameContext = createContext();
 
-const STORAGE_KEY = 'CEC_HEIST_STATE_V1';
+export const ALL_SECTORS = [
+  'entrance',
+  'recon',
+  'initial-access',
+  'infiltration',
+  'network',
+  'security',
+  'core',
+  'vault',
+  'escape'
+];
 
 export function GameProvider({ children }) {
   const [missions, setMissions] = useState(() => {
@@ -59,15 +70,119 @@ export function GameProvider({ children }) {
   const [isTerminalModalOpen, setIsTerminalModalOpen] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
 
+  // Heist Central Game State
+  const [crewName, setCrewName] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY + '_CREW') || 'GHOST-07';
+    } catch {
+      return 'GHOST-07';
+    }
+  });
+
+  // Heist Mode: EXPLORATION (Free-Roam Preview) vs COMPETITION (Strict Progression Lock)
+  const [heistMode, setHeistMode] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY + '_HEIST_MODE') || 'EXPLORATION';
+    } catch {
+      return 'EXPLORATION';
+    }
+  });
+
+  const toggleHeistMode = () => {
+    sound.playClick();
+    setHeistMode(prev => {
+      const next = prev === 'EXPLORATION' ? 'COMPETITION' : 'EXPLORATION';
+      try {
+        localStorage.setItem(STORAGE_KEY + '_HEIST_MODE', next);
+      } catch {}
+      return next;
+    });
+  };
+
+  const [unlockedRooms, setUnlockedRooms] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY + '_UNLOCKED_ROOMS');
+      const list = saved ? JSON.parse(saved) : ['entrance', 'recon'];
+      return Array.from(new Set(['entrance', 'recon', ...list]));
+    } catch {
+      return ['entrance', 'recon'];
+    }
+  });
+
+  const [completedRooms, setCompletedRooms] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY + '_COMPLETED_ROOMS');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [inventory, setInventory] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY + '_INVENTORY');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [lockdownActive, setLockdownActive] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY + '_LOCKDOWN') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [lockdownSecondsRemaining, setLockdownSecondsRemaining] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY + '_LOCKDOWN_TIME');
+      return saved ? parseInt(saved, 10) : 300;
+    } catch {
+      return 300;
+    }
+  });
+
+  const [escapeComplete, setEscapeComplete] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY + '_ESCAPED') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  // UI Overlays & In-Game Modals
+  const [isFacilityMapOpen, setIsFacilityMapOpen] = useState(false);
+  const [isInventoryOpen, setIsInventoryOpen] = useState(false);
+  const [activeInGameMission, setActiveInGameMission] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionData, setTransitionData] = useState({ title: '', subtitle: '', nextRoute: null });
+
   // Countdown timer: 02:47:18 -> ~10038 seconds
   const [secondsRemaining, setSecondsRemaining] = useState(10038);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setSecondsRemaining(prev => (prev > 0 ? prev - 1 : 0));
-    } , 1000);
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Lockdown countdown when active
+  useEffect(() => {
+    if (!lockdownActive || escapeComplete) return;
+    const lTimer = setInterval(() => {
+      setLockdownSecondsRemaining(prev => {
+        if (prev <= 1) {
+          clearInterval(lTimer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(lTimer);
+  }, [lockdownActive, escapeComplete]);
 
   // Save changes
   useEffect(() => {
@@ -76,10 +191,17 @@ export function GameProvider({ children }) {
       localStorage.setItem(STORAGE_KEY + '_HINTS', JSON.stringify(unlockedHints));
       localStorage.setItem(STORAGE_KEY + '_SUBS', JSON.stringify(submissions));
       localStorage.setItem(STORAGE_KEY + '_LEADERBOARD', JSON.stringify(leaderboard));
+      localStorage.setItem(STORAGE_KEY + '_CREW', crewName);
+      localStorage.setItem(STORAGE_KEY + '_UNLOCKED_ROOMS', JSON.stringify(unlockedRooms));
+      localStorage.setItem(STORAGE_KEY + '_COMPLETED_ROOMS', JSON.stringify(completedRooms));
+      localStorage.setItem(STORAGE_KEY + '_INVENTORY', JSON.stringify(inventory));
+      localStorage.setItem(STORAGE_KEY + '_LOCKDOWN', lockdownActive ? 'true' : 'false');
+      localStorage.setItem(STORAGE_KEY + '_LOCKDOWN_TIME', lockdownSecondsRemaining.toString());
+      localStorage.setItem(STORAGE_KEY + '_ESCAPED', escapeComplete ? 'true' : 'false');
     } catch (e) {
       console.warn("Storage save error", e);
     }
-  }, [missions, unlockedHints, submissions, leaderboard]);
+  }, [missions, unlockedHints, submissions, leaderboard, crewName, unlockedRooms, completedRooms, inventory, lockdownActive, lockdownSecondsRemaining, escapeComplete]);
 
   // Derived Player Stats
   const solvedMissions = missions.filter(m => m.status === 'SOLVED');
@@ -107,7 +229,7 @@ export function GameProvider({ children }) {
   // Recalculate rank dynamically based on score
   const currentPlayer = {
     id: "OP-7492",
-    callsign: "SPECTRE-9",
+    callsign: crewName || "GHOST-07",
     affiliation: "Canara Engineering College",
     score: totalScore,
     rank: 27, // will be computed in real-time
@@ -116,7 +238,8 @@ export function GameProvider({ children }) {
     accuracy: dynamicAccuracy,
     timePlayed: dynamicTimePlayed,
     securityClearance: "LEVEL-3 OMNI",
-    assignedGateway: "10.24.16.0/24"
+    assignedGateway: "10.24.16.0/24",
+    escaped: escapeComplete
   };
 
   // Sort leaderboard with updated player score
@@ -124,8 +247,10 @@ export function GameProvider({ children }) {
     if (entry.isCurrentPlayer) {
       return {
         ...entry,
+        team: crewName || entry.team,
         score: totalScore,
-        solved: solvedMissions.length
+        solved: solvedMissions.length,
+        escaped: escapeComplete
       };
     }
     return entry;
@@ -220,10 +345,52 @@ export function GameProvider({ children }) {
       };
       setActivities(prev => [newAct, ...prev.slice(0, 19)]);
 
+      // Check if this mission completes any Heist Stage
+      const matchedStage = HEIST_STAGES_CONFIG.find(s => 
+        s.primaryMissionId === missionId || 
+        (s.secondaryMissionIds && s.secondaryMissionIds.includes(missionId))
+      );
+
+      let stageCompletedNow = false;
+      let nextRoomUnlockedNow = null;
+
+      if (matchedStage) {
+        // If primary mission solved, mark stage complete and unlock next stage
+        if (matchedStage.primaryMissionId === missionId) {
+          stageCompletedNow = true;
+          setCompletedRooms(prev => prev.includes(matchedStage.id) ? prev : [...prev, matchedStage.id]);
+          
+          if (matchedStage.rewardItem) {
+            setInventory(prev => prev.some(i => i.id === matchedStage.rewardItem.id) ? prev : [...prev, matchedStage.rewardItem]);
+            sound.playItemAcquired();
+          }
+
+          if (matchedStage.nextStageId) {
+            nextRoomUnlockedNow = matchedStage.nextStageId;
+            setUnlockedRooms(prev => prev.includes(matchedStage.nextStageId) ? prev : [...prev, matchedStage.nextStageId]);
+          }
+
+          sound.playDoorUnlock();
+
+          if (matchedStage.id === 'vault') {
+            setLockdownActive(true);
+            sound.playLockdown();
+          }
+
+          if (matchedStage.id === 'escape') {
+            setEscapeComplete(true);
+            sound.playSuccess();
+          }
+        }
+      }
+
       return {
         success: true,
         message: `VALID ACCESS CODE: +${pointsAwarded} PTS ACQUIRED. CLEARANCE GRANTED.`,
-        pointsAwarded
+        pointsAwarded,
+        stageCompletedNow,
+        matchedStage,
+        nextRoomUnlockedNow
       };
     } else {
       sound.playError();
@@ -251,11 +418,75 @@ export function GameProvider({ children }) {
     setActiveTab('missions');
   };
 
+  const unlockRoom = (stageId) => {
+    setUnlockedRooms(prev => prev.includes(stageId) ? prev : [...prev, stageId]);
+  };
+
+  const completeRoom = (stageId) => {
+    setCompletedRooms(prev => prev.includes(stageId) ? prev : [...prev, stageId]);
+    const stage = HEIST_STAGES_CONFIG.find(s => s.id === stageId);
+    if (stage) {
+      if (stage.rewardItem) {
+        setInventory(prev => prev.some(i => i.id === stage.rewardItem.id) ? prev : [...prev, stage.rewardItem]);
+      }
+      if (stage.nextStageId) {
+        setUnlockedRooms(prev => prev.includes(stage.nextStageId) ? prev : [...prev, stage.nextStageId]);
+      }
+    }
+  };
+
+  const isRoomUnlocked = (stageId) => {
+    if (!stageId || stageId === 'entrance' || stageId === 'recon') return true;
+    if (heistMode === 'EXPLORATION') return true;
+    return unlockedRooms.includes(stageId);
+  };
+
+  const isRoomCompleted = (stageId) => {
+    return completedRooms.includes(stageId);
+  };
+
+  const openInGameMission = (mission) => {
+    sound.playClick();
+    setActiveInGameMission(mission);
+  };
+
+  const closeInGameMission = () => {
+    sound.playClick();
+    setActiveInGameMission(null);
+  };
+
+  const triggerLockdown = () => {
+    setLockdownActive(true);
+    sound.playLockdown();
+  };
+
+  const triggerEscapeComplete = () => {
+    setEscapeComplete(true);
+    sound.playSuccess();
+  };
+
+  const startTransition = (title, subtitle, nextRoute) => {
+    setIsTransitioning(true);
+    setTransitionData({ title, subtitle, nextRoute });
+  };
+
+  const finishTransition = () => {
+    setIsTransitioning(false);
+    setTransitionData({ title: '', subtitle: '', nextRoute: null });
+  };
+
   const resetAllProgress = () => {
     localStorage.removeItem(STORAGE_KEY + '_MISSIONS');
     localStorage.removeItem(STORAGE_KEY + '_HINTS');
     localStorage.removeItem(STORAGE_KEY + '_SUBS');
     localStorage.removeItem(STORAGE_KEY + '_LEADERBOARD');
+    localStorage.removeItem(STORAGE_KEY + '_UNLOCKED_ROOMS');
+    localStorage.removeItem(STORAGE_KEY + '_COMPLETED_ROOMS');
+    localStorage.removeItem(STORAGE_KEY + '_INVENTORY');
+    localStorage.removeItem(STORAGE_KEY + '_LOCKDOWN');
+    localStorage.removeItem(STORAGE_KEY + '_LOCKDOWN_TIME');
+    localStorage.removeItem(STORAGE_KEY + '_ESCAPED');
+
     const resetMissions = MISSIONS_DATA.map(m => ({
       ...m,
       status: 'AVAILABLE'
@@ -265,6 +496,12 @@ export function GameProvider({ children }) {
     setSubmissions([]);
     setLeaderboard(INITIAL_LEADERBOARD);
     setSelectedCategory('ALL');
+    setUnlockedRooms(['entrance', 'recon']);
+    setCompletedRooms([]);
+    setInventory([]);
+    setLockdownActive(false);
+    setLockdownSecondsRemaining(300);
+    setEscapeComplete(false);
     sound.playBeep(300, 0.1);
   };
 
@@ -294,7 +531,35 @@ export function GameProvider({ children }) {
         openMissionDetail,
         isTerminalModalOpen,
         setIsTerminalModalOpen,
-        resetAllProgress
+        resetAllProgress,
+        // Heist Specific State & Actions
+        heistMode,
+        toggleHeistMode,
+        crewName,
+        setCrewName,
+        unlockedRooms,
+        completedRooms,
+        inventory,
+        lockdownActive,
+        lockdownSecondsRemaining,
+        escapeComplete,
+        unlockRoom,
+        completeRoom,
+        isRoomUnlocked,
+        isRoomCompleted,
+        isFacilityMapOpen,
+        setIsFacilityMapOpen,
+        isInventoryOpen,
+        setIsInventoryOpen,
+        activeInGameMission,
+        openInGameMission,
+        closeInGameMission,
+        isTransitioning,
+        transitionData,
+        startTransition,
+        finishTransition,
+        triggerLockdown,
+        triggerEscapeComplete
       }}
     >
       {children}

@@ -537,6 +537,39 @@ export const MISSIONS_DATA = [
     ],
     flag: "CEC{4rp_sp00f_ntp_p01s0n_d3t3ct3d}",
     terminalAvailable: true
+  },
+  {
+    id: "mission-20",
+    number: "20",
+    title: "EMERGENCY EXIT PROTOCOL",
+    category: "EXPLOITATION",
+    difficulty: "INSANE",
+    points: 500,
+    solvedCount: 14,
+    status: "AVAILABLE",
+    target: "10.24.99.1:9090",
+    timeEstimate: "15 MIN",
+    requiredSkills: ["Hydraulic Bypass", "Emergency Override", "Timing Attacks"],
+    brief: "The facility has initiated emergency lockdown. The subterranean hydraulic blast gates are sealed shut. Restore the facility's exit hydraulic bypass controller before the countdown reaches maximum security lockdown.",
+    objectives: [
+      "Connect to the emergency egress controller at 10.24.99.1:9090",
+      "Inject override signal to reset the hydraulic pressure valves",
+      "Bypass the automated quarantine interlock latch",
+      "Recover the exit authorization token and execute the clean exfil sequence"
+    ],
+    hints: [
+      { id: 1, text: "Send OVERRIDE_VALVE_PNEUMATIC_DISENGAGE to port 9090.", penalty: 40 },
+      { id: 2, text: "The master bypass authorization flag is embedded in the egress controller firmware dump.", penalty: 80 }
+    ],
+    flag: "CEC{exfil_sanitized_clean_getaway_2026}",
+    terminalAvailable: true,
+    terminalFiles: [
+      { name: "egress_override.py", content: "# Emergency egress controller override\nimport socket\ns = socket.socket()\ns.connect(('10.24.99.1', 9090))\ns.send(b'OVERRIDE_EGRESS_FORCE_OPEN\\n')\nprint(s.recv(1024).decode())" },
+      { name: "lockdown_state.log", content: "[CRITICAL] FACILITY LOCKDOWN ACTIVE. ALL BULKHEADS SEALED." }
+    ],
+    terminalCommands: {
+      "python egress_override.py": "STATUS: PNEUMATIC SEAL DISENGAGED. EXIT GRANTED. KEY: CEC{exfil_sanitized_clean_getaway_2026}"
+    }
   }
 ];
 
