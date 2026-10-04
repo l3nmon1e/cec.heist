@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { X, Shield, Key, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { sound } from '../utils/audio';
@@ -10,6 +10,10 @@ export default function RegisterLoginModal({ isOpen, onClose, defaultMode = 'reg
   const [operatorHandle, setOperatorHandle] = useState('');
   const [collegeId, setCollegeId] = useState('');
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    setMode(defaultMode);
+  }, [defaultMode]);
 
   if (!isOpen) return null;
 

@@ -91,6 +91,7 @@ function AppContent() {
 
       {/* Modals */}
       <RegisterLoginModal 
+        key={authMode}
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
         defaultMode={authMode} 

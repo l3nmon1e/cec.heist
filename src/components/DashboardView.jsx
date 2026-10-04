@@ -266,11 +266,13 @@ export default function DashboardView() {
                   <div className="flex items-center space-x-2">
                     <span className="font-bold text-[#F4F5F7] text-[11px] truncate">{act.team}</span>
                     <span className={`text-[10px] px-1.5 py-0.2 border ${
-                      act.event === 'FLAG_SOLVED' 
+                      act.event === 'FLAG_CAPTURED' || act.event === 'FLAG_SOLVED'
                         ? 'text-[#4FB286] border-[#4FB286]/30 bg-[#4FB286]/10' 
+                        : act.event === 'FIRST_BLOOD'
+                        ? 'text-[#C8A96B] border-[#C8A96B]/30 bg-[#C8A96B]/10 font-bold'
                         : 'text-[#D6A85F] border-[#D6A85F]/30 bg-[#D6A85F]/10'
                     }`}>
-                      {act.event === 'FLAG_SOLVED' ? 'BREACHED' : 'INTEL'}
+                      {act.event === 'FLAG_CAPTURED' || act.event === 'FLAG_SOLVED' ? 'BREACHED' : act.event === 'FIRST_BLOOD' ? 'FIRST BLOOD' : 'INTEL'}
                     </span>
                   </div>
                   <div className="text-[10px] text-[#8D98A8] truncate">

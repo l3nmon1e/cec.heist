@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { HEIST_STAGES } from '../data/heistStages';
 import FacilityMap from './heist/FacilityMap';
@@ -37,15 +37,23 @@ export default function MissionsView() {
     missions, 
     selectedMissionId, 
     setSelectedMissionId, 
-    secondsRemaining 
+    secondsRemaining,
+    selectedCategory = 'ALL',
+    setSelectedCategory
   } = useGame();
 
   // Default directly to missions so players immediately see challenges
   const [activeView, setActiveView] = useState('missions'); // 'missions' | 'map' | 'vault'
-  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedDifficulty, setSelectedDifficulty] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isViewingDetail, setIsViewingDetail] = useState(false);
+
+  useEffect(() => {
+    if (selectedCategory && selectedCategory !== 'ALL') {
+      setActiveView('missions');
+      setIsViewingDetail(false);
+    }
+  }, [selectedCategory]);
 
   const solvedCount = missions.filter(m => m.status === 'SOLVED').length;
   const totalCount = missions.length;

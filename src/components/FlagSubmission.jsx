@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { Key, CheckCircle, AlertTriangle, ShieldCheck, Loader2 } from 'lucide-react';
 import { sound } from '../utils/audio';
@@ -8,6 +8,12 @@ export default function FlagSubmission({ mission }) {
   const [flagInput, setFlagInput] = useState('');
   const [status, setStatus] = useState(null); // { type: 'success' | 'error', message: '' }
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Clear input buffer and error/success message when mission changes
+  useEffect(() => {
+    setFlagInput('');
+    setStatus(null);
+  }, [mission.id]);
 
   const handleSubmit = (e) => {
     e?.preventDefault();

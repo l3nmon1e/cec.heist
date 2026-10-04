@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MISSIONS_DATA } from '../data/missions';
 import { INITIAL_LEADERBOARD, ACTIVITY_FEED } from '../data/leaderboard';
 import { sound } from '../utils/audio';
+import { formatTimer } from '../utils/formatters';
 
 const GameContext = createContext();
 
@@ -53,6 +54,7 @@ export function GameProvider({ children }) {
 
   const [activities, setActivities] = useState(() => ACTIVITY_FEED);
   const [activeTab, setActiveTab] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [selectedMissionId, setSelectedMissionId] = useState('mission-08');
   const [isTerminalModalOpen, setIsTerminalModalOpen] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
@@ -91,6 +93,17 @@ export function GameProvider({ children }) {
     return acc + Math.max(10, m.points - penalty);
   }, 0);
 
+  // Dynamic accuracy calculation from submission history
+  const totalSubmissions = submissions.length;
+  const validSubmissions = submissions.filter(s => s.status === 'VALID').length;
+  const dynamicAccuracy = totalSubmissions > 0 
+    ? `${Math.round((validSubmissions / totalSubmissions) * 100)}%` 
+    : (solvedMissions.length > 0 ? "100%" : "0%");
+
+  // Dynamic session elapsed time
+  const elapsedSeconds = Math.max(0, 5059 + (10038 - secondsRemaining));
+  const dynamicTimePlayed = formatTimer(elapsedSeconds);
+
   // Recalculate rank dynamically based on score
   const currentPlayer = {
     id: "OP-7492",
@@ -100,8 +113,8 @@ export function GameProvider({ children }) {
     rank: 27, // will be computed in real-time
     solvedCount: solvedMissions.length,
     totalMissions: missions.length,
-    accuracy: "86.4%",
-    timePlayed: "01:24:19",
+    accuracy: dynamicAccuracy,
+    timePlayed: dynamicTimePlayed,
     securityClearance: "LEVEL-3 OMNI",
     assignedGateway: "10.24.16.0/24"
   };
@@ -243,10 +256,15 @@ export function GameProvider({ children }) {
     localStorage.removeItem(STORAGE_KEY + '_HINTS');
     localStorage.removeItem(STORAGE_KEY + '_SUBS');
     localStorage.removeItem(STORAGE_KEY + '_LEADERBOARD');
-    setMissions(MISSIONS_DATA);
-    setUnlockedHints({ "mission-08": [1] });
+    const resetMissions = MISSIONS_DATA.map(m => ({
+      ...m,
+      status: 'AVAILABLE'
+    }));
+    setMissions(resetMissions);
+    setUnlockedHints({});
     setSubmissions([]);
     setLeaderboard(INITIAL_LEADERBOARD);
+    setSelectedCategory('ALL');
     sound.playBeep(300, 0.1);
   };
 
@@ -259,6 +277,8 @@ export function GameProvider({ children }) {
         selectedMission,
         selectedMissionId,
         setSelectedMissionId,
+        selectedCategory,
+        setSelectedCategory,
         activeTab,
         setActiveTab,
         unlockedHints,

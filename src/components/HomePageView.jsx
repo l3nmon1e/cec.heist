@@ -21,7 +21,7 @@ import { getAssetUrl } from '../utils/formatters';
 import CautionMarquee from './CautionMarquee';
 
 export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = true }) {
-  const { setActiveTab, setSelectedMissionId } = useGame();
+  const { setActiveTab, setSelectedMissionId, setSelectedCategory } = useGame();
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -38,6 +38,21 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
 
   const handleCategoryClick = (categoryName) => {
     sound.playClick();
+    let cat = (categoryName || '').toUpperCase();
+    if (cat.includes('REVERSE')) {
+      cat = 'REVERSE';
+    } else if (cat.includes('WEB')) {
+      cat = 'WEB';
+    } else if (cat.includes('CRYPTO')) {
+      cat = 'CRYPTO';
+    } else if (cat.includes('FORENSIC')) {
+      cat = 'FORENSICS';
+    } else if (cat.includes('NETWORK')) {
+      cat = 'NETWORK';
+    }
+    if (setSelectedCategory) {
+      setSelectedCategory(cat);
+    }
     setActiveTab('missions');
   };
 

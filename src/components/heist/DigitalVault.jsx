@@ -78,7 +78,7 @@ export default function DigitalVault({ onOpenVaultMission }) {
 
   const handleKeypadPress = (val) => {
     sound.playClick();
-    if (enteredCode.length < 16) {
+    if (enteredCode.length < 48) {
       setEnteredCode(prev => prev + val);
     }
   };
@@ -99,12 +99,17 @@ export default function DigitalVault({ onOpenVaultMission }) {
 
     setTimeout(() => {
       setIsVerifying(false);
-      // Attempt verification against mission 13 flag or master override
-      const res = submitFlag('mission-13', enteredCode.trim());
+      const cleanInput = enteredCode.trim();
+      const isPinMatch = cleanInput === '7492' || cleanInput === '2026' || cleanInput.toLowerCase() === 'reverse_engineer_vault_2026';
+      
+      // Attempt verification against mission 13 flag or master operator PIN
+      const flagToSubmit = isPinMatch ? 'CEC{reverse_engineer_vault_2026}' : cleanInput;
+      const res = submitFlag('mission-13', flagToSubmit);
+      
       if (res.success) {
         setAuthStatus({ success: true, message: "CLEARANCE CONFIRMED // DIGITAL VAULT SOLENOIDS RELEASED" });
       } else {
-        setAuthStatus({ success: false, message: "AUTHENTICATION DENIED: Cryptographic handshake mismatch. Verify all 5 sector tokens." });
+        setAuthStatus({ success: false, message: "AUTHENTICATION DENIED: Cryptographic handshake mismatch. Verify all 5 sector tokens or operator PIN." });
       }
     }, 600);
   };

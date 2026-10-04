@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { formatTimer, formatScore, getDifficultyStyle, getStatusStyle, getAssetUrl } from '../utils/formatters';
 import FlagSubmission from './FlagSubmission';
@@ -32,6 +32,12 @@ export default function MissionDetailView({ mission, onBack }) {
   const [completedObjectives, setCompletedObjectives] = useState(() => {
     return mission.status === 'SOLVED' ? [0, 1, 2, 3] : [];
   });
+
+  // Re-sync objectives and terminal state whenever mission updates
+  useEffect(() => {
+    setCompletedObjectives(mission.status === 'SOLVED' ? [0, 1, 2, 3] : []);
+    setShowTerminal(mission.terminalAvailable || false);
+  }, [mission.id, mission.status, mission.terminalAvailable]);
 
   const diffStyle = getDifficultyStyle(mission.difficulty);
   const statusStyle = getStatusStyle(mission.status);
