@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useGame } from '../../../context/GameContext';
 import { HEIST_STAGES_CONFIG } from '../../../data/heistGameData';
+import RoomGuideBar from '../RoomGuideBar';
 import ObjectivePanel from '../ObjectivePanel';
 import CrewAvatar from '../CrewAvatar';
 import InteractiveObject from '../InteractiveObject';
@@ -129,12 +130,23 @@ export default function ReconRoom() {
           </div>
         </div>
 
+        {/* Step-by-Step Operator Guide & High-Visibility Completion Banner */}
+        <RoomGuideBar
+          isCompleted={isMissionSolved}
+          primaryMission={primaryMission}
+          primaryObjectName={stage.interactiveObjects.find(o => o.missionId === stage.primaryMissionId)?.name || "Surveillance Terminal"}
+          nextRoomName="INITIAL ACCESS"
+          onProceedNext={handleProceedNext}
+          onOpenPrimaryMission={() => openInGameMission(stage.primaryMissionId)}
+        />
+
         {/* Interactive In-World Objects & Security Door */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stage.interactiveObjects.map((obj) => (
             <InteractiveObject
               key={obj.id}
               object={obj}
+              isPrimary={obj.missionId === stage.primaryMissionId}
               isCompleted={obj.missionId ? (missions.find(m => m.id === obj.missionId)?.status === 'SOLVED') : isMissionSolved}
               onInteract={handleInteract}
             />

@@ -226,22 +226,6 @@ export function GameProvider({ children }) {
   const elapsedSeconds = Math.max(0, 5059 + (10038 - secondsRemaining));
   const dynamicTimePlayed = formatTimer(elapsedSeconds);
 
-  // Recalculate rank dynamically based on score
-  const currentPlayer = {
-    id: "OP-7492",
-    callsign: crewName || "GHOST-07",
-    affiliation: "Canara Engineering College",
-    score: totalScore,
-    rank: 27, // will be computed in real-time
-    solvedCount: solvedMissions.length,
-    totalMissions: missions.length,
-    accuracy: dynamicAccuracy,
-    timePlayed: dynamicTimePlayed,
-    securityClearance: "LEVEL-3 OMNI",
-    assignedGateway: "10.24.16.0/24",
-    escaped: escapeComplete
-  };
-
   // Sort leaderboard with updated player score
   const updatedLeaderboard = [...leaderboard].map(entry => {
     if (entry.isCurrentPlayer) {
@@ -259,8 +243,23 @@ export function GameProvider({ children }) {
     rank: index + 1
   }));
 
-  const myRank = updatedLeaderboard.find(e => e.isCurrentPlayer)?.rank || 27;
-  currentPlayer.rank = myRank;
+  const myRank = updatedLeaderboard.find(e => e.isCurrentPlayer)?.rank || 1;
+
+  // Recalculate player profile dynamically based on live score and telemetry
+  const currentPlayer = {
+    id: "OP-7492",
+    callsign: crewName || "GHOST-07",
+    affiliation: "Canara Engineering College",
+    score: totalScore,
+    rank: myRank,
+    solvedCount: solvedMissions.length,
+    totalMissions: missions.length,
+    accuracy: dynamicAccuracy,
+    timePlayed: dynamicTimePlayed,
+    securityClearance: "LEVEL-3 OMNI",
+    assignedGateway: "10.24.16.0/24",
+    escaped: escapeComplete
+  };
 
   const toggleSound = () => {
     const state = sound.toggleSound();

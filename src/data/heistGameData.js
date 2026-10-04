@@ -1,5 +1,3 @@
-import { getAssetUrl } from '../utils/formatters';
-
 export const HEIST_STAGES_CONFIG = [
   {
     id: "entrance",

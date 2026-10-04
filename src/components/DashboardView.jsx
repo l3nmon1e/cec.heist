@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { formatTimer, formatScore, getDifficultyStyle, getStatusStyle, getAssetUrl } from '../utils/formatters';
 import { 
@@ -27,6 +28,7 @@ import {
 import { sound } from '../utils/audio';
 
 export default function DashboardView() {
+  const navigate = useNavigate();
   const { 
     currentPlayer, 
     secondsRemaining, 
@@ -51,6 +53,7 @@ export default function DashboardView() {
     sound.playClick();
     setSelectedMissionId(mId || currentMission.id);
     setActiveTab('missions');
+    navigate('/missions');
   };
 
   return (
@@ -197,7 +200,11 @@ export default function DashboardView() {
               </button>
 
               <button
-                onClick={() => setActiveTab('missions')}
+                onClick={() => {
+                  sound.playClick();
+                  setActiveTab('missions');
+                  navigate('/missions');
+                }}
                 className="w-full flex items-center justify-center space-x-2 px-6 py-2.5 bg-[#121923] hover:bg-[#16202D] border border-[#263140] text-[#F4F5F7] text-xs transition-colors cursor-pointer"
               >
                 <Layers className="w-3.5 h-3.5 text-[#C8A96B]" />

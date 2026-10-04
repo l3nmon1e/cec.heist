@@ -5,16 +5,16 @@ import {
   Building2, 
   Target, 
   Map, 
-  Users, 
-  Trophy 
+  Trophy,
+  LogOut
 } from 'lucide-react';
 
 export default function MobileGameDock({ 
   onOpenFacility, 
   onOpenMissions, 
   onOpenMap, 
-  onOpenCrew, 
-  onOpenScore 
+  onOpenScore,
+  onExitHeist 
 }) {
   const { inventory, currentPlayer } = useGame();
 
@@ -24,7 +24,7 @@ export default function MobileGameDock({
   };
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#070B12]/95 border-t border-[#263140] backdrop-blur-md font-mono select-none">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#070B12]/95 border-t border-[#263140] backdrop-blur-md font-mono select-none pb-[env(safe-area-inset-bottom)]">
       <div className="grid grid-cols-5 h-14 items-stretch divide-x divide-[#263140]">
         
         {/* 1. FACILITY */}
@@ -54,22 +54,22 @@ export default function MobileGameDock({
           <span className="text-[9px] font-bold tracking-wider uppercase">MAP</span>
         </button>
 
-        {/* 4. CREW */}
-        <button
-          onClick={() => handleAction(onOpenCrew)}
-          className="flex flex-col items-center justify-center space-y-0.5 text-[#8D98A8] active:text-[#C8A96B] active:bg-[#121923] transition-colors min-h-[44px] cursor-pointer"
-        >
-          <Users className="w-4 h-4 text-[#C8A96B]" />
-          <span className="text-[9px] font-bold tracking-wider uppercase">CREW</span>
-        </button>
-
-        {/* 5. SCORE */}
+        {/* 4. SCORE */}
         <button
           onClick={() => handleAction(onOpenScore)}
           className="flex flex-col items-center justify-center space-y-0.5 text-[#8D98A8] active:text-[#C8A96B] active:bg-[#121923] transition-colors min-h-[44px] cursor-pointer"
         >
           <Trophy className="w-4 h-4 text-[#C8A96B]" />
           <span className="text-[9px] font-bold tracking-wider uppercase">SCORE</span>
+        </button>
+
+        {/* 5. EXIT HEIST */}
+        <button
+          onClick={() => handleAction(onExitHeist)}
+          className="flex flex-col items-center justify-center space-y-0.5 text-[#EF4444] active:bg-[#121923] transition-colors min-h-[44px] cursor-pointer group"
+        >
+          <LogOut className="w-4 h-4 text-[#EF4444] group-active:scale-110 transition-transform" />
+          <span className="text-[9px] font-bold tracking-wider uppercase">EXIT</span>
         </button>
 
       </div>

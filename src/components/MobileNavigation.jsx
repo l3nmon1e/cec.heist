@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { sound } from '../utils/audio';
 import { formatTimer, formatScore } from '../utils/formatters';
@@ -7,7 +8,41 @@ import { formatTimer, formatScore } from '../utils/formatters';
  * Custom Vault Mechanical Icons (Concept 2: Bank Vault Mechanism & Champagne Gold Brass)
  */
 
-// 1. Multi-ring rotary vault combination dial (FACILITY / SECTOR MAP)
+// 1. Reinforced vault headquarters fortress gateway (HOME / BASE HQ)
+function VaultGatewayIcon({ active, className = "w-5 h-5" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="vaultGatewayGold" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFF7E6" />
+          <stop offset="45%" stopColor="#E5D0A0" />
+          <stop offset="85%" stopColor="#C8A96B" />
+          <stop offset="100%" stopColor="#8E784D" />
+        </linearGradient>
+      </defs>
+      {/* Heavy Classical Bank Pediment / Roof */}
+      <polygon 
+        points="12,3.5 21.5,8 2.5,8" 
+        fill={active ? "url(#vaultGatewayGold)" : "#16202D"} 
+        stroke={active ? "#FFF7E6" : "#4B5565"} 
+        strokeWidth="1.2" 
+      />
+      {/* Keystone Emblem in Pediment */}
+      <circle cx="12" cy="6" r="1" fill={active ? "#070B12" : "#8D98A8"} />
+      {/* Architrave Beam */}
+      <rect x="2" y="8" width="20" height="2" rx="0.5" fill={active ? "#5C4620" : "#121923"} stroke={active ? "#C8A96B" : "#3B4758"} strokeWidth="1" />
+      {/* 4 Fortified Brass Security Columns */}
+      <rect x="3.75" y="10" width="2.5" height="8" fill={active ? "url(#vaultGatewayGold)" : "#1E293B"} stroke={active ? "#C8A96B" : "#4B5565"} strokeWidth="0.8" />
+      <rect x="8.25" y="10" width="2.5" height="8" fill={active ? "url(#vaultGatewayGold)" : "#1E293B"} stroke={active ? "#C8A96B" : "#4B5565"} strokeWidth="0.8" />
+      <rect x="13.25" y="10" width="2.5" height="8" fill={active ? "url(#vaultGatewayGold)" : "#1E293B"} stroke={active ? "#C8A96B" : "#4B5565"} strokeWidth="0.8" />
+      <rect x="17.75" y="10" width="2.5" height="8" fill={active ? "url(#vaultGatewayGold)" : "#1E293B"} stroke={active ? "#C8A96B" : "#4B5565"} strokeWidth="0.8" />
+      {/* Lower Foundation Base Plinth */}
+      <rect x="1.5" y="18" width="21" height="2.5" rx="0.5" fill={active ? "url(#vaultGatewayGold)" : "#16202D"} stroke={active ? "#FFF7E6" : "#3B4758"} strokeWidth="1" />
+    </svg>
+  );
+}
+
+// 2. Multi-ring rotary vault combination dial (FACILITY / SECTOR MAP)
 function VaultDialIcon({ active, className = "w-5 h-5" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -64,7 +99,7 @@ function VaultDialIcon({ active, className = "w-5 h-5" }) {
   );
 }
 
-// 2. Heavy 3-spoke vault blast door locking wheel (HEIST / MISSIONS)
+// 3. Heavy 3-spoke vault blast door locking wheel (HEIST / MISSIONS)
 function VaultWheelIcon({ active, className = "w-5 h-5" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,7 +154,7 @@ function VaultWheelIcon({ active, className = "w-5 h-5" }) {
   );
 }
 
-// 3. Vault reserve gold bullion ingot (SCORE / BOUNTY / LEADERBOARD)
+// 4. Vault reserve gold bullion ingot (SCORE / BOUNTY / LEADERBOARD)
 function VaultBullionIcon({ active, className = "w-5 h-5" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,7 +211,7 @@ function VaultBullionIcon({ active, className = "w-5 h-5" }) {
   );
 }
 
-// 4. Classified brass operative security keycard (CREW / OPERATIVE DOSSIER)
+// 5. Classified brass operative security keycard (CREW / OPERATIVE DOSSIER)
 function VaultKeycardIcon({ active, className = "w-5 h-5" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -225,23 +260,23 @@ function VaultKeycardIcon({ active, className = "w-5 h-5" }) {
   );
 }
 
-import { useNavigate } from 'react-router-dom';
-
 /**
  * Mobile Navigation: The Bank Vault Mechanism
  * Heavy Metallurgy & Champagne Gold Brass Console
  */
 export default function MobileNavigation() {
   const navigate = useNavigate();
-  const { activeTab, setActiveTab, currentPlayer, secondsRemaining } = useGame();
+  const location = useLocation();
+  const { activeTab, setActiveTab } = useGame();
 
   const handleTab = (item) => {
     sound.playClick();
+    setActiveTab(item.id);
     if (item.route) {
       navigate(item.route);
     } else {
-      setActiveTab(item.id);
-      if (item.id === 'missions') navigate('/missions');
+      if (item.id === 'home') navigate('/');
+      else if (item.id === 'missions') navigate('/missions');
       else if (item.id === 'dashboard') navigate('/dashboard');
       else if (item.id === 'leaderboard') navigate('/leaderboard');
       else if (item.id === 'profile') navigate('/profile');
@@ -251,6 +286,13 @@ export default function MobileNavigation() {
 
   const navItems = [
     { 
+      id: 'home', 
+      label: 'HOME', 
+      code: 'BASE HQ',
+      icon: VaultGatewayIcon,
+      route: '/'
+    },
+    { 
       id: 'heist', 
       label: 'HEIST', 
       code: 'OPERATION',
@@ -258,24 +300,47 @@ export default function MobileNavigation() {
       route: '/heist'
     },
     { 
-      id: 'dashboard', 
-      label: 'OPS', 
-      code: 'DASHBOARD',
+      id: 'missions', 
+      label: 'MISSIONS', 
+      code: 'FACILITY',
       icon: VaultDialIcon,
+      route: '/missions'
     },
     { 
       id: 'leaderboard', 
       label: 'SCORE', 
       code: 'RESERVE',
       icon: VaultBullionIcon,
+      route: '/leaderboard'
     },
     { 
       id: 'profile', 
       label: 'CREW', 
       code: 'KEYCARD',
       icon: VaultKeycardIcon,
+      route: '/profile'
     },
   ];
+
+  const isTabActive = (item) => {
+    const currentPath = location.pathname;
+    if (item.id === 'home') {
+      return currentPath === '/' && (activeTab === 'home' || !activeTab);
+    }
+    if (item.id === 'heist') {
+      return currentPath.startsWith('/heist') || activeTab === 'heist';
+    }
+    if (item.id === 'missions') {
+      return currentPath === '/missions' || currentPath === '/dashboard' || activeTab === 'missions' || activeTab === 'dashboard';
+    }
+    if (item.id === 'leaderboard') {
+      return currentPath === '/leaderboard' || activeTab === 'leaderboard';
+    }
+    if (item.id === 'profile') {
+      return currentPath === '/profile' || activeTab === 'profile';
+    }
+    return activeTab === item.id;
+  };
 
   return (
     <nav 
@@ -286,14 +351,15 @@ export default function MobileNavigation() {
       <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#C8A96B]/50 to-transparent pointer-events-none" />
 
       {/* 5 Compact Engraved Vault Mechanical Navigation Buttons */}
-      <div className="grid grid-cols-5 px-1 pt-1 pb-[max(0.35rem,env(safe-area-inset-bottom))] font-mono">
+      <div className="grid grid-cols-5 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] font-mono">
         {navItems.map((item) => {
           const { id, label, icon: IconComponent } = item;
-          const isActive = activeTab === id;
+          const isActive = isTabActive(item);
           return (
             <button
               key={id}
               onClick={() => handleTab(item)}
+              aria-label={label}
               className={`relative flex flex-col items-center justify-center py-1.5 px-0.5 transition-all cursor-pointer group active:scale-95 border-r border-[#1C2633] last:border-r-0 ${
                 isActive 
                   ? 'bg-gradient-to-b from-[#C8A96B]/15 via-[#C8A96B]/5 to-transparent' 

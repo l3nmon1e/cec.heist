@@ -151,7 +151,7 @@ export default function GameHUD({ onExitHeist, currentStageTitle }) {
                 setIsFacilityMapOpen(true);
               }}
               title="Open Facility Map"
-              className="flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 bg-[#0C111A] hover:bg-[#121923] border border-[#263140] hover:border-[#C8A96B] text-[11px] text-[#F4F5F7] transition-colors cursor-pointer"
+              className="hidden sm:flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 bg-[#0C111A] hover:bg-[#121923] border border-[#263140] hover:border-[#C8A96B] text-[11px] text-[#F4F5F7] transition-colors cursor-pointer"
             >
               <Map className="w-3.5 h-3.5 text-[#C8A96B]" />
               <span className="hidden md:inline">MAP</span>
@@ -184,14 +184,14 @@ export default function GameHUD({ onExitHeist, currentStageTitle }) {
               {audioEnabled ? <Volume2 className="w-3.5 h-3.5 text-[#C8A96B]" /> : <VolumeX className="w-3.5 h-3.5 text-[#8D98A8]" />}
             </button>
 
-            {/* Return to Main Dashboard */}
+            {/* Return to Main Dashboard / Exit */}
             <button
               onClick={onExitHeist}
               title="Exit Heist View"
-              className="hidden lg:flex items-center space-x-1 px-2.5 py-1.5 bg-transparent hover:bg-[#263140]/50 border border-[#263140] hover:border-[#8D98A8] text-[11px] text-[#8D98A8] hover:text-[#F4F5F7] transition-colors cursor-pointer"
+              className="flex items-center space-x-1 px-2 sm:px-2.5 py-1.5 bg-[#0C111A] hover:bg-[#263140]/50 border border-[#263140] hover:border-[#EF4444] text-[11px] text-[#EF4444] sm:text-[#8D98A8] hover:text-[#F4F5F7] transition-colors cursor-pointer shrink-0"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>EXIT</span>
+              <LogOut className="w-3.5 h-3.5 text-[#EF4444]" />
+              <span className="hidden xs:inline">EXIT</span>
             </button>
           </div>
 

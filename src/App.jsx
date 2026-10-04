@@ -39,8 +39,8 @@ function PortalLayout({ onOpenRegister, onOpenLogin, onOpenFaq, onOpenContact, o
       {/* Navigation */}
       <Navbar onOpenLogin={onOpenLogin} onOpenFaq={onOpenFaq} />
 
-      {/* Main View Port */}
-      <main className="flex-1 w-full z-10">
+      {/* Main View Port - padded on mobile to account for fixed bottom navigation */}
+      <main className="flex-1 w-full z-10 pb-16 md:pb-0">
         {children}
       </main>
 
@@ -57,7 +57,8 @@ function PortalLayout({ onOpenRegister, onOpenLogin, onOpenFaq, onOpenContact, o
 }
 
 function MainAppRoutes() {
-  const { isTerminalModalOpen, setIsTerminalModalOpen, selectedMission } = useGame();
+  const location = useLocation();
+  const { isTerminalModalOpen, setIsTerminalModalOpen, selectedMission, setActiveTab } = useGame();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('register');
@@ -65,6 +66,18 @@ function MainAppRoutes() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
   const [legalMode, setLegalMode] = useState('privacy');
+
+  // Synchronize activeTab with current route
+  React.useEffect(() => {
+    const path = location.pathname;
+    if (path === '/') setActiveTab('home');
+    else if (path.startsWith('/heist')) setActiveTab('heist');
+    else if (path === '/dashboard') setActiveTab('dashboard');
+    else if (path === '/missions') setActiveTab('missions');
+    else if (path === '/leaderboard') setActiveTab('leaderboard');
+    else if (path === '/rules') setActiveTab('rules');
+    else if (path === '/profile') setActiveTab('profile');
+  }, [location.pathname, setActiveTab]);
 
   const openRegister = () => {
     setAuthMode('register');

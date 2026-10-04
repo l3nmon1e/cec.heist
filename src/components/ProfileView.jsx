@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { formatScore } from '../utils/formatters';
 import { HEIST_STAGES } from '../data/heistStages';
@@ -16,6 +17,7 @@ import {
 import { sound } from '../utils/audio';
 
 export default function ProfileView() {
+  const navigate = useNavigate();
   const { 
     currentPlayer, 
     missions, 
@@ -35,11 +37,13 @@ export default function ProfileView() {
     sound.playClick();
     setSelectedMissionId(mId);
     setActiveTab('missions');
+    navigate('/missions');
   };
 
   const handleContinueHeist = () => {
     sound.playClick();
     setActiveTab('missions');
+    navigate('/missions');
   };
 
   const handleReset = () => {
@@ -174,8 +178,8 @@ export default function ProfileView() {
           </span>
         </div>
 
-        {/* 5-Stage Horizontal Pipeline Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
+        {/* 8-Stage Pipeline Grid (4x2 layout) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 pt-1">
           {HEIST_STAGES.map((stage, idx) => {
             const stageMissions = stage.missionIds.map(id => missions.find(m => m.id === id)).filter(Boolean);
             const stageSolved = stageMissions.filter(m => m.status === 'SOLVED').length;

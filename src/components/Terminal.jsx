@@ -15,11 +15,13 @@ export default function Terminal({ mission, onClose, isModal = false }) {
   const [cmdHistory, setCmdHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [copied, setCopied] = useState(false);
-  const bottomRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+    }
   }, [history]);
 
   useEffect(() => {
@@ -341,6 +343,7 @@ export default function Terminal({ mission, onClose, isModal = false }) {
 
       {/* Output scroll area */}
       <div 
+        ref={scrollContainerRef}
         onClick={() => inputRef.current?.focus()}
         className="flex-1 p-3.5 overflow-y-auto space-y-2 bg-[#0A0A0A] cursor-text select-text"
       >
@@ -380,7 +383,6 @@ export default function Terminal({ mission, onClose, isModal = false }) {
             </pre>
           );
         })}
-        <div ref={bottomRef} />
       </div>
 
       {/* Interactive Command Input line */}

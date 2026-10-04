@@ -41,7 +41,12 @@ export default function ContactModal({ isOpen, onClose }) {
             <Mail className="w-4 h-4 text-[#FACC15] shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-[#E5E7EB] block">DIRECT COMM LINK</span>
-              <span className="text-[#9CA3AF]">heist-support@canaraengineering.in</span>
+              <a 
+                href="mailto:heist-support@canaraengineering.in" 
+                className="text-[#FACC15] hover:underline"
+              >
+                heist-support@canaraengineering.in
+              </a>
             </div>
           </div>
 
@@ -49,7 +54,14 @@ export default function ContactModal({ isOpen, onClose }) {
             <MessageSquare className="w-4 h-4 text-[#FACC15] shrink-0 mt-0.5" />
             <div>
               <span className="font-bold text-[#E5E7EB] block">DISCORD OPS SERVER</span>
-              <span className="text-[#9CA3AF]">discord.gg/cec-heist-2026 (#help-desk)</span>
+              <a 
+                href="https://discord.gg/cec-heist-2026" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[#FACC15] hover:underline"
+              >
+                discord.gg/cec-heist-2026 (#help-desk)
+              </a>
             </div>
           </div>
 

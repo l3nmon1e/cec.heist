@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { X, Shield, Key, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
 export default function RegisterLoginModal({ isOpen, onClose, defaultMode = 'register' }) {
+  const navigate = useNavigate();
   const { setActiveTab, setCrewName } = useGame();
   const [mode, setMode] = useState(defaultMode);
   const [teamName, setTeamName] = useState('');
@@ -29,6 +31,7 @@ export default function RegisterLoginModal({ isOpen, onClose, defaultMode = 'reg
       setSuccess(false);
       onClose();
       setActiveTab('dashboard');
+      navigate('/dashboard');
     }, 1200);
   };
 

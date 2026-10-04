@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGame } from '../../context/GameContext';
-import { Target, CheckCircle2, AlertTriangle, ArrowRight } from 'lucide-react';
+import { Target, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
+import { sound } from '../../utils/audio';
 
 export default function ObjectivePanel({ 
   objective, 
@@ -13,59 +14,70 @@ export default function ObjectivePanel({
   const { heistMode } = useGame();
   const isExploration = heistMode === 'EXPLORATION';
   const canAdvance = isCompleted || isExploration;
+
+  const handleAdvance = () => {
+    sound.playDoorUnlock();
+    if (onNextRoom) onNextRoom();
+  };
+
   return (
-    <div className={`relative bg-[#0C111A]/90 backdrop-blur-md border ${
-      isCompleted ? 'border-[#4FB286]/50 shadow-[0_0_20px_rgba(79,178,134,0.15)]' : 'border-[#263140]'
-    } p-3 sm:p-4 font-mono transition-all duration-300 ${className}`}>
+    <div className={`relative bg-[#0C111A]/95 backdrop-blur-md border ${
+      isCompleted 
+        ? 'border-[#4FB286] shadow-[0_0_30px_rgba(79,178,134,0.25)] ring-1 ring-[#4FB286]/40' 
+        : 'border-[#263140]'
+    } p-4 sm:p-5 font-mono transition-all duration-300 rounded-sm ${className}`}>
       
       {/* Top Status Header */}
-      <div className="flex items-center justify-between gap-2 mb-1.5 select-none">
+      <div className="flex items-center justify-between gap-2 mb-2 select-none">
         <div className="flex items-center space-x-2">
           {isCompleted ? (
-            <CheckCircle2 className="w-3.5 h-3.5 text-[#4FB286] animate-pulse" />
+            <CheckCircle2 className="w-4 h-4 text-[#4FB286] animate-bounce" />
           ) : (
-            <Target className="w-3.5 h-3.5 text-[#C8A96B] animate-spin-slow" />
+            <Target className="w-4 h-4 text-[#C8A96B] animate-spin-slow" />
           )}
-          <span className={`text-[10px] sm:text-[11px] font-bold tracking-widest uppercase ${
+          <span className={`text-[11px] sm:text-xs font-bold tracking-widest uppercase ${
             isCompleted ? 'text-[#4FB286]' : 'text-[#C8A96B]'
           }`}>
-            {isCompleted ? 'OBJECTIVE COMPLETE' : 'CURRENT OBJECTIVE'}
+            {isCompleted ? 'SECTOR OBJECTIVE COMPLETE' : 'CURRENT SECTOR OBJECTIVE'}
           </span>
         </div>
 
-        <span className={`text-[9px] px-2 py-0.5 uppercase tracking-wider font-semibold border ${
+        <span className={`text-[10px] px-2.5 py-0.5 uppercase tracking-wider font-bold border rounded-sm ${
           isCompleted 
-            ? 'bg-[#4FB286]/15 border-[#4FB286]/40 text-[#4FB286]' 
-            : 'bg-[#C8A96B]/10 border-[#C8A96B]/30 text-[#C8A96B]'
+            ? 'bg-[#4FB286] text-[#070B12] border-[#4FB286]' 
+            : 'bg-[#C8A96B]/10 border-[#C8A96B]/40 text-[#C8A96B]'
         }`}>
           {isCompleted ? 'ACCESS GRANTED' : 'OPERATION ACTIVE'}
         </span>
       </div>
 
       {/* Main Objective Title */}
-      <h3 className="text-xs sm:text-sm md:text-base font-bold text-[#F4F5F7] tracking-wide mb-1">
+      <h3 className="text-sm sm:text-base md:text-lg font-black text-[#F4F5F7] tracking-wide mb-1.5">
         {objective}
       </h3>
 
       {/* Supporting Text / Instructions */}
       {description && (
-        <p className="text-[11px] sm:text-xs text-[#8D98A8] font-sans leading-relaxed">
+        <p className="text-xs text-[#8D98A8] font-sans leading-relaxed">
           {description}
         </p>
       )}
 
-      {/* Action to proceed */}
+      {/* Action to proceed: Highlighted for easy discovery */}
       {canAdvance && onNextRoom && (
-        <div className="mt-3 pt-2.5 border-t border-[#263140]/60 flex items-center justify-between">
-          <span className="text-[10px] text-[#4FB286]">
-            {isCompleted ? 'DOOR PROTOCOL UNLOCKED' : 'EXPLORATION ACCESS CLEAR'}
-          </span>
+        <div className="mt-4 pt-3 border-t border-[#4FB286]/30 flex flex-col sm:flex-row items-center justify-between gap-3 bg-[#4FB286]/10 p-3 rounded-sm">
+          <div className="flex items-center space-x-2 text-[#4FB286] text-xs font-bold">
+            <ShieldCheck className="w-4 h-4 shrink-0" />
+            <span>DOOR PROTOCOL DISENGAGED // PASSAGE READY</span>
+          </div>
+
           <button
-            onClick={onNextRoom}
-            className="inline-flex items-center space-x-1.5 px-3 py-1 bg-[#C8A96B] hover:bg-[#E5D0A0] text-[#070B12] text-xs font-bold tracking-wider uppercase transition-colors cursor-pointer"
+            type="button"
+            onClick={handleAdvance}
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-2.5 bg-[#4FB286] hover:bg-[#3ea075] text-[#070B12] text-xs font-black tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(79,178,134,0.4)] hover:scale-105 active:scale-95 cursor-pointer rounded-sm"
           >
             <span>ADVANCE TO {nextRoomName || 'NEXT ROOM'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-4 h-4 stroke-[3]" />
           </button>
         </div>
       )}

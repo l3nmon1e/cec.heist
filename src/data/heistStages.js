@@ -13,7 +13,7 @@ export const HEIST_STAGES = [
     blueprintArea: "SURFACE ACCESS & PERIMETER"
   },
   {
-    id: "initial_access",
+    id: "initial-access",
     order: 2,
     name: "INITIAL ACCESS",
     callsign: "PHASE-02 // PERIMETER INFILTRATION",

@@ -421,22 +421,31 @@ export default function MissionPanel({ missionId, onClose, onAdvanceRoom, nextRo
             </div>
 
             {isSolved ? (
-              <div className="bg-[#4FB286]/10 border border-[#4FB286]/40 p-4 text-center space-y-2">
-                <div className="flex items-center justify-center space-x-2 text-[#4FB286] font-bold text-sm">
-                  <CheckCircle2 className="w-5 h-5" />
+              <div className="bg-[#4FB286]/15 border-2 border-[#4FB286] p-5 text-center space-y-3 shadow-[0_0_25px_rgba(79,178,134,0.3)] rounded-sm">
+                <div className="flex items-center justify-center space-x-2 text-[#4FB286] font-black text-sm uppercase tracking-wider">
+                  <CheckCircle2 className="w-5 h-5 animate-bounce" />
                   <span>MISSION COMPLETED // ACCESS GRANTED</span>
                 </div>
-                <p className="text-xs text-[#8D98A8] font-sans">
-                  The facility security barrier has been successfully disengaged for this sector.
+                <p className="text-xs text-[#F4F5F7] font-sans">
+                  The facility security barrier has been successfully disengaged for this sector!
                 </p>
-                {onAdvanceRoom && (
-                  <button
-                    onClick={onAdvanceRoom}
-                    className="mt-2 inline-flex items-center space-x-2 px-4 py-2 bg-[#C8A96B] hover:bg-[#E5D0A0] text-[#070B12] text-xs font-bold uppercase tracking-wider cursor-pointer"
-                  >
-                    <span>ADVANCE TO {nextRoomName || 'NEXT ROOM'}</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                {onAdvanceRoom ? (
+                  <div className="pt-2 flex flex-col items-center space-y-2">
+                    <button
+                      onClick={onAdvanceRoom}
+                      className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 bg-[#4FB286] hover:bg-[#3ea075] text-[#070B12] text-xs sm:text-sm font-black uppercase tracking-wider cursor-pointer shadow-lg hover:scale-105 transition-all rounded-sm"
+                    >
+                      <span>PROCEED DIRECTLY TO {nextRoomName || 'NEXT ROOM'}</span>
+                      <ArrowRight className="w-4 h-4 stroke-[3]" />
+                    </button>
+                    <p className="text-[11px] text-[#8D98A8] font-sans">
+                      (Or click "Return to Facility" below to view the unlocked door in the room)
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-[#4FB286] font-bold">
+                    You have unlocked all objectives for this sector!
+                  </p>
                 )}
               </div>
             ) : (

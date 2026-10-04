@@ -24,9 +24,14 @@ export default function Door({
   };
 
   return (
-    <div className={`relative bg-[#0C111A] border ${
-      isOpen ? 'border-[#4FB286]/60 shadow-[0_0_25px_rgba(79,178,134,0.2)]' : 'border-[#263140]'
-    } p-4 sm:p-5 font-mono select-none overflow-hidden transition-all duration-500 ${className}`}>
+    <div 
+      onClick={handleDoorClick}
+      className={`relative bg-[#0C111A] border ${
+        isOpen 
+          ? 'border-[#4FB286] ring-2 ring-[#4FB286]/40 shadow-[0_0_35px_rgba(79,178,134,0.3)] bg-gradient-to-b from-[#0C1A14] to-[#0C111A] cursor-pointer' 
+          : 'border-[#263140] cursor-not-allowed'
+      } p-4 sm:p-5 font-mono select-none overflow-hidden transition-all duration-500 rounded-sm ${className}`}
+    >
       
       {/* Background Industrial Hatch Texture */}
       <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(38,49,64,0.08)_10px,rgba(38,49,64,0.08)_20px)] pointer-events-none" />
@@ -37,18 +42,18 @@ export default function Door({
           <div className={`w-3 h-3 rounded-full ${
             isOpen ? 'bg-[#4FB286] animate-pulse shadow-[0_0_8px_#4FB286]' : 'bg-[#B85C5C] shadow-[0_0_8px_#B85C5C]'
           }`} />
-          <span className="text-[10px] sm:text-xs font-bold tracking-widest text-[#8D98A8] uppercase">
-            SECURITY BARRIER // {name}
+          <span className="text-[10px] sm:text-xs font-bold tracking-widest text-[#F4F5F7] uppercase">
+            SECTOR EXIT BARRIER // {name}
           </span>
         </div>
 
         {/* Status Pill */}
-        <span className={`text-[10px] px-2.5 py-0.5 uppercase tracking-wider font-bold border ${
+        <span className={`text-[10px] px-3 py-0.5 uppercase tracking-wider font-black border rounded-sm ${
           isOpen 
-            ? 'bg-[#4FB286]/15 border-[#4FB286]/40 text-[#4FB286]' 
+            ? 'bg-[#4FB286] text-[#070B12] border-[#4FB286] animate-pulse' 
             : 'bg-[#B85C5C]/15 border-[#B85C5C]/40 text-[#B85C5C]'
         }`}>
-          {status}
+          {isOpen ? 'UNLOCKED // READY' : status}
         </span>
       </div>
 
@@ -68,42 +73,46 @@ export default function Door({
 
         {/* Center Solenoid / Lock Indicator */}
         <div className="relative z-20 flex flex-col items-center space-y-1">
-          <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors ${
+          <div className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-colors shadow-lg ${
             isOpen 
-              ? 'bg-[#4FB286]/20 border-[#4FB286] text-[#4FB286]' 
+              ? 'bg-[#4FB286] border-[#4FB286] text-[#070B12] animate-bounce' 
               : 'bg-[#0C111A] border-[#B85C5C] text-[#B85C5C]'
           }`}>
-            {isOpen ? <Unlock className="w-6 h-6 animate-pulse" /> : <Lock className="w-6 h-6" />}
+            {isOpen ? <Unlock className="w-6 h-6 stroke-[3]" /> : <Lock className="w-6 h-6" />}
           </div>
-          <span className="text-[10px] tracking-widest text-[#8D98A8]">
-            {isOpen ? 'DOOR DISENGAGED' : 'HYDRAULICALLY SEALED'}
+          <span className={`text-[10px] tracking-widest font-bold ${isOpen ? 'text-[#4FB286]' : 'text-[#8D98A8]'}`}>
+            {isOpen ? 'SOLENOIDS DISENGAGED' : 'HYDRAULICALLY SEALED'}
           </span>
         </div>
       </div>
 
       {/* Action Footer */}
-      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pt-2 border-t border-[#263140]/60">
+      <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-[#263140]/60">
         <div className="text-[11px] text-[#8D98A8]">
           {isOpen ? (
-            <span className="text-[#4FB286] flex items-center space-x-1.5 font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>PASSAGE CLEAR // READY FOR CREW INGRESS</span>
+            <span className="text-[#4FB286] flex items-center space-x-1.5 font-bold">
+              <ShieldCheck className="w-4 h-4" />
+              <span>PASSAGE CLEAR // CLICK ANYWHERE ON THIS DOOR TO PROCEED</span>
             </span>
           ) : (
             <span className="text-[#8D98A8] flex items-center space-x-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-[#B85C5C]" />
-              <span>CLEAR ROOM OBJECTIVE TO DISENGAGE SOLENOIDS</span>
+              <ShieldAlert className="w-4 h-4 text-[#B85C5C]" />
+              <span>CLEAR ROOM OBJECTIVE ABOVE TO DISENGAGE DOOR</span>
             </span>
           )}
         </div>
 
         {isOpen && onOpen && (
           <button
-            onClick={handleDoorClick}
-            className="w-full sm:w-auto px-4 py-2 bg-[#C8A96B] hover:bg-[#E5D0A0] text-[#070B12] text-xs font-bold tracking-widest uppercase transition-all shadow-[0_0_15px_rgba(200,169,107,0.3)] flex items-center justify-center space-x-2 cursor-pointer"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDoorClick();
+            }}
+            className="w-full sm:w-auto px-6 py-2.5 bg-[#4FB286] hover:bg-[#3ea075] text-[#070B12] text-xs font-black tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(79,178,134,0.4)] flex items-center justify-center space-x-2 cursor-pointer rounded-sm hover:scale-105"
           >
-            <span>PROCEED TO {nextRoomName || 'NEXT ROOM'}</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>ENTER {nextRoomName || 'NEXT ROOM'}</span>
+            <ArrowRight className="w-4 h-4 stroke-[3]" />
           </button>
         )}
       </div>

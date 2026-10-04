@@ -14,7 +14,7 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
           
           {/* Copyright */}
           <div>
-            © 2025 CEC HEIST. All rights reserved.
+            © 2026 CEC HEIST. All rights reserved.
           </div>
 
           {/* Credit Line: Powered by Appvertex */}
