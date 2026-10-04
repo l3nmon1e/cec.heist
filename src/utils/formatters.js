@@ -18,33 +18,33 @@ export function getDifficultyStyle(diff) {
   switch (diff?.toUpperCase()) {
     case 'EASY':
       return {
-        badge: 'text-[#4ADE80] border-[#22C55E]/40 bg-[#16A34A]/10',
-        text: 'text-[#4ADE80]',
-        dot: 'bg-[#22C55E]'
+        badge: 'text-[#4FB286] border-[#4FB286]/30 bg-[#4FB286]/10',
+        text: 'text-[#4FB286]',
+        dot: 'bg-[#4FB286]'
       };
     case 'MEDIUM':
       return {
-        badge: 'text-[#FACC15] border-[#FACC15]/40 bg-[#FACC15]/10',
-        text: 'text-[#FACC15]',
-        dot: 'bg-[#FACC15]'
+        badge: 'text-[#D6A85F] border-[#D6A85F]/30 bg-[#D6A85F]/10',
+        text: 'text-[#D6A85F]',
+        dot: 'bg-[#D6A85F]'
       };
     case 'HARD':
       return {
-        badge: 'text-[#F87171] border-[#EF4444]/40 bg-[#EF4444]/10',
-        text: 'text-[#F87171]',
-        dot: 'bg-[#EF4444]'
+        badge: 'text-[#B85C5C] border-[#B85C5C]/30 bg-[#B85C5C]/10',
+        text: 'text-[#B85C5C]',
+        dot: 'bg-[#B85C5C]'
       };
     case 'INSANE':
       return {
-        badge: 'text-[#C084FC] border-[#A855F7]/40 bg-[#A855F7]/10',
-        text: 'text-[#C084FC]',
-        dot: 'bg-[#A855F7]'
+        badge: 'text-[#C8A96B] border-[#C8A96B]/40 bg-[#C8A96B]/15',
+        text: 'text-[#C8A96B]',
+        dot: 'bg-[#C8A96B]'
       };
     default:
       return {
-        badge: 'text-[#9CA3AF] border-[#4B5563]/40 bg-[#374151]/10',
-        text: 'text-[#9CA3AF]',
-        dot: 'bg-[#9CA3AF]'
+        badge: 'text-[#8D98A8] border-[#263140] bg-[#121923]',
+        text: 'text-[#8D98A8]',
+        dot: 'bg-[#8D98A8]'
       };
   }
 }
@@ -52,24 +52,30 @@ export function getDifficultyStyle(diff) {
 export function getStatusStyle(status) {
   switch (status?.toUpperCase()) {
     case 'SOLVED':
+    case 'COMPLETED':
       return {
-        badge: 'text-[#4ADE80] border-[#22C55E]/50 bg-[#16A34A]/15',
-        label: 'SOLVED'
+        badge: 'text-[#C8A96B] border-[#C8A96B]/40 bg-[#C8A96B]/10',
+        label: 'COMPLETED',
+        dot: 'bg-[#C8A96B]'
       };
     case 'AVAILABLE':
       return {
-        badge: 'text-[#FACC15] border-[#FACC15]/40 bg-[#FACC15]/10',
-        label: 'AVAILABLE'
+        badge: 'text-[#F4F5F7] border-[#263140] bg-[#121923] hover:border-[#C8A96B]/50',
+        label: 'AVAILABLE',
+        dot: 'bg-[#D6A85F]'
       };
     case 'IN_PROGRESS':
       return {
-        badge: 'text-[#60A5FA] border-[#3B82F6]/40 bg-[#3B82F6]/10',
-        label: 'IN PROGRESS'
+        badge: 'text-[#E5D0A0] border-[#C8A96B]/40 bg-[#121923]',
+        label: 'IN PROGRESS',
+        dot: 'bg-[#C8A96B] animate-pulse'
       };
+    case 'LOCKED':
     default:
       return {
-        badge: 'text-[#737373] border-[#303030] bg-[#151515]',
-        label: 'LOCKED'
+        badge: 'text-[#566375] border-[#1C2633] bg-[#0C111A]',
+        label: 'RESTRICTED',
+        dot: 'bg-[#566375]'
       };
   }
 }
@@ -79,5 +85,3 @@ export function getAssetUrl(path) {
   const cleanPath = path.startsWith('/') ? path.slice(1) : path;
   return `${import.meta.env.BASE_URL}${cleanPath}`;
 }
-
-

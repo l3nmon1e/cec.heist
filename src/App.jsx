@@ -41,10 +41,10 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#E5E7EB] flex flex-col font-sans relative selection:bg-[#FACC15] selection:text-black">
+    <div className="min-h-screen bg-[#070B12] text-[#F4F5F7] flex flex-col font-sans relative selection:bg-[#C8A96B] selection:text-[#070B12]">
       
-      {/* Subtle Background Tactical Grid Pattern */}
-      <div className="fixed inset-0 bg-tactical-grid opacity-25 pointer-events-none z-0" />
+      {/* Subtle Background Blueprint Grid Pattern */}
+      <div className="fixed inset-0 bg-blueprint-grid opacity-35 pointer-events-none z-0" />
 
       {/* Navigation matching reference mockup */}
       <Navbar onOpenLogin={openLogin} onOpenFaq={() => setIsFaqModalOpen(true)} />

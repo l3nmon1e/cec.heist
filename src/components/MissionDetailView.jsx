@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { formatTimer, formatScore, getDifficultyStyle, getStatusStyle } from '../utils/formatters';
+import { formatTimer, formatScore, getDifficultyStyle, getStatusStyle, getAssetUrl } from '../utils/formatters';
 import FlagSubmission from './FlagSubmission';
 import HintPanel from './HintPanel';
 import Terminal from './Terminal';
@@ -13,11 +13,16 @@ import {
   ShieldAlert, 
   CheckSquare, 
   Square, 
-  Download, 
+  FileText, 
   Share2, 
   ExternalLink,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Key,
+  Cpu,
+  Layers,
+  FileCode,
+  Download
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
@@ -62,20 +67,20 @@ export default function MissionDetailView({ mission, onBack }) {
     <div className="space-y-6">
       
       {/* Top Breadcrumb & Quick Mission Switcher */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#303030] pb-3 font-mono text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#263140] pb-3 font-mono text-xs">
         <button
           onClick={onBack}
-          className="flex items-center space-x-2 text-[#737373] hover:text-[#FACC15] transition-colors"
+          className="flex items-center space-x-2 text-[#8D98A8] hover:text-[#C8A96B] transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>RETURN TO MISSION GRID</span>
+          <span>RETURN TO FACILITY MAP</span>
         </button>
 
         <div className="flex items-center space-x-2">
           {prevMission && (
             <button
               onClick={() => navigateMission(prevMission)}
-              className="flex items-center space-x-1 px-2.5 py-1 bg-[#151515] border border-[#303030] hover:border-[#FACC15] text-[#E5E7EB] transition-colors"
+              className="flex items-center space-x-1 px-3 py-1.5 bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] transition-colors cursor-pointer"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
               <span>PREV: M-{prevMission.number}</span>
@@ -84,7 +89,7 @@ export default function MissionDetailView({ mission, onBack }) {
           {nextMission && (
             <button
               onClick={() => navigateMission(nextMission)}
-              className="flex items-center space-x-1 px-2.5 py-1 bg-[#151515] border border-[#303030] hover:border-[#FACC15] text-[#E5E7EB] transition-colors"
+              className="flex items-center space-x-1 px-3 py-1.5 bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] transition-colors cursor-pointer"
             >
               <span>NEXT: M-{nextMission.number}</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -93,222 +98,214 @@ export default function MissionDetailView({ mission, onBack }) {
         </div>
       </div>
 
-      {/* Main Mission Header Banner */}
-      <div className="bg-[#151515] border border-[#303030] p-5 font-mono">
+      {/* Main Mission Header Dossier Banner */}
+      <div className="bg-[#0C111A] border border-[#263140] p-5 sm:p-6 font-mono shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-1 bg-[#C8A96B]" />
+        
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           
-          <div>
-            <div className="flex items-center space-x-3 mb-1.5">
-              <span className="px-2 py-0.5 bg-[#FACC15] text-black text-xs font-bold tracking-wider">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-2 py-0.5 bg-[#121923] border border-[#C8A96B]/40 text-[#C8A96B] text-[10px] font-bold">
                 MISSION {mission.number}
               </span>
-              <span className="text-xs text-[#737373] tracking-widest uppercase">
-                {mission.category}
+              <span className={`px-2 py-0.5 text-[10px] font-medium border ${diffStyle.badge}`}>
+                SECURITY LEVEL: {mission.difficulty}
               </span>
-              <span className={`text-[10px] px-2 py-0.5 border ${diffStyle.badge}`}>
-                {mission.difficulty}
+              <span className="px-2 py-0.5 bg-[#121923] border border-[#263140] text-[#8D98A8] text-[10px]">
+                SECTOR: {mission.category}
               </span>
-              <span className={`text-[10px] px-2 py-0.5 border ${statusStyle.badge}`}>
+              <span className={`px-2 py-0.5 text-[10px] font-bold border ${statusStyle.badge}`}>
                 {statusStyle.label}
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-[#E5E7EB] uppercase">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-[#F4F5F7] uppercase">
               {mission.title}
             </h1>
+
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#8D98A8]">
+              <span className="flex items-center space-x-1.5">
+                <Target className="w-3.5 h-3.5 text-[#C8A96B]" />
+                <span>TARGET: <strong className="text-[#F4F5F7]">{mission.target || 'LOCAL NODE'}</strong></span>
+              </span>
+              <span>•</span>
+              <span className="flex items-center space-x-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#8D98A8]" />
+                <span>EST: {mission.timeEstimate || '30 MIN'}</span>
+              </span>
+            </div>
           </div>
 
-          {/* Quick Metrics Bar */}
-          <div className="flex flex-wrap items-center gap-4 bg-[#0A0A0A] p-3 border border-[#262626]">
+          {/* Reward & Solves Card */}
+          <div className="flex items-center gap-4 bg-[#070B12] p-4 border border-[#263140] shrink-0 self-start lg:self-auto">
             <div>
-              <div className="text-[10px] text-[#737373]">BASE VALUE</div>
-              <div className="text-sm font-bold text-[#FACC15]">
-                {formatScore(currentPotentialPoints)} PTS
-                {penalty > 0 && <span className="text-[10px] text-[#F87171] ml-1">(-{penalty})</span>}
-              </div>
+              <span className="text-[10px] text-[#566375] block uppercase">BOUNTY REWARD</span>
+              <span className="text-xl font-bold text-[#C8A96B]">
+                +{formatScore(currentPotentialPoints)} PTS
+              </span>
+              {penalty > 0 && (
+                <span className="text-[10px] text-[#B85C5C] block">
+                  (-{penalty} pts hint deductions)
+                </span>
+              )}
             </div>
 
-            <div className="border-l border-[#262626] pl-4">
-              <div className="text-[10px] text-[#737373]">SOLVES</div>
-              <div className="text-sm font-bold text-[#E5E7EB]">{mission.solvedCount} TEAMS</div>
-            </div>
-
-            <div className="border-l border-[#262626] pl-4">
-              <div className="text-[10px] text-[#737373]">EST. DURATION</div>
-              <div className="text-sm font-bold text-[#E5E7EB]">{mission.timeEstimate}</div>
-            </div>
-
-            <div className="border-l border-[#262626] pl-4">
-              <div className="text-[10px] text-[#737373]">SYS TIMER</div>
-              <div className="text-sm font-bold text-[#FACC15] flex items-center space-x-1">
-                <Clock className="w-3.5 h-3.5 text-[#FACC15]" />
-                <span>{formatTimer(secondsRemaining)}</span>
-              </div>
+            <div className="border-l border-[#263140] pl-4">
+              <span className="text-[10px] text-[#566375] block uppercase">CREW SOLVES</span>
+              <span className="text-xl font-bold text-[#F4F5F7]">
+                {mission.solvedCount || 0}
+              </span>
             </div>
           </div>
 
         </div>
       </div>
 
-      {/* Target Coordinates Banner */}
-      <div className="bg-[#101010] border border-[#303030] p-4 flex flex-wrap items-center justify-between gap-3 font-mono">
-        <div className="flex items-center space-x-3">
-          <Target className="w-5 h-5 text-[#FACC15]" />
-          <div>
-            <span className="text-[10px] text-[#737373] block">TARGET VECTOR SPECIFICATION</span>
-            <span className="text-sm font-bold text-[#E5E7EB] tracking-wider select-all">
-              {mission.target}
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          {mission.terminalAvailable && (
-            <button
-              onClick={() => {
-                sound.playClick();
-                setShowTerminal(!showTerminal);
-              }}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 text-xs font-mono border transition-colors ${
-                showTerminal 
-                  ? 'bg-[#FACC15] text-black border-[#FACC15] font-bold' 
-                  : 'bg-[#151515] text-[#E5E7EB] border-[#303030] hover:border-[#FACC15]'
-              }`}
-            >
-              <TerminalIcon className="w-3.5 h-3.5" />
-              <span>{showTerminal ? 'HIDE CONSOLE' : 'ENGAGE CONSOLE'}</span>
-            </button>
-          )}
-
-          <div className="px-3 py-1.5 bg-[#151515] border border-[#303030] text-[11px] text-[#737373]">
-            VPN: 10.24.16.0/24
-          </div>
-        </div>
-      </div>
-
-      {/* Embedded Terminal when enabled */}
-      {showTerminal && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-xs font-mono text-[#737373]">
-            <span className="text-[#FACC15] font-semibold">// LIVE INTERACTION CONTAINER CONSOLE</span>
-            <span>DIAGNOSTIC SHELL READY</span>
-          </div>
-          <Terminal mission={mission} onClose={() => setShowTerminal(false)} />
-        </div>
-      )}
-
-      {/* Two Column Layout: Brief + Objectives vs Flag + Hints */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Two Column Layout: Brief + Intel on Left, Flag + Hints + Terminal on Right */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left Column: Brief & Objectives (7 cols) */}
+        {/* Left Column: Briefing, Objectives, Intel Files (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
           
-          {/* Mission Brief */}
-          <div className="bg-[#151515] border border-[#303030] p-5">
-            <h3 className="font-mono text-xs font-bold tracking-widest text-[#FACC15] uppercase mb-3 flex items-center space-x-2">
-              <span className="w-1.5 h-1.5 bg-[#FACC15]"></span>
-              <span>MISSION BRIEF & TACTICAL OVERVIEW</span>
-            </h3>
-            
-            <p className="font-sans text-sm text-[#D1D5DB] leading-relaxed whitespace-pre-line mb-4">
+          {/* Mission Briefing Dossier */}
+          <div className="bg-[#0C111A] border border-[#263140] p-5 sm:p-6 space-y-4">
+            <div className="flex items-center space-x-2 font-mono text-xs text-[#C8A96B] font-bold border-b border-[#263140] pb-2.5 uppercase">
+              <FileText className="w-4 h-4" />
+              <span>CLASSIFIED MISSION BRIEF</span>
+            </div>
+
+            <p className="text-sm text-[#F4F5F7] leading-relaxed font-sans">
               {mission.brief}
             </p>
 
-            {/* Required Skills tags */}
-            <div className="pt-3 border-t border-[#262626]">
-              <span className="text-[10px] font-mono text-[#737373] block mb-2">
-                REQUIRED TACTICAL PREREQUISITES:
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                {mission.requiredSkills?.map((skill, i) => (
-                  <span
-                    key={i}
-                    className="text-xs font-mono px-2 py-0.5 bg-[#0A0A0A] border border-[#303030] text-[#E5E7EB]"
-                  >
-                    {skill}
-                  </span>
-                ))}
+            {/* Target Directives / Objectives */}
+            {mission.objectives && mission.objectives.length > 0 && (
+              <div className="pt-3 border-t border-[#1C2633] space-y-2.5 font-mono">
+                <span className="text-xs font-bold text-[#8D98A8] block">
+                  OPERATIONAL OBJECTIVES:
+                </span>
+                <div className="space-y-2">
+                  {mission.objectives.map((obj, idx) => {
+                    const isChecked = completedObjectives.includes(idx);
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => toggleObjective(idx)}
+                        className="flex items-start space-x-2.5 text-xs text-[#8D98A8] hover:text-[#F4F5F7] cursor-pointer transition-colors"
+                      >
+                        {isChecked ? (
+                          <CheckSquare className="w-4 h-4 text-[#C8A96B] shrink-0 mt-0.5" />
+                        ) : (
+                          <Square className="w-4 h-4 text-[#566375] shrink-0 mt-0.5" />
+                        )}
+                        <span className={isChecked ? 'line-through text-[#566375]' : ''}>
+                          {obj}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
+
+            {/* Required Tradecraft & Skills */}
+            {mission.requiredSkills && (
+              <div className="pt-3 border-t border-[#1C2633] font-mono">
+                <span className="text-[10px] text-[#566375] block uppercase mb-1.5">
+                  REQUISITE TRADECRAFT:
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {mission.requiredSkills.map((sk, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-0.5 bg-[#121923] border border-[#263140] text-[11px] text-[#8D98A8]"
+                    >
+                      {sk}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Operational Objectives Checklist */}
-          <div className="bg-[#151515] border border-[#303030] p-5">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-mono text-xs font-bold tracking-widest text-[#FACC15] uppercase flex items-center space-x-2">
-                <span className="w-1.5 h-1.5 bg-[#FACC15]"></span>
-                <span>OPERATIONAL OBJECTIVES</span>
-              </h3>
-              <span className="text-[11px] font-mono text-[#737373]">
-                {completedObjectives.length} / {mission.objectives.length} ACCOMPLISHED
-              </span>
-            </div>
+          {/* Intelligence Files & Recon Evidence */}
+          {mission.terminalFiles && mission.terminalFiles.length > 0 && (
+            <div className="bg-[#0C111A] border border-[#263140] p-5 sm:p-6 space-y-3 font-mono">
+              <div className="flex items-center justify-between border-b border-[#263140] pb-2.5">
+                <div className="flex items-center space-x-2 text-xs font-bold text-[#F4F5F7]">
+                  <FileCode className="w-4 h-4 text-[#C8A96B]" />
+                  <span>TARGET INTELLIGENCE ASSETS</span>
+                </div>
+                <span className="text-[10px] text-[#8D98A8]">
+                  {mission.terminalFiles.length} FILES STAGED
+                </span>
+              </div>
 
-            <div className="space-y-2 font-mono text-xs">
-              {mission.objectives.map((obj, idx) => {
-                const isChecked = completedObjectives.includes(idx);
-                return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {mission.terminalFiles.map((file, idx) => (
                   <div
                     key={idx}
-                    onClick={() => toggleObjective(idx)}
-                    className={`flex items-start space-x-3 p-3 border transition-colors cursor-pointer select-none ${
-                      isChecked
-                        ? 'bg-[#16A34A]/10 border-[#22C55E]/40 text-[#E5E7EB]'
-                        : 'bg-[#101010] border-[#262626] text-[#9CA3AF] hover:border-[#3E3E3E]'
-                    }`}
+                    className="p-3 bg-[#121923] border border-[#263140] flex items-center justify-between hover:border-[#C8A96B]/50 transition-colors"
                   >
-                    <button className="mt-0.5 shrink-0 text-[#FACC15]">
-                      {isChecked ? (
-                        <CheckSquare className="w-4 h-4 text-[#22C55E]" />
-                      ) : (
-                        <Square className="w-4 h-4 text-[#525252]" />
-                      )}
-                    </button>
-                    <div className="flex-1">
-                      <span className="text-[11px] text-[#737373] mr-2">STEP 0{idx + 1}.</span>
-                      <span className={isChecked ? 'line-through text-[#737373]' : ''}>{obj}</span>
+                    <div className="flex items-center space-x-2 overflow-hidden">
+                      <FileText className="w-3.5 h-3.5 text-[#C8A96B] shrink-0" />
+                      <span className="text-xs text-[#F4F5F7] truncate font-mono">
+                        {file.name}
+                      </span>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-        </div>
-
-        {/* Right Column: Flag Submission & Hint Panel (5 cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          
-          {/* Flag Submission */}
-          <FlagSubmission mission={mission} />
-
-          {/* Progressive Hints */}
-          <HintPanel mission={mission} />
-
-          {/* Target Artifacts / Staging notes */}
-          {mission.terminalFiles && mission.terminalFiles.length > 0 && (
-            <div className="bg-[#151515] border border-[#303030] p-4 font-mono text-xs">
-              <h4 className="text-[11px] font-bold text-[#737373] uppercase tracking-wider mb-2">
-                ATTACHED MISSION ARTIFACTS
-              </h4>
-              <div className="space-y-1.5">
-                {mission.terminalFiles.map((f, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 bg-[#0A0A0A] border border-[#262626]">
-                    <span className="text-[#E5E7EB]">{f.name}</span>
-                    <button
-                      onClick={() => {
-                        setShowTerminal(true);
-                        sound.playClick();
-                      }}
-                      className="text-[#FACC15] hover:underline text-[10px]"
-                    >
-                      VIEW IN CONSOLE →
-                    </button>
+                    <span className="text-[10px] text-[#8D98A8] shrink-0">
+                      IN SHELL
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
           )}
+
+          {/* Integrated Interactive Tactical Shell */}
+          <div className="bg-[#0C111A] border border-[#263140] overflow-hidden">
+            <div className="bg-[#121923] border-b border-[#263140] px-4 py-2.5 flex items-center justify-between font-mono text-xs">
+              <div className="flex items-center space-x-2 text-[#C8A96B]">
+                <TerminalIcon className="w-4 h-4" />
+                <span className="font-bold">INTEGRATED TACTICAL TERMINAL // LIVE VPN TUNNEL</span>
+              </div>
+              <button
+                onClick={() => setShowTerminal(!showTerminal)}
+                className="text-[11px] text-[#8D98A8] hover:text-[#F4F5F7] transition-colors cursor-pointer"
+              >
+                {showTerminal ? '[ COLLAPSE SHELL ]' : '[ EXPAND SHELL ]'}
+              </button>
+            </div>
+
+            {showTerminal && (
+              <div className="p-3 sm:p-4 bg-[#070B12]">
+                <Terminal mission={mission} isModal={false} />
+              </div>
+            )}
+          </div>
+
+        </div>
+
+        {/* Right Column: Flag Oracle & Declassified Intel (5 cols) */}
+        <div className="lg:col-span-5 space-y-6">
+          
+          {/* Flag Verification Oracle */}
+          <FlagSubmission mission={mission} />
+
+          {/* Intel Requisition (Hints) */}
+          <HintPanel mission={mission} />
+
+          {/* Security Protocols Notice */}
+          <div className="p-4 bg-[#121923] border border-[#263140] font-mono text-xs space-y-2">
+            <div className="flex items-center space-x-1.5 text-[#C8A96B] font-bold">
+              <ShieldAlert className="w-4 h-4" />
+              <span>RULES OF ENGAGEMENT // HEIST PROTOCOL</span>
+            </div>
+            <p className="text-[11px] text-[#8D98A8] leading-relaxed font-sans">
+              Attacks against out-of-scope infrastructure or fellow crews are prohibited. Flag tokens follow standard format <code className="text-[#C8A96B]">CEC&#123;...&#125;</code> and unlock progress towards Digital Vault clearance.
+            </p>
+          </div>
 
         </div>
 

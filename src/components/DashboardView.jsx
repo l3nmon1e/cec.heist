@@ -18,7 +18,11 @@ import {
   Globe,
   FileSearch,
   Binary,
-  Layers
+  Layers,
+  Users,
+  Key,
+  Shield,
+  Eye
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
@@ -27,13 +31,13 @@ export default function DashboardView() {
     currentPlayer, 
     secondsRemaining, 
     missions, 
-    openMissionDetail, 
+    setSelectedMissionId, 
     activities, 
     setActiveTab, 
     setIsTerminalModalOpen 
   } = useGame();
 
-  // Find the featured current mission (Mission 08: The Locked Terminal, or next available)
+  // Find the current priority objective mission (e.g. Mission 08 or next available)
   const currentMission = missions.find(m => m.id === 'mission-08') || missions.find(m => m.status === 'AVAILABLE') || missions[0];
   const diffStyle = getDifficultyStyle(currentMission.difficulty);
   const statusStyle = getStatusStyle(currentMission.status);
@@ -41,365 +45,251 @@ export default function DashboardView() {
   // Solved breakdown
   const solvedCount = missions.filter(m => m.status === 'SOLVED').length;
   const totalMissions = missions.length;
+  const progressPercent = Math.round((solvedCount / totalMissions) * 100);
 
-  const handleEnterMission = () => {
+  const handleEnterMission = (mId) => {
     sound.playClick();
-    openMissionDetail(currentMission.id);
+    setSelectedMissionId(mId || currentMission.id);
+    setActiveTab('missions');
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7 font-sans pb-16">
       
-      {/* 1. TOP AREA: MISSION CONTROL COMPACT DATA BLOCKS */}
-      <div className="bg-[#151515] border border-[#303030] p-4 sm:p-5 font-mono">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#2A2A2A] gap-2">
+      {/* 1. TOP CREW STATUS & HEIST PROGRESSION BANNER */}
+      <div className="bg-[#0C111A] border border-[#263140] p-5 sm:p-7 shadow-2xl relative overflow-hidden font-mono">
+        <div className="absolute top-0 left-0 w-24 h-1 bg-[#C8A96B]" />
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[#1C2633]">
           <div>
-            <div className="flex items-center space-x-2 text-[#FACC15] text-xs font-bold tracking-widest">
-              <span className="w-2 h-2 bg-[#FACC15] animate-pulse"></span>
-              <span>MISSION CONTROL // OPERATION CEC HEIST</span>
+            <div className="flex items-center space-x-2 text-[#C8A96B] text-xs font-bold tracking-widest mb-1.5 uppercase">
+              <span className="w-2 h-2 rounded-full bg-[#C8A96B] animate-pulse" />
+              <span>HEIST CREW COMMAND // OPERATION CEC HEIST</span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-[#E5E7EB] uppercase">
-              THE SYSTEM IS LIVE. SELECT YOUR NEXT TARGET.
+            <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-[#F4F5F7] uppercase">
+              CREW: {currentPlayer.callsign || 'SPECTRE-9'} // STATUS: INFILTRATION ACTIVE
             </h1>
+            <p className="text-xs text-[#8D98A8] font-sans mt-0.5">
+              Target Infrastructure: Canara Engineering College Cyber Labs • Digital Vault Sector Delta
+            </p>
           </div>
 
-          <div className="flex items-center space-x-2 text-xs">
-            <span className="px-2.5 py-1 bg-[#16A34A]/10 text-[#4ADE80] border border-[#22C55E]/40 font-bold flex items-center space-x-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-ping" />
-              <span>EVENT STATUS: ONLINE</span>
+          <div className="flex items-center space-x-3 text-xs">
+            <span className="px-3 py-1.5 bg-[#4FB286]/10 text-[#4FB286] border border-[#4FB286]/30 font-bold flex items-center space-x-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4FB286] animate-ping" />
+              <span>HEIST STATUS: LIVE</span>
             </span>
           </div>
         </div>
 
-        {/* 5 Compact Data Blocks */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-4">
+        {/* 4 Core Crew Telemetry Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
           
-          {/* Block 1: Event Status */}
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <div className="text-[10px] text-[#737373] tracking-widest uppercase mb-1">
-              NETWORK LINK
+          {/* Card 1: Heist Progress Bar */}
+          <div className="bg-[#121923] p-4 border border-[#263140] space-y-2">
+            <div className="flex justify-between items-center text-[10px] text-[#8D98A8] uppercase tracking-wider">
+              <span>HEIST PROGRESS</span>
+              <span className="text-[#C8A96B] font-bold text-xs">{progressPercent}%</span>
             </div>
-            <div className="flex items-center space-x-1.5">
-              <Wifi className="w-4 h-4 text-[#22C55E]" />
-              <span className="text-sm font-bold text-[#E5E7EB]">ONLINE</span>
+            <div className="h-2 w-full bg-[#070B12] border border-[#263140] overflow-hidden">
+              <div 
+                className="h-full bg-[#C8A96B] transition-all duration-700" 
+                style={{ width: `${progressPercent}%` }} 
+              />
             </div>
-            <div className="text-[10px] text-[#737373] mt-1">SUBNET: 10.24.0.0/16</div>
+            <div className="text-[10px] text-[#566375]">
+              {solvedCount} OF {totalMissions} OBJECTIVES CLEARED
+            </div>
           </div>
 
-          {/* Block 2: Remaining Time */}
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <div className="text-[10px] text-[#737373] tracking-widest uppercase mb-1">
-              REMAINING TIME
-            </div>
-            <div className="flex items-center space-x-1.5 text-[#FACC15]">
-              <Clock className="w-4 h-4 text-[#FACC15]" />
-              <span className="text-sm sm:text-base font-bold tracking-wider">
-                {formatTimer(secondsRemaining)}
-              </span>
-            </div>
-            <div className="text-[10px] text-[#737373] mt-1">WINDOW: 04:00:00</div>
-          </div>
-
-          {/* Block 3: Current Rank */}
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <div className="text-[10px] text-[#737373] tracking-widest uppercase mb-1">
+          {/* Card 2: Crew Rank */}
+          <div className="bg-[#121923] p-4 border border-[#263140] space-y-1">
+            <div className="text-[10px] text-[#8D98A8] uppercase tracking-wider">
               CURRENT RANK
             </div>
-            <div className="flex items-center space-x-1.5">
-              <Trophy className="w-4 h-4 text-[#FACC15]" />
-              <span className="text-sm sm:text-base font-bold text-[#FACC15]">
-                #{currentPlayer.rank}
-              </span>
+            <div className="text-xl sm:text-2xl font-bold text-[#F4F5F7] flex items-center space-x-2">
+              <Trophy className="w-5 h-5 text-[#C8A96B]" />
+              <span>#{currentPlayer.rank < 10 ? `0${currentPlayer.rank}` : currentPlayer.rank}</span>
             </div>
-            <div className="text-[10px] text-[#737373] mt-1">OF 84 OPERATORS</div>
+            <div className="text-[10px] text-[#4FB286]">▲ TOP 5% OF HEIST CREWS</div>
           </div>
 
-          {/* Block 4: Score */}
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A]">
-            <div className="text-[10px] text-[#737373] tracking-widest uppercase mb-1">
-              TOTAL SCORE
+          {/* Card 3: Total Bounties */}
+          <div className="bg-[#121923] p-4 border border-[#263140] space-y-1">
+            <div className="text-[10px] text-[#8D98A8] uppercase tracking-wider">
+              TOTAL BOUNTY SCORE
             </div>
-            <div className="flex items-center space-x-1.5">
-              <span className="text-sm sm:text-base font-bold text-[#E5E7EB]">
-                {formatScore(currentPlayer.score)}
-              </span>
-              <span className="text-[10px] text-[#FACC15] font-semibold">PTS</span>
+            <div className="text-xl sm:text-2xl font-bold text-[#C8A96B]">
+              {formatScore(currentPlayer.score)} PTS
             </div>
-            <div className="text-[10px] text-[#737373] mt-1">ACCURACY: {currentPlayer.accuracy}</div>
+            <div className="text-[10px] text-[#8D98A8]">ACCURACY: {currentPlayer.accuracy}</div>
           </div>
 
-          {/* Block 5: Missions Solved */}
-          <div className="bg-[#0A0A0A] p-3 border border-[#2A2A2A] col-span-2 sm:col-span-1">
-            <div className="text-[10px] text-[#737373] tracking-widest uppercase mb-1">
-              MISSIONS SOLVED
+          {/* Card 4: Operation Window */}
+          <div className="bg-[#121923] p-4 border border-[#263140] space-y-1">
+            <div className="text-[10px] text-[#8D98A8] uppercase tracking-wider">
+              TIME REMAINING
             </div>
-            <div className="flex items-center space-x-1.5">
-              <ShieldCheck className="w-4 h-4 text-[#22C55E]" />
-              <span className="text-sm sm:text-base font-bold text-[#E5E7EB]">
-                {solvedCount} / {totalMissions}
-              </span>
+            <div className="text-xl sm:text-2xl font-bold text-[#F4F5F7] tracking-wider flex items-center space-x-2">
+              <Clock className="w-5 h-5 text-[#D6A85F]" />
+              <span>{formatTimer(secondsRemaining)}</span>
             </div>
-            <div className="text-[10px] text-[#737373] mt-1">
-              {Math.round((solvedCount / totalMissions) * 100)}% PENETRATION
-            </div>
+            <div className="text-[10px] text-[#566375]">EXFILTRATION CUTOFF: 04:00:00</div>
           </div>
 
         </div>
       </div>
 
-      {/* 2. MAIN DASHBOARD: LARGE FEATURED CURRENT MISSION WITH REALISTIC FACILITY BACKDROP */}
-      <div className="relative bg-[#151515] border border-[#303030] overflow-hidden">
+      {/* 2. PRIMARY DIRECTIVE: CURRENT MISSION FEATURE */}
+      <div className="relative bg-[#0C111A] border border-[#263140] overflow-hidden shadow-2xl">
         {/* Subtle realistic facility photograph background overlay */}
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-15 mix-blend-luminosity pointer-events-none"
-          style={{ backgroundImage: `url('${getAssetUrl('/images/facility.jpg')}')` }}
+          className="absolute inset-0 bg-cover bg-center opacity-20 mix-blend-luminosity pointer-events-none"
+          style={{ backgroundImage: `url('${getAssetUrl('/assets/heist/facility/secure_corridor.jpg')}')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#151515] via-[#151515]/90 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0C111A] via-[#0C111A]/90 to-transparent pointer-events-none" />
 
         <div className="relative p-6 sm:p-8 font-mono">
-          <div className="flex items-center space-x-2 text-xs text-[#FACC15] font-bold tracking-widest uppercase mb-2">
-            <Target className="w-4 h-4 text-[#FACC15]" />
-            <span>PRIMARY DIRECTIVE // CURRENT MISSION</span>
+          <div className="flex items-center space-x-2 text-xs text-[#C8A96B] font-bold tracking-widest uppercase mb-2">
+            <Target className="w-4 h-4 text-[#C8A96B]" />
+            <span>PRIMARY DIRECTIVE // CURRENT OPERATIONAL TARGET</span>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
             
-            {/* Left 8 cols: Mission details */}
-            <div className="lg:col-span-8 space-y-4">
-              <div>
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="text-xs px-2 py-0.5 bg-[#0A0A0A] border border-[#303030] text-[#737373]">
-                    TARGET IDENTIFIER: M-{currentMission.number}
-                  </span>
-                  <span className="text-xs px-2 py-0.5 bg-[#0A0A0A] border border-[#303030] text-[#E5E7EB]">
-                    CATEGORY: {currentMission.category}
-                  </span>
-                  <span className={`text-[10px] px-2 py-0.5 border ${diffStyle.badge}`}>
-                    DIFFICULTY: {currentMission.difficulty}
-                  </span>
-                  <span className={`text-[10px] px-2 py-0.5 border ${statusStyle.badge}`}>
-                    {statusStyle.label}
-                  </span>
-                </div>
-
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-[#E5E7EB] tracking-wide uppercase">
-                  {currentMission.title}
-                </h2>
+            <div className="lg:col-span-8 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-2 py-0.5 bg-[#121923] border border-[#C8A96B]/40 text-[#C8A96B] text-[10px] font-bold">
+                  MISSION {currentMission.number}
+                </span>
+                <span className="px-2 py-0.5 bg-[#121923] border border-[#263140] text-[#8D98A8] text-[10px]">
+                  SECTOR: {currentMission.category}
+                </span>
+                <span className={`px-2 py-0.5 text-[10px] font-medium border ${diffStyle.badge}`}>
+                  LEVEL: {currentMission.difficulty}
+                </span>
               </div>
 
-              <p className="font-sans text-sm text-[#9CA3AF] max-w-2xl leading-relaxed">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-wide text-[#F4F5F7] uppercase">
+                {currentMission.title}
+              </h2>
+
+              <p className="text-xs sm:text-sm text-[#8D98A8] font-sans leading-relaxed max-w-2xl">
                 {currentMission.brief}
               </p>
 
-              {/* Skills tags */}
-              <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="text-[11px] text-[#737373]">REQUIRED CAPABILITIES:</span>
-                {currentMission.requiredSkills?.map((skill, idx) => (
-                  <span
-                    key={idx}
-                    className="text-xs px-2 py-0.5 bg-[#0A0A0A] border border-[#2E2E2E] text-[#D1D5DB]"
-                  >
-                    {skill}
-                  </span>
-                ))}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-1 text-xs text-[#8D98A8]">
+                <span>TARGET: <strong className="text-[#F4F5F7]">{currentMission.target || '10.24.16.42:2222'}</strong></span>
+                <span>•</span>
+                <span>ESTIMATE: {currentMission.timeEstimate}</span>
+                <span>•</span>
+                <span className="text-[#C8A96B] font-bold">REWARD: +{formatScore(currentMission.points)} PTS</span>
               </div>
             </div>
 
-            {/* Right 4 cols: Big Action & Metrics Card */}
-            <div className="lg:col-span-4 bg-[#0A0A0A]/90 border border-[#303030] p-5 space-y-4">
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div>
-                  <span className="text-[10px] text-[#737373] block">TARGET VALUE</span>
-                  <span className="text-xl font-bold text-[#FACC15]">{currentMission.points} PTS</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#737373] block">TIME ESTIMATE</span>
-                  <span className="text-base font-bold text-[#E5E7EB]">{currentMission.timeEstimate}</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#737373] block">SOLVES VERIFIED</span>
-                  <span className="text-base font-bold text-[#E5E7EB]">{currentMission.solvedCount} TEAMS</span>
-                </div>
-                <div>
-                  <span className="text-[10px] text-[#737373] block">ACCESS VECTOR</span>
-                  <span className="text-xs font-bold text-[#22C55E]">PORT 2222 READY</span>
-                </div>
-              </div>
-
+            <div className="lg:col-span-4 flex flex-col gap-3">
               <button
-                onClick={handleEnterMission}
-                className="w-full py-3 px-4 bg-[#FACC15] hover:bg-[#EAB308] text-[#0A0A0A] font-bold text-xs tracking-wider flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-lg"
+                onClick={() => handleEnterMission(currentMission.id)}
+                className="w-full flex items-center justify-center space-x-2 px-6 py-3.5 bg-[#C8A96B] hover:bg-[#D6A85F] text-[#070B12] font-bold text-xs tracking-widest transition-all cursor-pointer shadow-lg"
               >
-                <span>ENTER MISSION →</span>
+                <span>BEGIN INFILTRATION</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
 
-              <div className="text-center">
-                <span className="text-[10px] text-[#737373]">
-                  TARGET HOST: {currentMission.target}
-                </span>
-              </div>
+              <button
+                onClick={() => setActiveTab('missions')}
+                className="w-full flex items-center justify-center space-x-2 px-6 py-2.5 bg-[#121923] hover:bg-[#16202D] border border-[#263140] text-[#F4F5F7] text-xs transition-colors cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5 text-[#C8A96B]" />
+                <span>OPEN FACILITY BLUEPRINT MAP</span>
+              </button>
             </div>
 
           </div>
         </div>
       </div>
 
-      {/* 3. TACTICAL SECTOR RADAR & QUICK ATTACK VECTORS */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* 3. SURVEILLANCE & LIVE TELEMETRY FEED (Two Columns) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
-        {/* Left 2 Cols: Attack Vectors Grid */}
-        <div className="lg:col-span-2 bg-[#151515] border border-[#303030] p-5 font-mono">
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#2A2A2A]">
-            <div className="flex items-center space-x-2 text-xs">
-              <Layers className="w-4 h-4 text-[#FACC15]" />
-              <h3 className="font-bold text-[#E5E7EB] uppercase tracking-wider">
-                COMPETITION VECTORS & DISCIPLINE COVERAGE
+        {/* Left: CCTV Surveillance Wall Preview (7 cols) */}
+        <div className="lg:col-span-7 bg-[#0C111A] border border-[#263140] p-5 sm:p-6 space-y-4 font-mono">
+          <div className="flex items-center justify-between pb-3 border-b border-[#263140]">
+            <div className="flex items-center space-x-2">
+              <Eye className="w-4 h-4 text-[#C8A96B]" />
+              <h3 className="text-xs font-bold text-[#F4F5F7] tracking-wider uppercase">
+                SURVEILLANCE INTERCEPT FEED // CCTV MONITORING WALL
               </h3>
             </div>
-            <button
-              onClick={() => {
-                sound.playClick();
-                setActiveTab('missions');
-              }}
-              className="text-xs text-[#FACC15] hover:underline flex items-center space-x-1"
-            >
-              <span>VIEW ALL MISSIONS</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-            {[
-              { cat: 'WEB', name: 'Web Exploitation', count: 4, icon: Globe },
-              { cat: 'CRYPTO', name: 'Cryptography', count: 3, icon: Lock },
-              { cat: 'FORENSICS', name: 'Digital Forensics', count: 3, icon: FileSearch },
-              { cat: 'REVERSE ENGINEERING', name: 'Reverse Engineering', count: 3, icon: Binary },
-              { cat: 'OSINT', name: 'Open Source Intel', count: 3, icon: Target },
-              { cat: 'NETWORK', name: 'Network Analysis', count: 3, icon: Cpu }
-            ].map(item => {
-              const Icon = item.icon;
-              const catMissions = missions.filter(m => m.category === item.cat);
-              const catSolved = catMissions.filter(m => m.status === 'SOLVED').length;
-              const percent = Math.round((catSolved / catMissions.length) * 100);
-
-              return (
-                <div
-                  key={item.cat}
-                  onClick={() => {
-                    sound.playClick();
-                    setActiveTab('missions');
-                  }}
-                  className="bg-[#0A0A0A] border border-[#2E2E2E] hover:border-[#FACC15] p-3.5 cursor-pointer transition-all group"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <Icon className="w-4 h-4 text-[#737373] group-hover:text-[#FACC15] transition-colors" />
-                    <span className="text-[11px] font-bold text-[#FACC15]">
-                      {catSolved}/{catMissions.length}
-                    </span>
-                  </div>
-
-                  <div className="text-xs font-bold text-[#E5E7EB] mb-2 truncate">
-                    {item.name}
-                  </div>
-
-                  {/* Micro progress bar */}
-                  <div className="h-1.5 w-full bg-[#1F1F1F] border border-[#303030] overflow-hidden">
-                    <div
-                      className="h-full bg-[#FACC15] transition-all"
-                      style={{ width: `${percent}%` }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Right 1 Col: Live Competition Telemetry Activity Feed */}
-        <div className="bg-[#151515] border border-[#303030] p-5 font-mono">
-          <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#2A2A2A]">
-            <div className="flex items-center space-x-2 text-xs">
-              <Activity className="w-4 h-4 text-[#FACC15]" />
-              <h3 className="font-bold text-[#E5E7EB] uppercase tracking-wider">
-                LIVE TELEMETRY
-              </h3>
-            </div>
-            <span className="text-[10px] text-[#22C55E] flex items-center space-x-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-ping" />
-              <span>FEED LIVE</span>
+            <span className="text-[10px] text-[#4FB286] flex items-center space-x-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4FB286] animate-ping" />
+              <span>TAP ACTIVE</span>
             </span>
           </div>
 
-          <div className="space-y-2.5 max-h-[310px] overflow-y-auto pr-1">
+          <div className="relative aspect-video bg-[#070B12] border border-[#263140] overflow-hidden group">
+            <img 
+              src={getAssetUrl('/assets/heist/surveillance/cctv_wall.jpg')} 
+              alt="CCTV Surveillance Wall" 
+              className="w-full h-full object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500"
+            />
+            <div className="absolute inset-0 bg-[#070B12]/20 pointer-events-none" />
+            <div className="absolute top-2 left-2 px-2 py-0.5 bg-[#070B12]/90 border border-[#263140] text-[10px] text-[#C8A96B]">
+              CAM-FEED: SECTOR-04 CORRIDORS & AIRLOCK GATES
+            </div>
+          </div>
+
+          <p className="text-xs text-[#8D98A8] font-sans leading-relaxed">
+            Real-time optical tap into the facility security operations center. Monitor movement across the outer perimeter, subterranean data corridors, and the central digital vault perimeter.
+          </p>
+        </div>
+
+        {/* Right: Real-time Telemetry Solves Feed (5 cols) */}
+        <div className="lg:col-span-5 bg-[#0C111A] border border-[#263140] p-5 sm:p-6 space-y-4 font-mono">
+          <div className="flex items-center justify-between pb-3 border-b border-[#263140]">
+            <div className="flex items-center space-x-2">
+              <Radio className="w-4 h-4 text-[#C8A96B]" />
+              <h3 className="text-xs font-bold text-[#F4F5F7] tracking-wider uppercase">
+                LIVE HEIST TELEMETRY FEED
+              </h3>
+            </div>
+            <span className="text-[10px] text-[#8D98A8]">ALL CREWS</span>
+          </div>
+
+          <div className="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
             {activities.map((act) => (
               <div 
-                key={act.id}
-                className="bg-[#0A0A0A] border border-[#262626] p-2.5 text-xs transition-colors hover:border-[#383838]"
+                key={act.id} 
+                className="p-2.5 bg-[#121923] border border-[#1C2633] flex items-center justify-between text-xs"
               >
-                <div className="flex items-center justify-between text-[10px] mb-1">
-                  <span className="text-[#737373]">{act.timestamp}</span>
-                  <span className={`font-semibold ${
-                    act.event === 'FIRST_BLOOD' ? 'text-[#F87171]' :
-                    act.event === 'FLAG_CAPTURED' ? 'text-[#4ADE80]' : 'text-[#FACC15]'
-                  }`}>
-                    {act.event}
-                  </span>
+                <div className="space-y-0.5 overflow-hidden pr-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-bold text-[#F4F5F7] text-[11px] truncate">{act.team}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 border ${
+                      act.event === 'FLAG_SOLVED' 
+                        ? 'text-[#4FB286] border-[#4FB286]/30 bg-[#4FB286]/10' 
+                        : 'text-[#D6A85F] border-[#D6A85F]/30 bg-[#D6A85F]/10'
+                    }`}>
+                      {act.event === 'FLAG_SOLVED' ? 'BREACHED' : 'INTEL'}
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-[#8D98A8] truncate">
+                    {act.mission}
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-[#E5E7EB] font-bold text-[11px] truncate max-w-[170px]">
-                    {act.team}
+                <div className="text-right shrink-0">
+                  <span className={`font-bold text-xs ${act.penalty ? 'text-[#B85C5C]' : 'text-[#C8A96B]'}`}>
+                    {act.penalty ? `${act.penalty} PTS` : `+${act.points} PTS`}
                   </span>
-                  {act.points && (
-                    <span className="text-[#FACC15] font-bold text-[11px]">
-                      +{act.points} PTS
-                    </span>
-                  )}
-                  {act.penalty && (
-                    <span className="text-[#F87171] font-bold text-[11px]">
-                      {act.penalty} PTS
-                    </span>
-                  )}
-                </div>
-
-                <div className="text-[10px] text-[#737373] truncate mt-0.5">
-                  {act.mission}
+                  <span className="text-[9px] text-[#566375] block">{act.timestamp}</span>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
 
-      </div>
-
-      {/* 4. TACTICAL INVESTIGATION BOARD PREVIEW BANNER */}
-      <div className="bg-[#151515] border border-[#303030] p-4 sm:p-5 font-mono flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-[#0A0A0A] border border-[#303030] overflow-hidden shrink-0 hidden sm:block">
-            <img 
-              src={getAssetUrl('/images/investigation_board.jpg')} 
-              alt="Investigation Board" 
-              className="w-full h-full object-cover grayscale contrast-125"
-            />
-          </div>
-          <div>
-            <div className="text-xs text-[#FACC15] font-bold">CASE FILE: INCIDENT RECONSTRUCTION</div>
-            <div className="text-sm font-bold text-[#E5E7EB]">CANARA CYBER LABS // EVIDENCE BOARD READY</div>
-            <p className="text-xs text-[#737373] font-sans mt-0.5">
-              Review physical network topology schematics, RF intercepts, and server room schematics in your profile dossier.
-            </p>
-          </div>
-        </div>
-
-        <button
-          onClick={() => {
-            sound.playClick();
-            setActiveTab('profile');
-          }}
-          className="px-4 py-2 bg-[#1F1F1F] hover:bg-[#282828] border border-[#303030] hover:border-[#FACC15] text-xs font-bold text-[#E5E7EB] shrink-0 transition-colors"
-        >
-          VIEW OPERATOR DOSSIER →
-        </button>
       </div>
 
     </div>

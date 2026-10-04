@@ -49,25 +49,25 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
         {/* Full-width Panoramic Background Image stretching 100vw edge to edge */}
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-right lg:bg-center transition-all duration-700"
-          style={{ backgroundImage: `url('${getAssetUrl('/images/hero_bg_vault.jpg')}')` }}
+          style={{ backgroundImage: `url('${getAssetUrl('/assets/heist/facility/facility_wide.jpg')}')` }}
         />
 
         {/* Sophisticated dark gradient overlays ensuring high contrast text legibility on left */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent lg:w-[65%]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/95 via-transparent to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#070B12] via-[#070B12]/95 to-transparent lg:w-[68%]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070B12]/95 via-transparent to-black/40" />
 
-        {/* Bottom Right Corner Hazard Stripes flush with the bottom right edge */}
-        <div className="absolute bottom-0 right-0 w-32 sm:w-44 h-4 hazard-stripe opacity-90 z-10" />
+        {/* Bottom Right Corner Accent flush with the bottom right edge */}
+        <div className="absolute bottom-0 right-0 w-32 sm:w-44 h-1.5 bg-[#C8A96B] opacity-90 z-10" />
 
         {/* Left Hero Content Container aligned with standard max-w-7xl grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-16 sm:py-24">
           <div className="max-w-2xl lg:max-w-3xl space-y-7 sm:space-y-8">
             
-            {/* Top college subtitle with yellow dash */}
+            {/* Top college subtitle with gold dash */}
             <div className="flex items-center space-x-3.5">
-              <span className="w-10 h-[2.5px] bg-[#FACC15]" />
-              <span className="font-mono text-xs sm:text-sm tracking-[0.22em] text-[#B0B0B0] uppercase font-bold">
-                CANARA ENGINEERING COLLEGE
+              <span className="w-10 h-[2.5px] bg-[#C8A96B]" />
+              <span className="font-mono text-xs sm:text-sm tracking-[0.22em] text-[#C8A96B] uppercase font-bold">
+                CANARA ENGINEERING COLLEGE // CYBER LABS
               </span>
             </div>
 
@@ -122,24 +122,23 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
               <button
                 onClick={() => {
                   sound.playClick();
-                  onOpenRegister();
+                  setActiveTab('missions');
                 }}
-                className="px-8 py-3.5 sm:py-4 bg-[#FACC15] hover:bg-[#EAB308] text-black font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#FACC15]/25 hover:scale-[1.02]"
+                className="px-8 py-3.5 sm:py-4 bg-[#C8A96B] hover:bg-[#D6A85F] text-[#070B12] font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#C8A96B]/25 hover:scale-[1.02]"
               >
-                <span>REGISTER NOW</span>
+                <span>INFILTRATE FACILITY</span>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
 
               <button
                 onClick={() => {
                   sound.playClick();
-                  const el = document.getElementById('about-section');
-                  el?.scrollIntoView({ behavior: 'smooth' });
+                  onOpenRegister();
                 }}
-                className="px-6 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#D4D4D4] hover:text-[#FACC15] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer"
+                className="px-6 py-3.5 sm:py-4 bg-[#121923] hover:bg-[#16202D] border border-[#263140] hover:border-[#C8A96B] text-sm sm:text-base font-bold text-[#F4F5F7] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer"
               >
-                <span>LEARN MORE</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#737373] group-hover:text-[#FACC15]" />
+                <span>REGISTER CREW</span>
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#8D98A8] group-hover:text-[#C8A96B]" />
               </button>
             </div>
 
@@ -275,26 +274,26 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             {/* Card 1: Web Exploitation */}
             <div
               onClick={() => handleCategoryClick('WEB')}
-              className="bg-[#151515] border border-[#303030] hover:border-[#FACC15] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden"
+              className="bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden shadow-lg"
             >
-              <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
+              <div className="aspect-[4/3] bg-[#070B12] overflow-hidden relative">
                 <img
-                  src={getAssetUrl('/images/web_terminal.jpg')}
+                  src={getAssetUrl('/assets/heist/missions/restricted_terminal.jpg')}
                   alt="Web Exploitation"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0C111A] via-transparent to-transparent opacity-80" />
               </div>
 
               <div className="p-4 space-y-2">
-                <div className="w-7 h-7 rounded-full bg-[#1F1F1F] border border-[#303030] flex items-center justify-center text-[#FACC15]">
+                <div className="w-7 h-7 rounded-full bg-[#121923] border border-[#263140] flex items-center justify-center text-[#C8A96B]">
                   <TerminalIcon className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="font-mono text-xs font-bold text-[#E5E7EB] uppercase tracking-wide group-hover:text-[#FACC15] transition-colors">
-                  WEB EXPLOITATION
+                <h3 className="font-mono text-xs font-bold text-[#F4F5F7] uppercase tracking-wide group-hover:text-[#C8A96B] transition-colors">
+                  WEB INFILTRATION
                 </h3>
-                <p className="text-xs text-[#737373] font-sans">
-                  Find the flaws. Gain access.
+                <p className="text-xs text-[#8D98A8] font-sans">
+                  Identify access flaws. Bypass authorization gates.
                 </p>
               </div>
             </div>
@@ -302,26 +301,26 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             {/* Card 2: Cryptography */}
             <div
               onClick={() => handleCategoryClick('CRYPTO')}
-              className="bg-[#151515] border border-[#303030] hover:border-[#FACC15] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden"
+              className="bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden shadow-lg"
             >
-              <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
+              <div className="aspect-[4/3] bg-[#070B12] overflow-hidden relative">
                 <img
-                  src={getAssetUrl('/images/padlock.jpg')}
+                  src={getAssetUrl('/assets/heist/vault/vault_lock.jpg')}
                   alt="Cryptography"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0C111A] via-transparent to-transparent opacity-80" />
               </div>
 
               <div className="p-4 space-y-2">
-                <div className="w-7 h-7 rounded-full bg-[#1F1F1F] border border-[#303030] flex items-center justify-center text-[#FACC15]">
+                <div className="w-7 h-7 rounded-full bg-[#121923] border border-[#263140] flex items-center justify-center text-[#C8A96B]">
                   <Lock className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="font-mono text-xs font-bold text-[#E5E7EB] uppercase tracking-wide group-hover:text-[#FACC15] transition-colors">
+                <h3 className="font-mono text-xs font-bold text-[#F4F5F7] uppercase tracking-wide group-hover:text-[#C8A96B] transition-colors">
                   CRYPTOGRAPHY
                 </h3>
-                <p className="text-xs text-[#737373] font-sans">
-                  Decode the hidden. Reveal the truth.
+                <p className="text-xs text-[#8D98A8] font-sans">
+                  Decode encrypted intercepts. Reveal master keys.
                 </p>
               </div>
             </div>
@@ -329,26 +328,26 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             {/* Card 3: Forensics */}
             <div
               onClick={() => handleCategoryClick('FORENSICS')}
-              className="bg-[#151515] border border-[#303030] hover:border-[#FACC15] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden"
+              className="bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden shadow-lg"
             >
-              <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
+              <div className="aspect-[4/3] bg-[#070B12] overflow-hidden relative">
                 <img
-                  src={getAssetUrl('/images/fingerprint.jpg')}
+                  src={getAssetUrl('/assets/heist/surveillance/cctv_wall.jpg')}
                   alt="Forensics"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0C111A] via-transparent to-transparent opacity-80" />
               </div>
 
               <div className="p-4 space-y-2">
-                <div className="w-7 h-7 rounded-full bg-[#1F1F1F] border border-[#303030] flex items-center justify-center text-[#FACC15]">
+                <div className="w-7 h-7 rounded-full bg-[#121923] border border-[#263140] flex items-center justify-center text-[#C8A96B]">
                   <Fingerprint className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="font-mono text-xs font-bold text-[#E5E7EB] uppercase tracking-wide group-hover:text-[#FACC15] transition-colors">
-                  FORENSICS
+                <h3 className="font-mono text-xs font-bold text-[#F4F5F7] uppercase tracking-wide group-hover:text-[#C8A96B] transition-colors">
+                  FORENSIC AUDIT
                 </h3>
-                <p className="text-xs text-[#737373] font-sans">
-                  Find what's left. Piece it together.
+                <p className="text-xs text-[#8D98A8] font-sans">
+                  Recover memory traces. Carve forensic payloads.
                 </p>
               </div>
             </div>
@@ -356,26 +355,26 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             {/* Card 4: Reverse Engineering */}
             <div
               onClick={() => handleCategoryClick('REVERSE ENGINEERING')}
-              className="bg-[#151515] border border-[#303030] hover:border-[#FACC15] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden"
+              className="bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] transition-all cursor-pointer group flex flex-col justify-between overflow-hidden shadow-lg"
             >
-              <div className="aspect-[4/3] bg-[#0A0A0A] overflow-hidden relative">
+              <div className="aspect-[4/3] bg-[#070B12] overflow-hidden relative">
                 <img
-                  src={getAssetUrl('/images/server_racks.jpg')}
+                  src={getAssetUrl('/assets/heist/missions/server_room.jpg')}
                   alt="Reverse Engineering"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0C111A] via-transparent to-transparent opacity-80" />
               </div>
 
               <div className="p-4 space-y-2">
-                <div className="w-7 h-7 rounded-full bg-[#1F1F1F] border border-[#303030] flex items-center justify-center text-[#FACC15]">
+                <div className="w-7 h-7 rounded-full bg-[#121923] border border-[#263140] flex items-center justify-center text-[#C8A96B]">
                   <Cpu className="w-3.5 h-3.5" />
                 </div>
-                <h3 className="font-mono text-xs font-bold text-[#E5E7EB] uppercase tracking-wide group-hover:text-[#FACC15] transition-colors">
+                <h3 className="font-mono text-xs font-bold text-[#F4F5F7] uppercase tracking-wide group-hover:text-[#C8A96B] transition-colors">
                   REVERSE ENGINEERING
                 </h3>
-                <p className="text-xs text-[#737373] font-sans">
-                  Understand the binary. Take control.
+                <p className="text-xs text-[#8D98A8] font-sans">
+                  Disassemble vault logic. Control physical solenoids.
                 </p>
               </div>
             </div>
@@ -387,14 +386,14 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
 
       {/* 4. TIMELINE SECTION ("MARK YOUR CALENDAR") */}
       <section className="relative pt-6">
-        <div className="relative rounded-sm overflow-hidden border border-[#303030] shadow-2xl">
+        <div className="relative rounded-none overflow-hidden border border-[#263140] shadow-2xl">
           
-          {/* Background Image of walking operator in corridor with "THE HEIST BEGINS" */}
+          {/* Background Image of secure corridor */}
           <div 
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('${getAssetUrl('/images/heist_corridor.jpg')}')` }}
+            style={{ backgroundImage: `url('${getAssetUrl('/assets/heist/facility/secure_corridor.jpg')}')` }}
           />
-          <div className="absolute inset-0 bg-[#0A0A0A]/85 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-[#070B12]/90 backdrop-blur-[2px]" />
 
           {/* Overlay Content */}
           <div className="relative p-6 sm:p-12 lg:p-16 space-y-8">
