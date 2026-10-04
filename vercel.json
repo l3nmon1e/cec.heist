@@ -1,0 +1,25 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/cec-heist/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/cec-heist/images/:path*",
+      "destination": "/images/:path*"
+    },
+    {
+      "source": "/cec-heist/assets/heist/:path*",
+      "destination": "/assets/heist/:path*"
+    },
+    {
+      "source": "/cec-heist/:path*",
+      "destination": "/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
