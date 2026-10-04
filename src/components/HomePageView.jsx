@@ -430,53 +430,86 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
               </h2>
             </div>
 
-            {/* Connected Horizontal Timeline (01 -> 02 -> 03 -> 04) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative font-mono">
+            {/* Responsive Timeline: Vertical Connected Stepper on Mobile, Horizontal Pipeline on Desktop */}
+            <div className="relative font-mono">
               
-              {/* Step 01 */}
-              <div className="relative flex flex-col items-start space-y-3">
-                <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15]">
-                  01
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#E5E7EB]">Registration Opens</h4>
-                  <span className="text-xs text-[#737373]">TBA</span>
-                </div>
-              </div>
+              {/* Connecting rail on Mobile (Vertical) */}
+              <div className="absolute left-[23px] top-6 bottom-6 w-[2px] bg-gradient-to-b from-[#FACC15] via-[#C8A96B]/60 to-[#FACC15]/20 lg:hidden pointer-events-none" />
 
-              {/* Step 02 */}
-              <div className="relative flex flex-col items-start space-y-3">
-                <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15]">
-                  02
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#E5E7EB]">Prelims</h4>
-                  <span className="text-xs text-[#737373]">TBA</span>
-                </div>
-              </div>
+              {/* Connecting rail on Desktop (Horizontal) */}
+              <div className="hidden lg:block absolute top-6 left-12 right-12 h-[2px] bg-gradient-to-r from-[#FACC15] via-[#C8A96B]/60 to-[#FACC15]/20 z-0 pointer-events-none" />
 
-              {/* Step 03 */}
-              <div className="relative flex flex-col items-start space-y-3">
-                <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15]">
-                  03
+              <div className="flex flex-col lg:grid lg:grid-cols-4 gap-6 lg:gap-8 relative z-10">
+                
+                {/* Step 01 */}
+                <div className="relative flex flex-row lg:flex-col items-center lg:items-start space-x-4 lg:space-x-0 lg:space-y-4 group">
+                  <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15] shrink-0 shadow-[0_0_15px_rgba(250,204,21,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all">
+                    01
+                  </div>
+                  <div className="flex-1 bg-[#121923]/70 lg:bg-transparent border border-[#263140]/80 lg:border-0 p-3.5 sm:p-4 lg:p-0 rounded-lg lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none">
+                    <div className="flex items-center justify-between lg:block">
+                      <h4 className="text-sm sm:text-base font-bold text-[#E5E7EB] group-hover:text-[#FACC15] transition-colors">
+                        Registration Opens
+                      </h4>
+                      <span className="text-[10px] sm:text-xs font-mono text-[#FACC15] border border-[#FACC15]/40 bg-[#FACC15]/10 px-2 py-0.5 rounded ml-2 lg:ml-0 lg:mt-1.5 lg:inline-block">
+                        TBA
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#E5E7EB]">Main Event</h4>
-                  <span className="text-xs text-[#737373]">TBA</span>
-                </div>
-              </div>
 
-              {/* Step 04 */}
-              <div className="relative flex flex-col items-start space-y-3">
-                <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15]">
-                  04
+                {/* Step 02 */}
+                <div className="relative flex flex-row lg:flex-col items-center lg:items-start space-x-4 lg:space-x-0 lg:space-y-4 group">
+                  <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15] shrink-0 shadow-[0_0_15px_rgba(250,204,21,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all">
+                    02
+                  </div>
+                  <div className="flex-1 bg-[#121923]/70 lg:bg-transparent border border-[#263140]/80 lg:border-0 p-3.5 sm:p-4 lg:p-0 rounded-lg lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none">
+                    <div className="flex items-center justify-between lg:block">
+                      <h4 className="text-sm sm:text-base font-bold text-[#E5E7EB] group-hover:text-[#FACC15] transition-colors">
+                        Prelims
+                      </h4>
+                      <span className="text-[10px] sm:text-xs font-mono text-[#FACC15] border border-[#FACC15]/40 bg-[#FACC15]/10 px-2 py-0.5 rounded ml-2 lg:ml-0 lg:mt-1.5 lg:inline-block">
+                        TBA
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-sm font-bold text-[#E5E7EB]">Results</h4>
-                  <span className="text-xs text-[#737373]">TBA</span>
-                </div>
-              </div>
 
+                {/* Step 03 */}
+                <div className="relative flex flex-row lg:flex-col items-center lg:items-start space-x-4 lg:space-x-0 lg:space-y-4 group">
+                  <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15] shrink-0 shadow-[0_0_15px_rgba(250,204,21,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all">
+                    03
+                  </div>
+                  <div className="flex-1 bg-[#121923]/70 lg:bg-transparent border border-[#263140]/80 lg:border-0 p-3.5 sm:p-4 lg:p-0 rounded-lg lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none">
+                    <div className="flex items-center justify-between lg:block">
+                      <h4 className="text-sm sm:text-base font-bold text-[#E5E7EB] group-hover:text-[#FACC15] transition-colors">
+                        Main Event
+                      </h4>
+                      <span className="text-[10px] sm:text-xs font-mono text-[#FACC15] border border-[#FACC15]/40 bg-[#FACC15]/10 px-2 py-0.5 rounded ml-2 lg:ml-0 lg:mt-1.5 lg:inline-block">
+                        TBA
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step 04 */}
+                <div className="relative flex flex-row lg:flex-col items-center lg:items-start space-x-4 lg:space-x-0 lg:space-y-4 group">
+                  <div className="w-12 h-12 rounded-full border-2 border-[#FACC15] bg-[#0A0A0A] flex items-center justify-center text-sm font-bold text-[#FACC15] shrink-0 shadow-[0_0_15px_rgba(250,204,21,0.25)] group-hover:scale-105 group-hover:shadow-[0_0_20px_rgba(250,204,21,0.4)] transition-all">
+                    04
+                  </div>
+                  <div className="flex-1 bg-[#121923]/70 lg:bg-transparent border border-[#263140]/80 lg:border-0 p-3.5 sm:p-4 lg:p-0 rounded-lg lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none">
+                    <div className="flex items-center justify-between lg:block">
+                      <h4 className="text-sm sm:text-base font-bold text-[#E5E7EB] group-hover:text-[#FACC15] transition-colors">
+                        Results
+                      </h4>
+                      <span className="text-[10px] sm:text-xs font-mono text-[#FACC15] border border-[#FACC15]/40 bg-[#FACC15]/10 px-2 py-0.5 rounded ml-2 lg:ml-0 lg:mt-1.5 lg:inline-block">
+                        TBA
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
           </div>
