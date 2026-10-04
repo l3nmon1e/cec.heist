@@ -64,7 +64,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
 
         {/* Left Hero Content Container aligned with standard max-w-7xl grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-16 sm:py-24">
-          <div className="max-w-2xl lg:max-w-3xl space-y-7 sm:space-y-8">
+          <div className="max-w-2xl lg:max-w-3xl space-y-7 sm:space-y-8 lg:-translate-y-7 transition-transform">
             
             {/* Top college subtitle with yellow dash */}
             <div className={`flex items-center space-x-3.5 ${

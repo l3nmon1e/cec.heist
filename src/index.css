@@ -33,13 +33,23 @@
     font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
 
-  /* Make every button edges curved */
-  button:not(.rounded-full),
-  input[type="submit"],
-  input[type="button"],
-  .btn {
-    border-radius: 8px !important;
-  }
+}
+
+/* Universal curved edges for all buttons, inputs, and button-like controls */
+button:not(.rounded-full):not([class*="rounded-full"]),
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+.btn {
+  border-radius: 10px !important;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea {
+  border-radius: 8px !important;
 }
 
 /* Blueprint grid texture background */
