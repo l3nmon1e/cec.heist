@@ -49,25 +49,25 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
         {/* Full-width Panoramic Background Image stretching 100vw edge to edge */}
         <div 
           className="absolute inset-0 w-full h-full bg-cover bg-right lg:bg-center transition-all duration-700"
-          style={{ backgroundImage: `url('${getAssetUrl('/assets/heist/facility/facility_wide.jpg')}')` }}
+          style={{ backgroundImage: `url('${getAssetUrl('/images/hero_bg_vault.jpg')}')` }}
         />
 
         {/* Sophisticated dark gradient overlays ensuring high contrast text legibility on left */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#070B12] via-[#070B12]/95 to-transparent lg:w-[68%]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#070B12]/95 via-transparent to-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/90 to-transparent lg:w-[65%]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A]/95 via-transparent to-black/30" />
 
-        {/* Bottom Right Corner Accent flush with the bottom right edge */}
-        <div className="absolute bottom-0 right-0 w-32 sm:w-44 h-1.5 bg-[#C8A96B] opacity-90 z-10" />
+        {/* Bottom Right Corner Hazard Stripes flush with the bottom right edge */}
+        <div className="absolute bottom-0 right-0 w-32 sm:w-44 h-4 hazard-stripe opacity-90 z-10" />
 
         {/* Left Hero Content Container aligned with standard max-w-7xl grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-16 sm:py-24">
           <div className="max-w-2xl lg:max-w-3xl space-y-7 sm:space-y-8">
             
-            {/* Top college subtitle with gold dash */}
+            {/* Top college subtitle with yellow dash */}
             <div className="flex items-center space-x-3.5">
-              <span className="w-10 h-[2.5px] bg-[#C8A96B]" />
-              <span className="font-mono text-xs sm:text-sm tracking-[0.22em] text-[#C8A96B] uppercase font-bold">
-                CANARA ENGINEERING COLLEGE // CYBER LABS
+              <span className="w-10 h-[2.5px] bg-[#FACC15]" />
+              <span className="font-mono text-xs sm:text-sm tracking-[0.22em] text-[#B0B0B0] uppercase font-bold">
+                CANARA ENGINEERING COLLEGE
               </span>
             </div>
 
@@ -122,23 +122,24 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
               <button
                 onClick={() => {
                   sound.playClick();
-                  setActiveTab('missions');
+                  onOpenRegister();
                 }}
-                className="px-8 py-3.5 sm:py-4 bg-[#C8A96B] hover:bg-[#D6A85F] text-[#070B12] font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#C8A96B]/25 hover:scale-[1.02]"
+                className="px-8 py-3.5 sm:py-4 bg-[#FACC15] hover:bg-[#EAB308] text-black font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center space-x-2.5 transition-all cursor-pointer shadow-xl hover:shadow-[#FACC15]/25 hover:scale-[1.02]"
               >
-                <span>INFILTRATE FACILITY</span>
+                <span>REGISTER NOW</span>
                 <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
 
               <button
                 onClick={() => {
                   sound.playClick();
-                  onOpenRegister();
+                  const el = document.getElementById('about-section');
+                  el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-6 py-3.5 sm:py-4 bg-[#121923] hover:bg-[#16202D] border border-[#263140] hover:border-[#C8A96B] text-sm sm:text-base font-bold text-[#F4F5F7] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer"
+                className="px-6 py-3.5 sm:py-4 text-sm sm:text-base font-bold text-[#D4D4D4] hover:text-[#FACC15] tracking-wider uppercase flex items-center space-x-2 transition-colors cursor-pointer"
               >
-                <span>REGISTER CREW</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#8D98A8] group-hover:text-[#C8A96B]" />
+                <span>LEARN MORE</span>
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#737373] group-hover:text-[#FACC15]" />
               </button>
             </div>
 

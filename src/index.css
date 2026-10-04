@@ -47,6 +47,18 @@
   background-image: radial-gradient(rgba(200, 169, 107, 0.12) 1px, transparent 1px);
 }
 
+/* Hazard striping */
+.hazard-stripe {
+  background: repeating-linear-gradient(
+    -45deg,
+    #FACC15,
+    #FACC15 10px,
+    #0A0A0A 10px,
+    #0A0A0A 20px
+  );
+}
+
+
 /* Subtle Security Glass */
 .security-glass {
   background: rgba(12, 17, 26, 0.75);
