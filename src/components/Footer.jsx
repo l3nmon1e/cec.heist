@@ -8,21 +8,36 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
   return (
     <footer className="bg-[#0A0A0A] border-t border-[#222222] font-mono text-xs select-none relative pb-16 md:pb-0">
       
-      {/* Bottom Bar: Copyright & Legal */}
+      {/* Bottom Bar: Copyright, Credit & Legal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[#737373] text-[11px]">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-[#737373] text-[11px]">
           
+          {/* Copyright */}
           <div>
             © 2025 CEC HEIST. All rights reserved.
           </div>
 
+          {/* Credit Line: powered by Appvertex */}
+          <div className="flex items-center space-x-1.5 text-[#8D98A8]">
+            <span className="tracking-wide">powered by</span>
+            <a
+              href="https://appvertex.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#FACC15] hover:text-[#EAB308] font-bold tracking-wider hover:underline transition-colors cursor-pointer"
+            >
+              Appvertex
+            </a>
+          </div>
+
+          {/* Legal Links */}
           <div className="flex items-center space-x-3 text-[#737373]">
             <button 
               onClick={() => {
                 sound.playClick();
                 onOpenPrivacy?.('privacy');
               }}
-              className="hover:text-[#FACC15] transition-colors"
+              className="hover:text-[#FACC15] transition-colors cursor-pointer"
             >
               Privacy Policy
             </button>
@@ -32,7 +47,7 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
                 sound.playClick();
                 onOpenPrivacy?.('terms');
               }}
-              className="hover:text-[#FACC15] transition-colors"
+              className="hover:text-[#FACC15] transition-colors cursor-pointer"
             >
               Terms & Conditions
             </button>
@@ -42,7 +57,7 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
                 sound.playClick();
                 onOpenContact?.();
               }}
-              className="hover:text-[#FACC15] transition-colors"
+              className="hover:text-[#FACC15] transition-colors cursor-pointer"
             >
               Contact
             </button>

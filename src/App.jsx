@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { GameProvider, useGame } from './context/GameContext';
 import Navbar from './components/Navbar';
-import EventStatusBar from './components/EventStatusBar';
 import HomePageView from './components/HomePageView';
 import DashboardView from './components/DashboardView';
 import MissionsView from './components/MissionsView';
@@ -55,9 +54,6 @@ function AppContent() {
 
       {/* Navigation matching reference mockup */}
       <Navbar onOpenLogin={openLogin} onOpenFaq={() => setIsFaqModalOpen(true)} />
-      
-      {/* Show live system status bar when on dashboard/missions/leaderboard */}
-      {activeTab !== 'home' && <EventStatusBar />}
 
       {/* Main View Port */}
       {activeTab === 'home' ? (
