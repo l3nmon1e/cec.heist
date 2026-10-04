@@ -168,6 +168,80 @@
   animation-play-state: paused;
 }
 
+/* Starting Loader Animations */
+@keyframes loaderShimmer {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-25deg);
+  }
+}
+
+.animate-loader-shimmer {
+  animation: loaderShimmer 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes hudRotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hudRotateCounter {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.animate-hud-cw {
+  animation: hudRotateClockwise 12s linear infinite;
+}
+
+.animate-hud-ccw {
+  animation: hudRotateCounter 16s linear infinite;
+}
+
+@keyframes logoBreathingGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 15px rgba(200, 169, 107, 0.35)) drop-shadow(0 0 35px rgba(200, 169, 107, 0.15));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(200, 169, 107, 0.65)) drop-shadow(0 0 60px rgba(200, 169, 107, 0.3));
+  }
+}
+
+.animate-logo-glow {
+  animation: logoBreathingGlow 3s ease-in-out infinite;
+}
+
+@keyframes scanlineBeam {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.animate-scanline-beam {
+  animation: scanlineBeam 3s ease-in-out infinite;
+}
+
 /* Respect user's reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -176,9 +250,15 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .caution-marquee-track {
+  .caution-marquee-track,
+  .animate-loader-shimmer,
+  .animate-hud-cw,
+  .animate-hud-ccw,
+  .animate-logo-glow,
+  .animate-scanline-beam {
     animation: none !important;
     transform: none !important;
   }
 }
+
 

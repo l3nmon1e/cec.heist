@@ -15,9 +15,11 @@ import RegisterLoginModal from './components/RegisterLoginModal';
 import FaqModal from './components/FaqModal';
 import ContactModal from './components/ContactModal';
 import PrivacyTermsModal from './components/PrivacyTermsModal';
+import StartingLoader from './components/StartingLoader';
 
 function AppContent() {
   const { activeTab, setActiveTab, isTerminalModalOpen, setIsTerminalModalOpen, selectedMission } = useGame();
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('register');
   const [isFaqModalOpen, setIsFaqModalOpen] = useState(false);
@@ -43,6 +45,11 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-[#070B12] text-[#F4F5F7] flex flex-col font-sans relative selection:bg-[#C8A96B] selection:text-[#070B12]">
       
+      {/* Starting Animated Fullscreen Loader */}
+      {isLoading && (
+        <StartingLoader onComplete={() => setIsLoading(false)} />
+      )}
+
       {/* Subtle Background Blueprint Grid Pattern */}
       <div className="fixed inset-0 bg-blueprint-grid opacity-35 pointer-events-none z-0" />
 
