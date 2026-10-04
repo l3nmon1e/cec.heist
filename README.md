@@ -1,7 +1,8 @@
 # CEC HEIST // Technical Cyber Challenge Platform
 
 > **Capture The Flag & Cyber Operations Console**  
-> Organized at **Canara Engineering College, Mangalore**
+> Organized at **Canara Engineering College, Mangalore**  
+> **Live Site**: [cecheist.vercel.app](https://cecheist.vercel.app/)
 
 ![CEC HEIST](/public/images/logo.png)
 
