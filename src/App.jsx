@@ -65,6 +65,7 @@ function AppContent() {
           <HomePageView 
             onOpenRegister={openRegister} 
             onOpenFaq={() => setIsFaqModalOpen(true)} 
+            isHeroReady={!isLoading}
           />
         </main>
       ) : (

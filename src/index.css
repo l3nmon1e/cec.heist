@@ -245,6 +245,87 @@
   animation: scanlineBeam 3s ease-in-out infinite;
 }
 
+/* Hero Section Cinematic Staggered Entrance Animations */
+@keyframes heroBgZoom {
+  0% {
+    transform: scale(1.06);
+    filter: brightness(0.7);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes heroSlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heroScaleReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(20px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes heroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-bg {
+  animation: heroBgZoom 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-hero-tagline {
+  animation: heroSlideRight 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.12s;
+}
+
+.animate-hero-logo {
+  animation: heroScaleReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.28s;
+}
+
+.animate-hero-quote {
+  animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.46s;
+}
+
+.animate-hero-desc {
+  animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.62s;
+}
+
+.animate-hero-chips {
+  animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.78s;
+}
+
+.animate-hero-actions {
+  animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.92s;
+}
+
 /* Respect user's reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
@@ -258,10 +339,18 @@
   .animate-hud-cw,
   .animate-hud-ccw,
   .animate-logo-glow,
-  .animate-scanline-beam {
+  .animate-scanline-beam,
+  .animate-hero-bg,
+  .animate-hero-tagline,
+  .animate-hero-logo,
+  .animate-hero-quote,
+  .animate-hero-desc,
+  .animate-hero-chips,
+  .animate-hero-actions {
     animation: none !important;
     transform: none !important;
   }
 }
+
 
 

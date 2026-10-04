@@ -20,7 +20,7 @@ import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/formatters';
 import CautionMarquee from './CautionMarquee';
 
-export default function HomePageView({ onOpenRegister, onOpenFaq }) {
+export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = true }) {
   const { setActiveTab, setSelectedMissionId } = useGame();
   const [emailInput, setEmailInput] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -49,7 +49,9 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
         
         {/* Full-width Panoramic Background Image stretching 100vw edge to edge */}
         <div 
-          className="absolute inset-0 w-full h-full bg-cover bg-right lg:bg-center transition-all duration-700"
+          className={`absolute inset-0 w-full h-full bg-cover bg-right lg:bg-center transition-all duration-700 ${
+            isHeroReady ? 'animate-hero-bg' : 'opacity-0 scale-105'
+          }`}
           style={{ backgroundImage: `url('${getAssetUrl('/images/hero_bg_vault.jpg')}')` }}
         />
 
@@ -65,7 +67,9 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
           <div className="max-w-2xl lg:max-w-3xl space-y-7 sm:space-y-8">
             
             {/* Top college subtitle with yellow dash */}
-            <div className="flex items-center space-x-3.5">
+            <div className={`flex items-center space-x-3.5 ${
+              isHeroReady ? 'animate-hero-tagline' : 'opacity-0'
+            }`}>
               <span className="w-10 h-[2.5px] bg-[#FACC15]" />
               <span className="font-mono text-xs sm:text-sm tracking-[0.22em] text-[#B0B0B0] uppercase font-bold">
                 CANARA ENGINEERING COLLEGE
@@ -74,23 +78,31 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
 
             {/* Official Brand Logo - Enlarged Size */}
             <div className="space-y-4">
-              <img 
-                src={getAssetUrl('/images/logo.png')} 
-                alt="CEC HEIST - Cyber Security Challenge" 
-                className="w-full max-w-lg sm:max-w-xl lg:max-w-2xl object-contain py-1 drop-shadow-[0_0_35px_rgba(250,204,21,0.25)]"
-              />
-              <p className="font-mono text-sm sm:text-base lg:text-lg tracking-[0.35em] text-[#E0E0E0] uppercase font-semibold">
+              <div className={isHeroReady ? 'animate-hero-logo' : 'opacity-0'}>
+                <img 
+                  src={getAssetUrl('/images/cec_heist_logo.png')} 
+                  alt="CEC HEIST - Cyber Security Challenge" 
+                  className="w-full max-w-lg sm:max-w-xl lg:max-w-2xl object-contain py-1 drop-shadow-[0_0_35px_rgba(250,204,21,0.25)] hover:scale-[1.01] transition-transform duration-300"
+                />
+              </div>
+              <p className={`font-mono text-sm sm:text-base lg:text-lg tracking-[0.35em] text-[#E0E0E0] uppercase font-semibold ${
+                isHeroReady ? 'animate-hero-quote' : 'opacity-0'
+              }`}>
                 THINK. EXPLOIT. ESCAPE
               </p>
             </div>
 
             {/* Description */}
-            <p className="text-base sm:text-lg text-[#9CA3AF] max-w-xl leading-relaxed font-sans">
+            <p className={`text-base sm:text-lg text-[#9CA3AF] max-w-xl leading-relaxed font-sans ${
+              isHeroReady ? 'animate-hero-desc' : 'opacity-0'
+            }`}>
               A next-gen cybersecurity challenge where your skills, logic and teamwork will be tested. Break in, find the secrets, and make it out.
             </p>
 
             {/* Flexible Info Chips with Reduced Height */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 max-w-2xl">
+            <div className={`flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 max-w-2xl ${
+              isHeroReady ? 'animate-hero-chips' : 'opacity-0'
+            }`}>
               
               <div className="flex items-center space-x-3 py-2 px-3.5 sm:py-2.5 sm:px-4 bg-[#0A0A0A]/90 border border-[#2E2E2E] backdrop-blur-md flex-1">
                 <Calendar className="w-4 h-4 text-[#FACC15] shrink-0" />
@@ -119,7 +131,9 @@ export default function HomePageView({ onOpenRegister, onOpenFaq }) {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2">
+            <div className={`flex flex-wrap items-center gap-4 sm:gap-6 pt-2 ${
+              isHeroReady ? 'animate-hero-actions' : 'opacity-0'
+            }`}>
               <button
                 onClick={() => {
                   sound.playClick();
