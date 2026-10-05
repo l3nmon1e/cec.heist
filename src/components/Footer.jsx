@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
 import { sound } from '../utils/audio';
 
@@ -61,6 +62,14 @@ export default function Footer({ onOpenContact, onOpenPrivacy }) {
             >
               Contact
             </button>
+            <span className="text-[#303030]">|</span>
+            <Link 
+              to="/admin"
+              className="text-[#525252] hover:text-cyan-400 transition-colors cursor-pointer"
+              title="Restricted Staff Console"
+            >
+              Admin
+            </Link>
           </div>
 
         </div>

@@ -27,6 +27,7 @@ import SecurityRoom from './components/heist/rooms/SecurityRoom';
 import CoreRoom from './components/heist/rooms/CoreRoom';
 import VaultRoom from './components/heist/rooms/VaultRoom';
 import EscapeRoom from './components/heist/rooms/EscapeRoom';
+import AdminPage from './pages/AdminPage';
 
 // Standard CTF Portal Wrapper
 function PortalLayout({ onOpenRegister, onOpenLogin, onOpenFaq, onOpenContact, onOpenLegal, isHeroReady, children }) {
@@ -57,7 +58,7 @@ function PortalLayout({ onOpenRegister, onOpenLogin, onOpenFaq, onOpenContact, o
 
 function MainAppRoutes() {
   const location = useLocation();
-  const { isTerminalModalOpen, setIsTerminalModalOpen, selectedMission, setActiveTab } = useGame();
+  const { isTerminalModalOpen, setIsTerminalModalOpen, selectedMission, setActiveTab, broadcastMessage } = useGame();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState('register');
@@ -134,6 +135,18 @@ function MainAppRoutes() {
         onClose={() => setIsLegalModalOpen(false)} 
         mode={legalMode} 
       />
+
+      {/* Global Admin Broadcast Ribbon */}
+      {broadcastMessage && (
+        <div className="bg-amber-500/20 border-b border-amber-500/40 text-amber-300 px-4 py-2 text-xs font-mono flex items-center justify-between sticky top-0 z-50 backdrop-blur-md animate-fadeIn">
+          <div className="flex items-center gap-2 max-w-7xl mx-auto w-full">
+            <span className="px-2 py-0.5 rounded bg-amber-500 text-black font-bold text-[10px] tracking-wider animate-pulse">
+              ADMIN BROADCAST
+            </span>
+            <span className="font-bold tracking-wide flex-1 truncate">{broadcastMessage}</span>
+          </div>
+        </div>
+      )}
 
       <Routes>
         {/* ==================================================== */}
@@ -248,6 +261,9 @@ function MainAppRoutes() {
             </PortalLayout>
           } 
         />
+
+        {/* Admin Center Route */}
+        <Route path="/admin" element={<AdminPage />} />
 
         {/* Fallback to Home */}
         <Route path="*" element={<Navigate to="/" replace />} />

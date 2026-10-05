@@ -156,13 +156,30 @@ export function GameProvider({ children }) {
 
   // Countdown timer: 02:47:18 -> ~10038 seconds
   const [secondsRemaining, setSecondsRemaining] = useState(10038);
+  const [isGamePaused, setIsGamePaused] = useState(false);
+  const [broadcastMessage, setBroadcastMessage] = useState(() => {
+    try {
+      return localStorage.getItem(STORAGE_KEY + '_BROADCAST') || '';
+    } catch {
+      return '';
+    }
+  });
+
+  const setGlobalBroadcast = (msg) => {
+    setBroadcastMessage(msg);
+    try {
+      if (msg) localStorage.setItem(STORAGE_KEY + '_BROADCAST', msg);
+      else localStorage.removeItem(STORAGE_KEY + '_BROADCAST');
+    } catch {}
+  };
 
   useEffect(() => {
+    if (isGamePaused) return;
     const timer = setInterval(() => {
       setSecondsRemaining(prev => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isGamePaused]);
 
   // Lockdown countdown when active
   useEffect(() => {
@@ -509,6 +526,59 @@ export function GameProvider({ children }) {
     sound.playBeep(300, 0.1);
   };
 
+  // Admin Methods
+  const updateChallenge = (missionId, updatedFields) => {
+    setMissions(prev => {
+      const next = prev.map(m => m.id === missionId ? { ...m, ...updatedFields } : m);
+      try {
+        localStorage.setItem(STORAGE_KEY + '_MISSIONS', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const adjustTeamScore = (teamIdentifier, deltaPoints) => {
+    setLeaderboard(prev => {
+      const next = prev.map(t => {
+        if (t.id === teamIdentifier || t.team === teamIdentifier) {
+          const newScore = Math.max(0, (t.score || 0) + deltaPoints);
+          return { ...t, score: newScore };
+        }
+        return t;
+      }).sort((a, b) => b.score - a.score).map((t, idx) => ({ ...t, rank: idx + 1 }));
+      try {
+        localStorage.setItem(STORAGE_KEY + '_LEADERBOARD', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const toggleDisqualifyTeam = (teamIdentifier) => {
+    setLeaderboard(prev => {
+      const next = prev.map(t => {
+        if (t.id === teamIdentifier || t.team === teamIdentifier) {
+          return { ...t, isDisqualified: !t.isDisqualified };
+        }
+        return t;
+      });
+      try {
+        localStorage.setItem(STORAGE_KEY + '_LEADERBOARD', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const overrideTimer = (newSeconds) => {
+    setSecondsRemaining(Math.max(0, newSeconds));
+  };
+
+  const clearSubmissions = () => {
+    setSubmissions([]);
+    try {
+      localStorage.removeItem(STORAGE_KEY + '_SUBS');
+    } catch {}
+  };
+
   const selectedMission = missions.find(m => m.id === selectedMissionId) || missions[0];
 
   return (
@@ -563,7 +633,17 @@ export function GameProvider({ children }) {
         startTransition,
         finishTransition,
         triggerLockdown,
-        triggerEscapeComplete
+        triggerEscapeComplete,
+        // Admin State & Methods
+        isGamePaused,
+        setIsGamePaused,
+        broadcastMessage,
+        setGlobalBroadcast,
+        updateChallenge,
+        adjustTeamScore,
+        toggleDisqualifyTeam,
+        overrideTimer,
+        clearSubmissions
       }}
     >
       {children}
