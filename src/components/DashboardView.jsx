@@ -52,8 +52,8 @@ export default function DashboardView() {
   const handleEnterMission = (mId) => {
     sound.playClick();
     setSelectedMissionId(mId || currentMission.id);
-    setActiveTab('missions');
-    navigate('/missions');
+    setActiveTab('heist');
+    navigate('/heist');
   };
 
   return (
@@ -202,13 +202,13 @@ export default function DashboardView() {
               <button
                 onClick={() => {
                   sound.playClick();
-                  setActiveTab('missions');
-                  navigate('/missions');
+                  setActiveTab('heist');
+                  navigate('/heist');
                 }}
                 className="w-full flex items-center justify-center space-x-2 px-6 py-2.5 bg-[#121923] hover:bg-[#16202D] border border-[#263140] text-[#F4F5F7] text-xs transition-colors cursor-pointer"
               >
                 <Layers className="w-3.5 h-3.5 text-[#C8A96B]" />
-                <span>OPEN FACILITY BLUEPRINT MAP</span>
+                <span>ENTER HEIST OPERATION</span>
               </button>
             </div>
 

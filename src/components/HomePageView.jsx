@@ -61,8 +61,8 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
     if (setSelectedCategory) {
       setSelectedCategory(cat);
     }
-    setActiveTab('missions');
-    navigate('/missions');
+    setActiveTab('heist');
+    navigate('/heist');
   };
 
   return (
@@ -312,12 +312,12 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
             <button
               onClick={() => {
                 sound.playClick();
-                setActiveTab('missions');
-                navigate('/missions');
+                setActiveTab('heist');
+                navigate('/heist');
               }}
               className="px-5 py-2.5 bg-transparent border border-[#FACC15] text-[#FACC15] hover:bg-[#FACC15] hover:text-black font-mono font-bold text-xs tracking-wider uppercase flex items-center space-x-2 transition-all cursor-pointer"
             >
-              <span>VIEW ALL CHALLENGES</span>
+              <span>ENTER DIGITAL HEIST</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

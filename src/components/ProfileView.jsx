@@ -36,14 +36,14 @@ export default function ProfileView() {
   const handleInspectMission = (mId) => {
     sound.playClick();
     setSelectedMissionId(mId);
-    setActiveTab('missions');
-    navigate('/missions');
+    setActiveTab('heist');
+    navigate('/heist');
   };
 
   const handleContinueHeist = () => {
     sound.playClick();
-    setActiveTab('missions');
-    navigate('/missions');
+    setActiveTab('heist');
+    navigate('/heist');
   };
 
   const handleReset = () => {

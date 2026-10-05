@@ -23,7 +23,7 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
     } else {
       if (tab === 'home') navigate('/');
       else if (tab === 'dashboard') navigate('/dashboard');
-      else if (tab === 'missions') navigate('/missions');
+      else if (tab === 'missions') navigate('/heist');
       else if (tab === 'leaderboard') navigate('/leaderboard');
       else if (tab === 'rules') navigate('/rules');
       else if (tab === 'profile') navigate('/profile');
@@ -86,20 +86,6 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
               <span className="text-[9px] bg-[#C8A96B] text-[#070B12] px-1 py-0.2 font-black uppercase">GAME</span>
             </button>
 
-            {/* MISSIONS */}
-            <button
-              onClick={() => handleNav('missions')}
-              className={`relative py-1 transition-colors cursor-pointer ${
-                activeTab === 'missions'
-                  ? 'text-[#C8A96B] font-bold'
-                  : 'text-[#8D98A8] hover:text-[#F4F5F7]'
-              }`}
-            >
-              <span>MISSIONS</span>
-              {activeTab === 'missions' && (
-                <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-[#C8A96B]" />
-              )}
-            </button>
 
             {/* DASHBOARD */}
             <button

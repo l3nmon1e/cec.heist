@@ -4,7 +4,6 @@ import { GameProvider, useGame } from './context/GameContext';
 import Navbar from './components/Navbar';
 import HomePageView from './components/HomePageView';
 import DashboardView from './components/DashboardView';
-import MissionsView from './components/MissionsView';
 import LeaderboardView from './components/LeaderboardView';
 import RulesView from './components/RulesView';
 import ProfileView from './components/ProfileView';
@@ -73,7 +72,7 @@ function MainAppRoutes() {
     if (path === '/') setActiveTab('home');
     else if (path.startsWith('/heist')) setActiveTab('heist');
     else if (path === '/dashboard') setActiveTab('dashboard');
-    else if (path === '/missions') setActiveTab('missions');
+    else if (path === '/missions') setActiveTab('heist');
     else if (path === '/leaderboard') setActiveTab('leaderboard');
     else if (path === '/rules') setActiveTab('rules');
     else if (path === '/profile') setActiveTab('profile');
@@ -193,23 +192,8 @@ function MainAppRoutes() {
           } 
         />
 
-        <Route 
-          path="/missions" 
-          element={
-            <PortalLayout
-              onOpenRegister={openRegister}
-              onOpenLogin={openLogin}
-              onOpenFaq={() => setIsFaqModalOpen(true)}
-              onOpenContact={() => setIsContactModalOpen(true)}
-              onOpenLegal={openLegal}
-              isHeroReady={!isLoading}
-            >
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <MissionsView />
-              </div>
-            </PortalLayout>
-          } 
-        />
+        {/* Missions route now redirects directly to the Digital Heist experience */}
+        <Route path="/missions" element={<Navigate to="/heist" replace />} />
 
         <Route 
           path="/leaderboard" 

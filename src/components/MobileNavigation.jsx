@@ -276,7 +276,6 @@ export default function MobileNavigation() {
       navigate(item.route);
     } else {
       if (item.id === 'home') navigate('/');
-      else if (item.id === 'missions') navigate('/missions');
       else if (item.id === 'dashboard') navigate('/dashboard');
       else if (item.id === 'leaderboard') navigate('/leaderboard');
       else if (item.id === 'profile') navigate('/profile');
@@ -300,11 +299,11 @@ export default function MobileNavigation() {
       route: '/heist'
     },
     { 
-      id: 'missions', 
-      label: 'MISSIONS', 
-      code: 'FACILITY',
+      id: 'dashboard', 
+      label: 'COMMAND', 
+      code: 'TELEMETRY',
       icon: VaultDialIcon,
-      route: '/missions'
+      route: '/dashboard'
     },
     { 
       id: 'leaderboard', 
@@ -330,8 +329,8 @@ export default function MobileNavigation() {
     if (item.id === 'heist') {
       return currentPath.startsWith('/heist') || activeTab === 'heist';
     }
-    if (item.id === 'missions') {
-      return currentPath === '/missions' || currentPath === '/dashboard' || activeTab === 'missions' || activeTab === 'dashboard';
+    if (item.id === 'dashboard') {
+      return currentPath === '/dashboard' || activeTab === 'dashboard';
     }
     if (item.id === 'leaderboard') {
       return currentPath === '/leaderboard' || activeTab === 'leaderboard';
