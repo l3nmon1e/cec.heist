@@ -19,6 +19,8 @@ export const ALL_SECTORS = [
   'escape'
 ];
 
+const STORAGE_KEY = 'CEC_HEIST_V3';
+
 export function GameProvider({ children }) {
   const [missions, setMissions] = useState(() => {
     try {
@@ -32,23 +34,16 @@ export function GameProvider({ children }) {
   const [unlockedHints, setUnlockedHints] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY + '_HINTS');
-      return saved ? JSON.parse(saved) : { "mission-08": [1] };
+      return saved ? JSON.parse(saved) : {};
     } catch {
-      return { "mission-08": [1] };
+      return {};
     }
   });
 
   const [submissions, setSubmissions] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY + '_SUBS');
-      return saved ? JSON.parse(saved) : [
-        { id: 1, missionId: "mission-01", title: "VAULT GATEWAY SQLi", status: "VALID", points: 100, timestamp: "13:30:14" },
-        { id: 2, missionId: "mission-04", title: "AIRLOCK OVERRIDE IDOR", status: "VALID", points: 200, timestamp: "13:48:22" },
-        { id: 3, missionId: "mission-05", title: "INTERCEPTED FREQUENCY CIPHER", status: "VALID", points: 150, timestamp: "14:02:11" },
-        { id: 4, missionId: "mission-10", title: "CCTV FRAME STEGANOGRAPHY", status: "VALID", points: 150, timestamp: "14:15:40" },
-        { id: 5, missionId: "mission-14", title: "GIT COMMIT TRAIL", status: "VALID", points: 100, timestamp: "14:21:05" },
-        { id: 6, missionId: "mission-15", title: "BGP & SUBDOMAIN TRACE", status: "VALID", points: 200, timestamp: "14:38:52" }
-      ];
+      return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
     }
@@ -82,9 +77,9 @@ export function GameProvider({ children }) {
   // Heist Mode: EXPLORATION (Free-Roam Preview) vs COMPETITION (Strict Progression Lock)
   const [heistMode, setHeistMode] = useState(() => {
     try {
-      return localStorage.getItem(STORAGE_KEY + '_HEIST_MODE') || 'EXPLORATION';
+      return localStorage.getItem(STORAGE_KEY + '_HEIST_MODE') || 'COMPETITION';
     } catch {
-      return 'EXPLORATION';
+      return 'COMPETITION';
     }
   });
 
@@ -354,7 +349,7 @@ export function GameProvider({ children }) {
       let nextRoomUnlockedNow = null;
 
       if (matchedStage) {
-        // If primary mission solved, mark stage complete and unlock next stage
+        // Solving the room's primary objective completes the stage and unlocks the next room
         if (matchedStage.primaryMissionId === missionId) {
           stageCompletedNow = true;
           setCompletedRooms(prev => prev.includes(matchedStage.id) ? prev : [...prev, matchedStage.id]);
@@ -434,14 +429,24 @@ export function GameProvider({ children }) {
     }
   };
 
+  const isRoomCompleted = (stageId) => {
+    if (completedRooms.includes(stageId)) return true;
+    const stage = HEIST_STAGES_CONFIG.find(s => s.id === stageId);
+    if (!stage || !stage.primaryMissionId) return false;
+    return missions.find(m => m.id === stage.primaryMissionId)?.status === 'SOLVED';
+  };
+
   const isRoomUnlocked = (stageId) => {
     if (!stageId || stageId === 'entrance' || stageId === 'recon') return true;
     if (heistMode === 'EXPLORATION') return true;
-    return unlockedRooms.includes(stageId);
-  };
-
-  const isRoomCompleted = (stageId) => {
-    return completedRooms.includes(stageId);
+    
+    // Strict progression: A room is unlocked if and only if the preceding room is completed
+    const stageIndex = HEIST_STAGES_CONFIG.findIndex(s => s.id === stageId);
+    if (stageIndex > 0) {
+      const prevStage = HEIST_STAGES_CONFIG[stageIndex - 1];
+      return isRoomCompleted(prevStage.id);
+    }
+    return false;
   };
 
   const openInGameMission = (mission) => {

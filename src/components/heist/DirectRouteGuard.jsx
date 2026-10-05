@@ -7,7 +7,7 @@ import { ShieldAlert, Lock, ArrowLeft, Target } from 'lucide-react';
 
 export default function DirectRouteGuard({ stageId, children }) {
   const navigate = useNavigate();
-  const { isRoomUnlocked, unlockedRooms } = useGame();
+  const { isRoomUnlocked, isRoomCompleted } = useGame();
 
   const isUnlocked = isRoomUnlocked(stageId);
 
@@ -15,9 +15,8 @@ export default function DirectRouteGuard({ stageId, children }) {
     const currentStage = HEIST_STAGES_CONFIG.find(s => s.id === stageId) || {};
     const requiredStage = HEIST_STAGES_CONFIG.find(s => s.id === currentStage.requiredStageId) || { shortName: "PREVIOUS SECTOR" };
     
-    // Find the latest unlocked stage to redirect the player to
-    const latestUnlockedId = unlockedRooms[unlockedRooms.length - 1] || 'recon';
-    const latestUnlockedStage = HEIST_STAGES_CONFIG.find(s => s.id === latestUnlockedId) || HEIST_STAGES_CONFIG[1];
+    // Find the current active stage the player needs to complete
+    const latestUnlockedStage = HEIST_STAGES_CONFIG.slice(1).find(s => !isRoomCompleted(s.id)) || HEIST_STAGES_CONFIG[1];
 
     return (
       <div className="relative min-h-[70vh] flex items-center justify-center p-4 sm:p-8 font-mono select-none">

@@ -60,7 +60,7 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/initial-access",
     nextStageId: "initial-access",
     primaryMissionId: "mission-14", // Git Commit Trail / The Leaked Blueprint
-    secondaryMissionIds: ["mission-15", "mission-16"],
+    secondaryMissionIds: ["mission-15"],
     rewardItem: {
       id: "item-blueprint",
       name: "FACILITY BLUEPRINT & ACCESS KEY",
@@ -122,7 +122,7 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/infiltration",
     nextStageId: "infiltration",
     primaryMissionId: "mission-01", // Vault Gateway SQLi / The Forgotten Login
-    secondaryMissionIds: ["mission-04", "mission-02"],
+    secondaryMissionIds: ["mission-04"],
     rewardItem: {
       id: "item-badge",
       name: "SECURITY BADGE TOKEN",
@@ -184,7 +184,7 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/network",
     nextStageId: "network",
     primaryMissionId: "mission-08", // The Locked Terminal / Volatile RAM Dump
-    secondaryMissionIds: ["mission-10", "mission-09"],
+    secondaryMissionIds: ["mission-10"],
     rewardItem: {
       id: "item-forensic",
       name: "FORENSIC CRYPT-KEY",
@@ -246,7 +246,7 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/security",
     nextStageId: "security",
     primaryMissionId: "mission-17", // Modbus PLC Switch Override
-    secondaryMissionIds: ["mission-18", "mission-19"],
+    secondaryMissionIds: ["mission-19"],
     telemetry: {
       nodes: 24,
       active: 19,
@@ -314,7 +314,7 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/core",
     nextStageId: "core",
     primaryMissionId: "mission-03", // Telemetry Injection / Shadow Hash
-    secondaryMissionIds: ["mission-05", "mission-06"],
+    secondaryMissionIds: ["mission-06"],
     telemetry: {
       cameras: "ACTIVE (16/16)",
       doors: "LOCKED",
@@ -382,12 +382,12 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/vault",
     nextStageId: "vault",
     primaryMissionId: "mission-11", // Vault Arm Binary / Core Firmware
-    secondaryMissionIds: ["mission-07", "mission-12"],
+    secondaryMissionIds: ["mission-12"],
     multiRequirements: [
       { id: "req-net", name: "NETWORK KEY", isComplete: true },
       { id: "req-enc", name: "ENCRYPTION KEY", isComplete: true },
       { id: "req-adm", name: "ADMIN ACCESS", isComplete: false, missionId: "mission-11" },
-      { id: "req-sec", name: "SECURITY BYPASS", isComplete: true }
+      { id: "req-sec", name: "FIRMWARE BYPASS", isComplete: false, missionId: "mission-12" }
     ],
     rewardItem: {
       id: "item-master-cred",
@@ -450,6 +450,7 @@ export const HEIST_STAGES_CONFIG = [
     nextRoute: "/heist/escape",
     nextStageId: "escape",
     primaryMissionId: "mission-13", // Malware Domain Extract / Master Vault Breach
+    secondaryMissionIds: ["mission-07"], // Weak RSA Modulus / Hardware Cryptography
     vaultProtocolSystems: [
       { id: "sys-enc", name: "ENCRYPTION", defaultSolved: false },
       { id: "sys-auth", name: "AUTHENTICATION", defaultSolved: false },
@@ -481,9 +482,10 @@ export const HEIST_STAGES_CONFIG = [
         type: "mechanism",
         icon: "Disc",
         status: "ENGAGED",
-        badge: "PNEUMATIC PINS",
-        description: "Triple precision locking wheel with interlocking high-tensile steel pins.",
-        actionLabel: "INSPECT MECHANISM"
+        badge: "RSA HSM LOCK",
+        description: "Triple precision locking wheel secured by embedded HSM cryptographic factors.",
+        actionLabel: "FACTOR RSA KEY",
+        missionId: "mission-07"
       }
     ]
   },

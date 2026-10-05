@@ -8,7 +8,8 @@ export default function Door({
   status = 'LOCKED', // 'LOCKED' | 'AUTHENTICATING' | 'ACCESS_GRANTED' | 'UNLOCKING' | 'OPEN'
   onOpen, 
   nextRoomName = '', 
-  className = "" 
+  className = "",
+  subText = null
 }) {
   const { heistMode } = useGame();
   const isExploration = heistMode === 'EXPLORATION';
@@ -97,7 +98,7 @@ export default function Door({
           ) : (
             <span className="text-[#8D98A8] flex items-center space-x-1.5">
               <ShieldAlert className="w-4 h-4 text-[#B85C5C]" />
-              <span>CLEAR ROOM OBJECTIVE ABOVE TO DISENGAGE DOOR</span>
+              <span>{subText || "CLEAR ROOM OBJECTIVE ABOVE TO DISENGAGE DOOR"}</span>
             </span>
           )}
         </div>

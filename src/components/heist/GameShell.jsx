@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useGame } from '../../context/GameContext';
 import GameHUD from './GameHUD';
-import SectorStepper from './SectorStepper';
 import FacilityMapModal from './FacilityMapModal';
 import InventoryModal from './InventoryModal';
 import MissionPanel from './MissionPanel';
@@ -61,8 +60,8 @@ export default function GameShell() {
         currentStageTitle={currentStage.shortName}
       />
 
-      {/* Sector Stage Progression Stepper */}
-      <SectorStepper />
+
+
 
       {/* Game World (Primary Area) */}
       <main className="flex-1 w-full relative z-10 flex flex-col">

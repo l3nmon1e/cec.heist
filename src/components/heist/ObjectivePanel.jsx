@@ -9,7 +9,9 @@ export default function ObjectivePanel({
   isCompleted = false, 
   onNextRoom = null,
   nextRoomName = null,
-  className = "" 
+  className = "",
+  challengesSolved = null,
+  totalChallenges = null
 }) {
   const { heistMode } = useGame();
   const isExploration = heistMode === 'EXPLORATION';
@@ -38,17 +40,28 @@ export default function ObjectivePanel({
           <span className={`text-[11px] sm:text-xs font-bold tracking-widest uppercase ${
             isCompleted ? 'text-[#4FB286]' : 'text-[#C8A96B]'
           }`}>
-            {isCompleted ? 'SECTOR OBJECTIVE COMPLETE' : 'CURRENT SECTOR OBJECTIVE'}
+            {isCompleted ? 'SECTOR OBJECTIVES COMPLETE' : 'CURRENT SECTOR OBJECTIVES'}
           </span>
         </div>
 
-        <span className={`text-[10px] px-2.5 py-0.5 uppercase tracking-wider font-bold border rounded-sm ${
-          isCompleted 
-            ? 'bg-[#4FB286] text-[#070B12] border-[#4FB286]' 
-            : 'bg-[#C8A96B]/10 border-[#C8A96B]/40 text-[#C8A96B]'
-        }`}>
-          {isCompleted ? 'ACCESS GRANTED' : 'OPERATION ACTIVE'}
-        </span>
+        <div className="flex items-center space-x-2">
+          {totalChallenges != null && (
+            <span className={`text-[10px] px-2 py-0.5 uppercase tracking-wider font-bold border rounded-sm ${
+              challengesSolved >= totalChallenges 
+                ? 'bg-[#4FB286]/20 border-[#4FB286] text-[#4FB286]' 
+                : 'bg-[#C8A96B]/15 border-[#C8A96B]/40 text-[#C8A96B]'
+            }`}>
+              CHALLENGES: {challengesSolved}/{totalChallenges}
+            </span>
+          )}
+          <span className={`text-[10px] px-2.5 py-0.5 uppercase tracking-wider font-bold border rounded-sm ${
+            isCompleted 
+              ? 'bg-[#4FB286] text-[#070B12] border-[#4FB286]' 
+              : 'bg-[#C8A96B]/10 border-[#C8A96B]/40 text-[#C8A96B]'
+          }`}>
+            {isCompleted ? 'ACCESS GRANTED' : 'OPERATION ACTIVE'}
+          </span>
+        </div>
       </div>
 
       {/* Main Objective Title */}
@@ -61,6 +74,14 @@ export default function ObjectivePanel({
         <p className="text-xs text-[#8D98A8] font-sans leading-relaxed">
           {description}
         </p>
+      )}
+
+      {/* 2-Challenge Sector Rule Notice when incomplete */}
+      {!isCompleted && totalChallenges > 1 && (
+        <div className="mt-2.5 pt-2 border-t border-[#263140]/60 flex items-center space-x-2 text-[11px] text-[#C8A96B]">
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+          <span>Both sector challenges ({challengesSolved}/{totalChallenges}) must be solved to disengage the exit blast gate.</span>
+        </div>
       )}
 
       {/* Action to proceed: Highlighted for easy discovery */}
