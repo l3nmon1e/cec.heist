@@ -144,27 +144,40 @@ export default function HeistRoomLayout({
             {customCenterpiece ? (
               customCenterpiece
             ) : isMissionSolved ? (
-              /* Minimal, Satisfying Success State */
-              <div className="bg-[#070B12]/95 border-2 border-[#4FB286]/60 p-6 sm:p-8 max-w-md w-full shadow-[0_0_35px_rgba(79,178,134,0.15)] backdrop-blur-md animate-in fade-in zoom-in-95 duration-300">
-                <div className="w-12 h-12 rounded-full bg-[#4FB286]/10 border border-[#4FB286] flex items-center justify-center text-[#4FB286] mx-auto mb-3">
-                  <CheckCircle2 className="w-6 h-6" />
+              /* Minimal, Cinematic Access Granted Centerpiece */
+              <div className="relative bg-[#070B12]/95 border-2 border-[#4FB286] p-6 sm:p-8 max-w-md w-full shadow-[0_0_45px_rgba(79,178,134,0.25)] backdrop-blur-md overflow-hidden rounded-xs animate-in fade-in zoom-in-95 duration-300 group">
+                
+                {/* Subtle Digital Scanline Sweep */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(79,178,134,0.04)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none" />
+                <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#4FB286]/10 rounded-full blur-2xl pointer-events-none" />
+
+                {/* Pulsing Hologram Emblem */}
+                <div className="relative w-14 h-14 rounded-full bg-[#0C111A] border-2 border-[#4FB286] flex items-center justify-center text-[#4FB286] mx-auto mb-3 shadow-[0_0_25px_rgba(79,178,134,0.4)]">
+                  <Unlock className="w-7 h-7 drop-shadow-[0_0_8px_#4FB286]" />
+                  <div className="absolute -inset-1 rounded-full border border-[#4FB286]/50 animate-ping opacity-75 pointer-events-none" />
                 </div>
                 
-                <div className="text-xs text-[#4FB286] font-bold tracking-widest uppercase mb-1">
-                  ✓ OBJECTIVE COMPLETE
+                {/* Status Badges */}
+                <div className="inline-flex items-center space-x-1.5 px-3 py-0.5 bg-[#4FB286]/15 border border-[#4FB286]/40 text-[10px] text-[#4FB286] font-black tracking-[0.25em] uppercase mb-2">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span>OBJECTIVE COMPLETE</span>
                 </div>
                 
-                <h3 className="text-lg sm:text-xl font-black text-[#F4F5F7] tracking-wider uppercase mb-5">
-                  {completedStatusText}
+                <h3 className="text-xl sm:text-2xl font-black text-[#F4F5F7] tracking-[0.15em] uppercase mb-1 font-mono drop-shadow-[0_0_15px_rgba(79,178,134,0.5)]">
+                  {completedStatusText || "ACCESS GRANTED"}
                 </h3>
+
+                <p className="text-xs text-[#8D98A8] font-sans mb-6">
+                  Security perimeter disengaged. Bulkhead interlock unsealed.
+                </p>
 
                 {nextRoute ? (
                   <button
                     onClick={handleProceedNext}
-                    className="w-full py-3.5 px-6 bg-[#4FB286] hover:bg-[#5fc597] text-[#070B12] font-black uppercase tracking-wider text-sm font-mono flex items-center justify-center space-x-2 transition-all shadow-[0_0_20px_rgba(79,178,134,0.35)] hover:shadow-[0_0_30px_rgba(79,178,134,0.5)] active:scale-95"
+                    className="w-full py-3.5 px-6 bg-gradient-to-r from-[#4FB286] to-[#34D399] hover:from-[#5fc597] hover:to-[#4ade80] text-[#070B12] font-black uppercase tracking-[0.15em] text-sm font-mono flex items-center justify-center space-x-2 transition-all shadow-[0_0_25px_rgba(79,178,134,0.4)] hover:shadow-[0_0_35px_rgba(79,178,134,0.6)] active:scale-95 cursor-pointer rounded-xs"
                   >
                     <span>ENTER NEXT ROOM</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 animate-pulse" />
                   </button>
                 ) : isFinalRoom && finalSuccessContent ? (
                   finalSuccessContent

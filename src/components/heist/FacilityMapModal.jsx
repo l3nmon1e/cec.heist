@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 
 export default function FacilityMapModal({ currentStageId, onNavigateRoom, onClose }) {
-  const { isRoomUnlocked, isRoomCompleted } = useGame();
+  const { isRoomUnlocked, isRoomCompleted, heistMode, toggleHeistMode } = useGame();
 
   return (
     <div className="fixed inset-0 z-50 bg-[#070B12]/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -60,9 +60,30 @@ export default function FacilityMapModal({ currentStageId, onNavigateRoom, onClo
                 SITE-DELTA SUBTERRANEAN COMPLEX
               </div>
             </div>
-            <div className="relative z-10 flex items-center space-x-4 text-[11px] text-[#8D98A8]">
+            <div className="relative z-10 flex flex-wrap items-center gap-3 text-[11px] text-[#8D98A8]">
               <div>CLEARANCE: <span className="text-[#C8A96B] font-bold">LEVEL-4 OMNI</span></div>
               <div>STAGES: <span className="text-[#F4F5F7] font-bold">9 SECTORS</span></div>
+
+              <button
+                onClick={toggleHeistMode}
+                className={`px-2.5 py-1 text-xs border font-mono flex items-center space-x-1.5 transition-all cursor-pointer rounded-xs ${
+                  heistMode === 'EXPLORATION'
+                    ? 'bg-[#C8A96B]/20 border-[#C8A96B] text-[#C8A96B] shadow-[0_0_10px_rgba(200,169,107,0.3)]'
+                    : 'bg-[#121923] hover:bg-[#263140] border-[#263140] text-[#8D98A8] hover:text-[#F4F5F7]'
+                }`}
+              >
+                {heistMode === 'EXPLORATION' ? (
+                  <>
+                    <Unlock className="w-3.5 h-3.5 text-[#C8A96B]" />
+                    <span className="font-bold">ALL ROOMS UNLOCKED</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-3.5 h-3.5 text-[#8D98A8]" />
+                    <span>UNLOCK ALL ROOMS</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
 

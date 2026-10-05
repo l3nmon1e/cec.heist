@@ -15,7 +15,9 @@ import {
   LogOut,
   Layers,
   AlertTriangle,
-  Sliders
+  Sliders,
+  Lock,
+  Unlock
 } from 'lucide-react';
 
 export default function GameHUD({ onExitHeist, currentStageTitle }) {
@@ -114,8 +116,32 @@ export default function GameHUD({ onExitHeist, currentStageTitle }) {
             </div>
           </div>
 
-          {/* Right Action Utilities: MAP, GEAR, SOUND, EXIT */}
+          {/* Right Action Utilities: UNLOCK ALL, MAP, GEAR, SOUND, EXIT */}
           <div className="flex items-center space-x-1 sm:space-x-1.5 text-xs font-mono">
+            {/* Unlock All Rooms Toggle (Dev/Testing Mode) */}
+            <button
+              onClick={toggleHeistMode}
+              title={heistMode === 'EXPLORATION' ? "Lock Rooms (Enforce Strict Progression)" : "Unlock All Rooms (Free Roam Mode)"}
+              className={`flex items-center space-x-1 px-2 py-1 text-[11px] font-mono transition-all cursor-pointer rounded-xs border ${
+                heistMode === 'EXPLORATION'
+                  ? 'bg-[#C8A96B]/20 border-[#C8A96B] text-[#C8A96B] shadow-[0_0_10px_rgba(200,169,107,0.3)]'
+                  : 'bg-[#0C111A] hover:bg-[#121923] border-[#263140] hover:border-[#C8A96B] text-[#8D98A8] hover:text-[#F4F5F7]'
+              }`}
+            >
+              {heistMode === 'EXPLORATION' ? (
+                <>
+                  <Unlock className="w-3.5 h-3.5 text-[#C8A96B]" />
+                  <span className="font-bold">UNLOCKED</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3.5 h-3.5 text-[#8D98A8]" />
+                  <span className="hidden sm:inline">UNLOCK ALL</span>
+                  <span className="sm:hidden">UNLOCK</span>
+                </>
+              )}
+            </button>
+
             {/* Facility Map Trigger */}
             <button
               onClick={() => {

@@ -1,17 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import HeistRoomLayout from '../HeistRoomLayout';
+import VaultUnlockingSequence from '../VaultUnlockingSequence';
 import { useGame } from '../../../context/GameContext';
 import { Disc, AlertTriangle } from 'lucide-react';
 
 export default function VaultRoom() {
+  const navigate = useNavigate();
+  const { onAdvanceRoom } = useOutletContext() || {};
   const { isRoomCompleted, missions, triggerLockdown, lockdownActive } = useGame();
+  
+  const [isCutsceneActive, setIsCutsceneActive] = useState(false);
   const isMissionSolved = missions.find(m => m.id === 'mission-13')?.status === 'SOLVED' || isRoomCompleted('vault');
 
-  useEffect(() => {
-    if (isMissionSolved && !lockdownActive && triggerLockdown) {
+  const handleProceedWithCutscene = () => {
+    setIsCutsceneActive(true);
+  };
+
+  const handleCutsceneComplete = () => {
+    setIsCutsceneActive(false);
+    if (triggerLockdown) {
       triggerLockdown();
     }
-  }, [isMissionSolved, lockdownActive, triggerLockdown]);
+
+    if (onAdvanceRoom) {
+      onAdvanceRoom('/heist/escape', 'EMERGENCY ESCAPE ROUTE');
+    } else {
+      navigate('/heist/escape');
+    }
+  };
 
   return (
     <div className="relative w-full flex-1 flex flex-col justify-between">
@@ -41,6 +58,13 @@ export default function VaultRoom() {
         nextRoomName="ESCAPE ROUTE"
         missionId="mission-13"
         monitoringBadge={isMissionSolved ? "LOCKDOWN ACTIVE" : "VAULT INTERLOCK ARMED"}
+        customSuccessAction={handleProceedWithCutscene}
+      />
+
+      {/* Fullscreen Procedural 3D Vault Unlocking Cutscene */}
+      <VaultUnlockingSequence
+        isActive={isCutsceneActive}
+        onComplete={handleCutsceneComplete}
       />
     </div>
   );
