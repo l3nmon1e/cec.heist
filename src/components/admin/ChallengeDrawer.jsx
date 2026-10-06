@@ -55,7 +55,8 @@ export const ChallengeDrawer = ({ mission, onClose, onUpdated }) => {
   };
 
   const handleReleaseHint = (hintId) => {
-    unlockHint(mission.id, hintId);
+    const hintObj = (mission.hints || []).find(h => h.id === hintId);
+    unlockHint(mission.id, hintId, hintObj?.penalty || 0);
   };
 
   return (

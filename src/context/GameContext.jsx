@@ -68,9 +68,9 @@ export function GameProvider({ children }) {
   // Heist Central Game State
   const [crewName, setCrewName] = useState(() => {
     try {
-      return localStorage.getItem(STORAGE_KEY + '_CREW') || 'GHOST-07';
+      return localStorage.getItem(STORAGE_KEY + '_CREW') || 'SPECTRE-9';
     } catch {
-      return 'GHOST-07';
+      return 'SPECTRE-9';
     }
   });
 
@@ -155,7 +155,14 @@ export function GameProvider({ children }) {
   const [transitionData, setTransitionData] = useState({ title: '', subtitle: '', nextRoute: null });
 
   // Countdown timer: 02:47:18 -> ~10038 seconds
-  const [secondsRemaining, setSecondsRemaining] = useState(10038);
+  const [secondsRemaining, setSecondsRemaining] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY + '_TIMER');
+      return saved ? parseInt(saved, 10) : 10038;
+    } catch {
+      return 10038;
+    }
+  });
   const [isGamePaused, setIsGamePaused] = useState(false);
   const [broadcastMessage, setBroadcastMessage] = useState(() => {
     try {
@@ -210,10 +217,11 @@ export function GameProvider({ children }) {
       localStorage.setItem(STORAGE_KEY + '_LOCKDOWN', lockdownActive ? 'true' : 'false');
       localStorage.setItem(STORAGE_KEY + '_LOCKDOWN_TIME', lockdownSecondsRemaining.toString());
       localStorage.setItem(STORAGE_KEY + '_ESCAPED', escapeComplete ? 'true' : 'false');
+      localStorage.setItem(STORAGE_KEY + '_TIMER', secondsRemaining.toString());
     } catch (e) {
       console.warn("Storage save error", e);
     }
-  }, [missions, unlockedHints, submissions, leaderboard, crewName, unlockedRooms, completedRooms, inventory, lockdownActive, lockdownSecondsRemaining, escapeComplete]);
+  }, [missions, unlockedHints, submissions, leaderboard, crewName, unlockedRooms, completedRooms, inventory, lockdownActive, lockdownSecondsRemaining, escapeComplete, secondsRemaining]);
 
   // Derived Player Stats
   const solvedMissions = missions.filter(m => m.status === 'SOLVED');
@@ -260,7 +268,7 @@ export function GameProvider({ children }) {
   // Recalculate player profile dynamically based on live score and telemetry
   const currentPlayer = {
     id: "OP-7492",
-    callsign: crewName || "GHOST-07",
+    callsign: crewName || "SPECTRE-9",
     affiliation: "Canara Engineering College",
     score: totalScore,
     rank: myRank,
@@ -278,7 +286,7 @@ export function GameProvider({ children }) {
     setAudioEnabled(state);
   };
 
-  const unlockHint = (missionId, hintId, penalty) => {
+  const unlockHint = (missionId, hintId, penalty = 0) => {
     sound.playBeep(440, 0.06);
     setUnlockedHints(prev => {
       const existing = prev[missionId] || [];
@@ -287,13 +295,14 @@ export function GameProvider({ children }) {
     });
 
     const mission = missions.find(m => m.id === missionId);
+    const penaltyNum = Number(penalty) || 0;
     const newActivity = {
       id: Date.now(),
       timestamp: new Date().toTimeString().slice(0, 8),
-      team: "SPECTRE-9",
+      team: crewName || "SPECTRE-9",
       event: "HINT_UNLOCKED",
       mission: `${mission?.number || '00'} - ${mission?.title || 'MISSION'} (HINT #${hintId})`,
-      penalty: -penalty
+      penalty: -penaltyNum
     };
     setActivities(prev => [newActivity, ...prev.slice(0, 19)]);
   };
@@ -349,7 +358,7 @@ export function GameProvider({ children }) {
       const newAct = {
         id: Date.now(),
         timestamp: nowTime,
-        team: "SPECTRE-9",
+        team: crewName || "SPECTRE-9",
         event: "FLAG_CAPTURED",
         mission: `MISSION ${mission.number} - ${mission.title}`,
         points: pointsAwarded
@@ -478,7 +487,14 @@ export function GameProvider({ children }) {
 
   const triggerLockdown = () => {
     setLockdownActive(true);
+    setLockdownSecondsRemaining(300);
     sound.playLockdown();
+  };
+
+  const haltLockdown = () => {
+    setLockdownActive(false);
+    setLockdownSecondsRemaining(300);
+    sound.playBeep(440, 0.1);
   };
 
   const triggerEscapeComplete = () => {
@@ -507,6 +523,7 @@ export function GameProvider({ children }) {
     localStorage.removeItem(STORAGE_KEY + '_LOCKDOWN');
     localStorage.removeItem(STORAGE_KEY + '_LOCKDOWN_TIME');
     localStorage.removeItem(STORAGE_KEY + '_ESCAPED');
+    localStorage.removeItem(STORAGE_KEY + '_TIMER');
 
     const resetMissions = MISSIONS_DATA.map(m => ({
       ...m,
@@ -522,6 +539,7 @@ export function GameProvider({ children }) {
     setInventory([]);
     setLockdownActive(false);
     setLockdownSecondsRemaining(300);
+    setSecondsRemaining(10038);
     setEscapeComplete(false);
     sound.playBeep(300, 0.1);
   };
@@ -633,6 +651,7 @@ export function GameProvider({ children }) {
         startTransition,
         finishTransition,
         triggerLockdown,
+        haltLockdown,
         triggerEscapeComplete,
         // Admin State & Methods
         isGamePaused,

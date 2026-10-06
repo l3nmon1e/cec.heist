@@ -44,7 +44,7 @@ export default function CrewAvatar({ isMoving = false, className = "" }) {
           </span>
         </div>
         <div className="text-xs sm:text-sm font-black tracking-wider text-[#F4F5F7] flex items-center space-x-1">
-          <span className="text-[#C8A96B]">{crewName || "GHOST-07"}</span>
+          <span className="text-[#C8A96B]">{crewName || "SPECTRE-9"}</span>
           <span className="text-[10px] text-[#8D98A8] hidden sm:inline">[{currentPlayer.callsign || "OP-7492"}]</span>
         </div>
       </div>

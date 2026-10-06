@@ -47,22 +47,28 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
   const handleCategoryClick = (categoryName) => {
     sound.playClick();
     let cat = (categoryName || '').toUpperCase();
+    let targetSector = '/heist/recon';
     if (cat.includes('REVERSE')) {
       cat = 'REVERSE';
+      targetSector = '/heist/core';
     } else if (cat.includes('WEB')) {
       cat = 'WEB';
+      targetSector = '/heist/initial-access';
     } else if (cat.includes('CRYPTO')) {
       cat = 'CRYPTO';
+      targetSector = '/heist/security';
     } else if (cat.includes('FORENSIC')) {
       cat = 'FORENSICS';
+      targetSector = '/heist/infiltration';
     } else if (cat.includes('NETWORK')) {
       cat = 'NETWORK';
+      targetSector = '/heist/network';
     }
     if (setSelectedCategory) {
       setSelectedCategory(cat);
     }
     setActiveTab('heist');
-    navigate('/heist');
+    navigate(targetSector);
   };
 
   return (
@@ -174,7 +180,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
                   sound.playClick();
                   onOpenRegister();
                 }}
-                className="hidden sm:flex px-6 py-3.5 sm:py-4 bg-[#121923] hover:bg-[#263140] border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] font-extrabold text-sm sm:text-base tracking-wider uppercase items-center space-x-2 transition-all cursor-pointer rounded-lg"
+                className="w-full sm:w-auto px-6 py-3.5 sm:py-4 bg-[#121923] hover:bg-[#263140] border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] font-extrabold text-sm sm:text-base tracking-wider uppercase flex items-center justify-center space-x-2 transition-all cursor-pointer rounded-lg"
               >
                 <span>REGISTER CREW</span>
               </button>
@@ -185,7 +191,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
                   const el = document.getElementById('about-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="hidden sm:flex px-4 py-3.5 sm:py-4 text-xs sm:text-sm font-bold text-[#8D98A8] hover:text-[#C8A96B] tracking-wider uppercase items-center space-x-1.5 transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-4 py-3.5 sm:py-4 text-xs sm:text-sm font-bold text-[#8D98A8] hover:text-[#C8A96B] tracking-wider uppercase flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
               >
                 <span>FACILITY INTEL</span>
                 <ArrowRight className="w-4 h-4 text-[#566375] group-hover:text-[#C8A96B]" />
@@ -566,6 +572,29 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
             <p className="text-xs text-[#737373] tracking-widest uppercase">
               ONE TEAM. ONE MISSION.
             </p>
+            <div className="flex items-center space-x-3 pt-2 font-mono text-xs">
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  navigate('/rules');
+                }}
+                className="text-[#8D98A8] hover:text-[#C8A96B] underline cursor-pointer"
+              >
+                EVENT RULES
+              </button>
+              <span className="text-[#303030]">•</span>
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playClick();
+                  onOpenFaq?.();
+                }}
+                className="text-[#8D98A8] hover:text-[#C8A96B] underline cursor-pointer"
+              >
+                HEIST FAQ
+              </button>
+            </div>
           </div>
 
           {/* Center Newsletter Box */}

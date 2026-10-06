@@ -24,7 +24,8 @@ export default function ProfileView() {
     submissions, 
     resetAllProgress,
     setSelectedMissionId,
-    setActiveTab
+    setActiveTab,
+    completedRooms = []
   } = useGame();
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -173,7 +174,7 @@ export default function ProfileView() {
           <span className="text-[#566375]">
             {HEIST_STAGES.filter(stage => {
               const sMissions = stage.missionIds.map(id => missions.find(m => m.id === id)).filter(Boolean);
-              return sMissions.length > 0 && sMissions.every(m => m.status === 'SOLVED');
+              return completedRooms.includes(stage.id) || (sMissions.length > 0 && sMissions.some(m => m.status === 'SOLVED'));
             }).length} / {HEIST_STAGES.length} SECTORS CLEARED
           </span>
         </div>
@@ -182,9 +183,9 @@ export default function ProfileView() {
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3 pt-1">
           {HEIST_STAGES.map((stage, idx) => {
             const stageMissions = stage.missionIds.map(id => missions.find(m => m.id === id)).filter(Boolean);
-            const stageSolved = stageMissions.filter(m => m.status === 'SOLVED').length;
-            const isCompleted = stageMissions.length > 0 && stageSolved === stageMissions.length;
-            const pct = stageMissions.length ? Math.round((stageSolved / stageMissions.length) * 100) : 0;
+            const isCompleted = completedRooms.includes(stage.id) || (stageMissions.length > 0 && stageMissions.some(m => m.status === 'SOLVED'));
+            const stageSolved = isCompleted ? stageMissions.length : stageMissions.filter(m => m.status === 'SOLVED').length;
+            const pct = isCompleted ? 100 : (stageMissions.length ? Math.round((stageSolved / stageMissions.length) * 100) : 0);
 
             return (
               <div 

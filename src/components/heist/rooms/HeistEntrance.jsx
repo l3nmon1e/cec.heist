@@ -88,7 +88,7 @@ export default function HeistEntrance() {
             </div>
             <div className="bg-[#0C111A]/90 border border-[#263140] p-2.5">
               <div className="text-[10px] text-[#8D98A8] uppercase">ASSIGNED CREW</div>
-              <div className="font-bold text-[#F4F5F7] tracking-wider">{crewName || "GHOST-07"}</div>
+              <div className="font-bold text-[#F4F5F7] tracking-wider">{crewName || "SPECTRE-9"}</div>
             </div>
           </div>
 

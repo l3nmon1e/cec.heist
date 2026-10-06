@@ -23,8 +23,8 @@ export const ChallengeTable = ({ initialSectorFilter = 'ALL' }) => {
 
     const matchesSector = 
       sectorFilter === 'ALL' || 
-      sec.sectorShort.toLowerCase() === sectorFilter.toLowerCase() ||
-      sec.sector.toLowerCase().includes(sectorFilter.toLowerCase());
+      (sec?.sectorShort && sec.sectorShort.toLowerCase() === sectorFilter.toLowerCase()) ||
+      (sec?.sector && sec.sector.toLowerCase().includes(sectorFilter.toLowerCase()));
 
     const matchesDifficulty = 
       difficultyFilter === 'ALL' || 
@@ -127,7 +127,7 @@ export const ChallengeTable = ({ initialSectorFilter = 'ALL' }) => {
 
                     {/* Sector */}
                     <td className="py-3 px-4 text-[#8994A4]">
-                      {sec.sectorShort}
+                      {sec?.sectorShort || sec?.sector || 'General'}
                     </td>
 
                     {/* Difficulty */}

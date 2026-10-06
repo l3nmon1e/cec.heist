@@ -234,7 +234,7 @@ export default function FacilityMap({ selectedStageId, onSelectStage, onOpenMiss
                 onClick={() => {
                   sound.playClick();
                   onSelectStage(activeStageData.id);
-                  const el = document.getElementById('missions-dossier-grid');
+                  const el = document.getElementById('missions-dossier-grid') || document.getElementById('challenges-section');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
                 className="flex items-center space-x-2 px-4 py-2 bg-[#C8A96B] hover:bg-[#D6A85F] text-[#070B12] font-bold text-xs tracking-wider transition-colors cursor-pointer"

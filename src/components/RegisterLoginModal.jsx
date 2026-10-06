@@ -22,7 +22,7 @@ export default function RegisterLoginModal({ isOpen, onClose, defaultMode = 'reg
   const handleSubmit = (e) => {
     e.preventDefault();
     sound.playSuccess();
-    const callsign = (teamName || operatorHandle || 'GHOST-07').trim().toUpperCase();
+    const callsign = (teamName || operatorHandle || 'SPECTRE-9').trim().toUpperCase();
     if (setCrewName) {
       setCrewName(callsign);
     }

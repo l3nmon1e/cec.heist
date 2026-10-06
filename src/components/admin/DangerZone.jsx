@@ -6,6 +6,7 @@ export const DangerZone = () => {
   const { 
     resetAllProgress, 
     triggerLockdown, 
+    haltLockdown,
     lockdownActive 
   } = useGame();
 
@@ -161,7 +162,11 @@ export const DangerZone = () => {
               <button
                 type="button"
                 onClick={() => {
-                  triggerLockdown();
+                  if (lockdownActive) {
+                    haltLockdown();
+                  } else {
+                    triggerLockdown();
+                  }
                   setIsLockdownConfirmOpen(false);
                 }}
                 className="px-4 py-1.5 rounded bg-[#D6AA55] text-[#070B12] font-bold hover:bg-[#e4b865] transition-colors"

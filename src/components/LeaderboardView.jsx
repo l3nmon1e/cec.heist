@@ -117,13 +117,13 @@ export default function LeaderboardView() {
 
                 {/* 2. TEAM COLUMN */}
                 <div className="col-span-8 sm:col-span-9 flex items-center space-x-3 sm:space-x-4">
-                  {/* Square TE Badge in matching theme */}
+                  {/* Square initials badge in matching theme */}
                   <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded bg-[#121923] border text-[10px] font-bold flex items-center justify-center shrink-0 select-none ${
                     isCurrent 
                       ? 'border-[#C8A96B] text-[#C8A96B]' 
                       : 'border-[#263140] text-[#8D98A8]'
                   }`}>
-                    TE
+                    {(entry.team || 'TE').split(' ').filter(Boolean).map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'TE'}
                   </div>
 
                   {/* Team Name */}

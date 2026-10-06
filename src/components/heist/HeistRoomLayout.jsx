@@ -246,7 +246,9 @@ export default function HeistRoomLayout({
 
           <div className="w-full sm:w-auto shrink-0">
             {isMissionSolved ? (
-              nextRoute ? (
+              finalSuccessContent ? (
+                finalSuccessContent
+              ) : nextRoute ? (
                 <button
                   onClick={handleProceedNext}
                   className="w-full sm:w-auto px-6 py-2.5 bg-[#4FB286] hover:bg-[#5fc597] text-[#070B12] font-black uppercase tracking-wider text-xs sm:text-sm font-mono flex items-center justify-center space-x-2 transition-all shadow-[0_0_20px_rgba(79,178,134,0.3)] active:scale-95"
@@ -254,7 +256,15 @@ export default function HeistRoomLayout({
                   <span>CONTINUE</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
-              ) : null
+              ) : (
+                <button
+                  onClick={customSuccessAction || handleProceedNext}
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#4FB286] hover:bg-[#5fc597] text-[#070B12] font-black uppercase tracking-wider text-xs sm:text-sm font-mono flex items-center justify-center space-x-2 transition-all shadow-[0_0_20px_rgba(79,178,134,0.3)] active:scale-95"
+                >
+                  <span>OPERATION COMPLETE</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              )
             ) : (
               <button
                 onClick={handlePrimaryAction}

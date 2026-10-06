@@ -137,7 +137,7 @@ export default function DashboardView() {
               <Clock className="w-5 h-5 text-[#D6A85F]" />
               <span>{formatTimer(secondsRemaining)}</span>
             </div>
-            <div className="text-[10px] text-[#566375]">EXFILTRATION CUTOFF: 04:00:00</div>
+            <div className="text-[10px] text-[#566375]">EXFILTRATION WINDOW: {formatTimer(secondsRemaining)}</div>
           </div>
 
         </div>
@@ -288,8 +288,8 @@ export default function DashboardView() {
                 </div>
 
                 <div className="text-right shrink-0">
-                  <span className={`font-bold text-xs ${act.penalty ? 'text-[#B85C5C]' : 'text-[#C8A96B]'}`}>
-                    {act.penalty ? `${act.penalty} PTS` : `+${act.points} PTS`}
+                  <span className={`font-bold text-xs ${act.penalty != null ? 'text-[#B85C5C]' : 'text-[#C8A96B]'}`}>
+                    {act.penalty != null ? `${Number(act.penalty) || 0} PTS` : `+${act.points || 0} PTS`}
                   </span>
                   <span className="text-[9px] text-[#566375] block">{act.timestamp}</span>
                 </div>

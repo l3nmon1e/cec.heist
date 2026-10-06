@@ -238,7 +238,7 @@ export default function MissionsView() {
 
       {/* 3. VIEW 1: MISSIONS GRID (Clean, Direct, Zero Clutter) */}
       {activeView === 'missions' && (
-        <section className="space-y-6">
+        <section id="missions-dossier-grid" className="space-y-6">
           
           {/* Category Filter Pills & Search Bar */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -351,7 +351,9 @@ export default function MissionsView() {
 
           <FacilityMap 
             selectedStageId="all"
-            onSelectStage={() => {}}
+            onSelectStage={(stageId) => {
+              setActiveView('missions');
+            }}
             onOpenMission={handleOpenMission}
           />
         </section>

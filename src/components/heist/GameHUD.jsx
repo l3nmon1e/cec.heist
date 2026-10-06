@@ -90,7 +90,7 @@ export default function GameHUD({ onExitHeist, currentStageTitle }) {
             {/* Crew Identifier */}
             <div className="hidden md:flex items-center space-x-1 text-[#8D98A8]">
               <span className="text-[10px]">CREW:</span>
-              <span className="font-bold text-[#F4F5F7] tracking-wider">{crewName || "GHOST-07"}</span>
+              <span className="font-bold text-[#F4F5F7] tracking-wider">{crewName || "SPECTRE-9"}</span>
             </div>
 
             {/* Timer */}

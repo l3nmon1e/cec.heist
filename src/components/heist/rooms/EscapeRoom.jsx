@@ -5,7 +5,7 @@ import HeistRoomLayout from '../HeistRoomLayout';
 import { useGame } from '../../../context/GameContext';
 import { sound } from '../../../utils/audio';
 import { formatTimer, formatScore } from '../../../utils/formatters';
-import { LogOut, Trophy, AlertTriangle } from 'lucide-react';
+import { LogOut, Trophy, AlertTriangle, X } from 'lucide-react';
 
 export default function EscapeRoom() {
   const navigate = useNavigate();
@@ -72,8 +72,17 @@ export default function EscapeRoom() {
       {/* Final Victory Debrief Modal */}
       {isDebriefOpen && (
         <div className="fixed inset-0 z-50 bg-[#070B12]/95 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto font-mono">
-          <div className="max-w-xl w-full bg-[#0C111A] border-2 border-[#C8A96B] p-6 sm:p-8 text-center space-y-6 shadow-[0_0_50px_rgba(200,169,107,0.35)] my-auto animate-in zoom-in-95 duration-300">
+          <div className="relative max-w-xl w-full bg-[#0C111A] border-2 border-[#C8A96B] p-6 sm:p-8 text-center space-y-6 shadow-[0_0_50px_rgba(200,169,107,0.35)] my-auto animate-in zoom-in-95 duration-300">
             
+            {/* Modal Close Button */}
+            <button
+              onClick={() => setIsDebriefOpen(false)}
+              className="absolute top-4 right-4 text-[#8D98A8] hover:text-[#F4F5F7] p-1 transition-colors cursor-pointer"
+              title="Close Debriefing"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
             <div className="w-16 h-16 rounded-full bg-[#C8A96B]/20 border-2 border-[#C8A96B] text-[#C8A96B] flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(200,169,107,0.4)] animate-bounce">
               <Trophy className="w-8 h-8" />
             </div>
@@ -98,7 +107,7 @@ export default function EscapeRoom() {
               </div>
               <div>
                 <span className="text-[10px] text-[#8D98A8] uppercase block">CREW</span>
-                <span className="font-bold text-[#C8A96B]">{crewName || "GHOST-07"}</span>
+                <span className="font-bold text-[#C8A96B]">{crewName || "SPECTRE-9"}</span>
               </div>
               <div>
                 <span className="text-[10px] text-[#8D98A8] uppercase block">STATUS</span>

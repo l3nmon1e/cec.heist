@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useGame } from '../context/GameContext';
-import { Crosshair, User, Terminal, Shield, Key, Sparkles, Building2 } from 'lucide-react';
+import { Crosshair, User, Terminal, Shield, Key, Sparkles, Building2, Menu, X, BookOpen, HelpCircle } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { getAssetUrl } from '../utils/formatters';
 
 export default function Navbar({ onOpenLogin, onOpenFaq }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { 
     activeTab, 
     setActiveTab, 
@@ -17,6 +18,7 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
 
   const handleNav = (tab, routePath = null) => {
     sound.playClick();
+    setMobileMenuOpen(false);
     setActiveTab(tab);
     if (routePath) {
       navigate(routePath);
@@ -79,11 +81,11 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
             {/* DIGITAL HEIST (THE MAIN GAMEPLAY EXPERIENCE) */}
             <button
               onClick={() => handleNav('heist', '/heist')}
-              className="relative py-1.5 px-3 bg-[#C8A96B]/15 hover:bg-[#C8A96B]/25 border border-[#C8A96B]/50 hover:border-[#C8A96B] transition-all cursor-pointer flex items-center space-x-1.5 shadow-[0_0_15px_rgba(200,169,107,0.2)]"
+              className="relative py-1.5 px-3 bg-[#C8A96B]/15 hover:bg-[#C8A96B]/25 border border-[#C8A96B]/50 hover:border-[#C8A96B] transition-all cursor-pointer flex items-center space-x-1.5 shadow-[0_0_15px_rgba(200,169,107,0.2)] rounded-lg"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96B] animate-ping" />
               <span className="text-[#C8A96B] font-black tracking-widest">DIGITAL HEIST</span>
-              <span className="text-[9px] bg-[#C8A96B] text-[#070B12] px-1 py-0.2 font-black uppercase">GAME</span>
+              <span className="text-[9px] bg-[#C8A96B] text-[#070B12] px-1 py-0.2 font-black uppercase rounded-sm">GAME</span>
             </button>
 
 
@@ -152,7 +154,7 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
                 setIsTerminalModalOpen(true);
               }}
               title="Open Shell Terminal"
-              className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1.5 bg-[#0C111A] border border-[#263140] text-[11px] text-[#8D98A8] hover:text-[#F4F5F7] hover:border-[#C8A96B] transition-colors cursor-pointer"
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 bg-[#0C111A] border border-[#263140] text-[11px] text-[#8D98A8] hover:text-[#F4F5F7] hover:border-[#C8A96B] transition-colors cursor-pointer rounded-lg shadow-sm"
             >
               <Terminal className="w-3.5 h-3.5 text-[#C8A96B]" />
               <span>TERMINAL</span>
@@ -164,7 +166,7 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
                 sound.playClick();
                 onOpenLogin();
               }}
-              className="px-3.5 py-1.5 bg-transparent border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] hover:text-[#C8A96B] text-xs font-semibold tracking-wider transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 bg-transparent border border-[#263140] hover:border-[#C8A96B] text-[#F4F5F7] hover:text-[#C8A96B] text-xs font-semibold tracking-wider transition-colors cursor-pointer rounded-lg shadow-sm"
             >
               CREW LOGIN
             </button>
@@ -173,15 +175,118 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
             <button
               onClick={() => handleNav('profile')}
               title={`Logged in as ${currentPlayer.id} (${currentPlayer.callsign})`}
-              className="w-8 h-8 bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] flex items-center justify-center text-[#C8A96B] transition-colors cursor-pointer"
+              className="w-8 h-8 bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] flex items-center justify-center text-[#C8A96B] transition-colors cursor-pointer rounded-lg shadow-sm"
             >
               <User className="w-4 h-4" />
+            </button>
+
+            {/* Mobile Menu Hamburger Toggle */}
+            <button
+              onClick={() => {
+                sound.playClick();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+              className="md:hidden w-8 h-8 bg-[#0C111A] border border-[#263140] hover:border-[#C8A96B] flex items-center justify-center text-[#F4F5F7] hover:text-[#C8A96B] transition-colors cursor-pointer rounded-lg shadow-sm"
+              aria-label="Toggle navigation menu"
+            >
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
 
           </div>
 
         </div>
       </div>
+
+      {/* Mobile Drawer Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-[#263140] bg-[#070B12]/98 backdrop-blur-xl px-4 py-4 space-y-2 font-mono text-xs shadow-2xl">
+          <button
+            onClick={() => handleNav('home')}
+            className={`w-full text-left px-3 py-2 rounded flex items-center justify-between ${
+              activeTab === 'home' ? 'bg-[#C8A96B]/15 text-[#C8A96B] font-bold' : 'text-[#8D98A8] hover:text-[#F4F5F7]'
+            }`}
+          >
+            <span>HOME HQ</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('heist', '/heist')}
+            className="w-full text-left px-3 py-2 rounded flex items-center justify-between bg-[#C8A96B]/15 border border-[#C8A96B]/40 text-[#C8A96B] font-bold"
+          >
+            <span>DIGITAL HEIST (GAME)</span>
+            <span className="text-[9px] bg-[#C8A96B] text-[#070B12] px-1.5 py-0.5 font-black uppercase rounded">ACTIVE</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('dashboard')}
+            className={`w-full text-left px-3 py-2 rounded flex items-center justify-between ${
+              activeTab === 'dashboard' ? 'bg-[#C8A96B]/15 text-[#C8A96B] font-bold' : 'text-[#8D98A8] hover:text-[#F4F5F7]'
+            }`}
+          >
+            <span>DASHBOARD</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('leaderboard')}
+            className={`w-full text-left px-3 py-2 rounded flex items-center justify-between ${
+              activeTab === 'leaderboard' ? 'bg-[#C8A96B]/15 text-[#C8A96B] font-bold' : 'text-[#8D98A8] hover:text-[#F4F5F7]'
+            }`}
+          >
+            <span>LEADERBOARD</span>
+          </button>
+
+          <button
+            onClick={() => handleNav('rules')}
+            className={`w-full text-left px-3 py-2 rounded flex items-center justify-between ${
+              activeTab === 'rules' ? 'bg-[#C8A96B]/15 text-[#C8A96B] font-bold' : 'text-[#8D98A8] hover:text-[#F4F5F7]'
+            }`}
+          >
+            <span>RULES & DIRECTIVES</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sound.playClick();
+              setMobileMenuOpen(false);
+              onOpenFaq?.();
+            }}
+            className="w-full text-left px-3 py-2 rounded flex items-center justify-between text-[#8D98A8] hover:text-[#F4F5F7]"
+          >
+            <span>HEIST FAQ</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sound.playClick();
+              setMobileMenuOpen(false);
+              setIsTerminalModalOpen(true);
+            }}
+            className="w-full text-left px-3 py-2 rounded flex items-center space-x-2 text-[#8D98A8] hover:text-[#F4F5F7]"
+          >
+            <Terminal className="w-3.5 h-3.5 text-[#C8A96B]" />
+            <span>OPERATIONAL TERMINAL</span>
+          </button>
+
+          <div className="pt-2 border-t border-[#1C2633] flex items-center gap-2">
+            <button
+              onClick={() => {
+                sound.playClick();
+                setMobileMenuOpen(false);
+                onOpenLogin?.();
+              }}
+              className="flex-1 py-2 text-center bg-[#C8A96B] text-[#070B12] font-bold rounded"
+            >
+              CREW LOGIN
+            </button>
+            <button
+              onClick={() => handleNav('profile')}
+              className="px-4 py-2 border border-[#263140] text-[#8D98A8] rounded"
+            >
+              PROFILE
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
