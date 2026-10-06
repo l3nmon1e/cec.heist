@@ -30,8 +30,8 @@ export default function RegisterLoginModal({ isOpen, onClose, defaultMode = 'reg
     setTimeout(() => {
       setSuccess(false);
       onClose();
-      setActiveTab('dashboard');
-      navigate('/dashboard');
+      setActiveTab('heist');
+      navigate('/heist');
     }, 1200);
   };
 

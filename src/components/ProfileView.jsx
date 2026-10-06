@@ -12,7 +12,10 @@ import {
   RotateCcw,
   Layers,
   Lock,
-  ArrowUpRight
+  ArrowUpRight,
+  Activity,
+  Radio,
+  FileText
 } from 'lucide-react';
 import { sound } from '../utils/audio';
 
@@ -21,7 +24,8 @@ export default function ProfileView() {
   const { 
     currentPlayer, 
     missions, 
-    submissions, 
+    submissions = [], 
+    activities = [],
     resetAllProgress,
     setSelectedMissionId,
     setActiveTab,
@@ -274,7 +278,114 @@ export default function ProfileView() {
         </div>
       </div>
 
-      {/* 5. MINIMAL RESET SIMULATION FOOTER */}
+      {/* 5. TELEMETRY STREAM & SUBMISSION LOGS (Merged from Dashboard) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2 font-mono">
+        {/* Left: Live Contestant Telemetry Feed */}
+        <div className="lg:col-span-7 bg-[#0C111A] border border-[#263140] p-4 sm:p-5 rounded-lg space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#263140]">
+            <div className="flex items-center space-x-2">
+              <Radio className="w-4 h-4 text-[#C8A96B]" />
+              <h3 className="text-xs font-bold text-[#F4F5F7] tracking-wider uppercase">
+                GLOBAL TELEMETRY STREAM
+              </h3>
+            </div>
+            <span className="text-[10px] text-[#4FB286] flex items-center space-x-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4FB286] animate-ping" />
+              <span>LIVE INTERCEPT</span>
+            </span>
+          </div>
+
+          <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+            {activities.length === 0 ? (
+              <div className="text-center py-8 text-[#566375] text-xs">
+                NO ACTIVE TELEMETRY DETECTED
+              </div>
+            ) : (
+              activities.slice(0, 8).map((act) => (
+                <div 
+                  key={act.id} 
+                  className="p-2.5 bg-[#121923] border border-[#1C2633] rounded flex items-center justify-between text-xs"
+                >
+                  <div className="space-y-0.5 overflow-hidden pr-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-bold text-[#F4F5F7] text-[11px] truncate">{act.team}</span>
+                      <span className={`text-[9px] px-1.5 py-0.2 border rounded ${
+                        act.event === 'FLAG_CAPTURED' || act.event === 'FLAG_SOLVED'
+                          ? 'text-[#4FB286] border-[#4FB286]/30 bg-[#4FB286]/10' 
+                          : act.event === 'FIRST_BLOOD'
+                          ? 'text-[#C8A96B] border-[#C8A96B]/30 bg-[#C8A96B]/10 font-bold'
+                          : 'text-[#D6A85F] border-[#D6A85F]/30 bg-[#D6A85F]/10'
+                      }`}>
+                        {act.event === 'FLAG_CAPTURED' || act.event === 'FLAG_SOLVED' ? 'BREACHED' : act.event === 'FIRST_BLOOD' ? 'FIRST BLOOD' : 'INTEL'}
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-[#8D98A8] truncate">
+                      {act.mission}
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className={`font-bold text-xs ${act.penalty != null ? 'text-[#B85C5C]' : 'text-[#C8A96B]'}`}>
+                      {act.penalty != null ? `${Number(act.penalty) || 0} PTS` : `+${act.points || 0} PTS`}
+                    </span>
+                    <span className="text-[9px] text-[#566375] block">{act.timestamp}</span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Right: Personal Flag Submissions History */}
+        <div className="lg:col-span-5 bg-[#0C111A] border border-[#263140] p-4 sm:p-5 rounded-lg space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#263140]">
+            <div className="flex items-center space-x-2">
+              <FileText className="w-4 h-4 text-[#C8A96B]" />
+              <h3 className="text-xs font-bold text-[#F4F5F7] tracking-wider uppercase">
+                INFILTRATION LOG
+              </h3>
+            </div>
+            <span className="text-[10px] text-[#8D98A8]">
+              {submissions.length} ATTEMPTS
+            </span>
+          </div>
+
+          <div className="overflow-x-auto max-h-[300px] overflow-y-auto pr-1">
+            {submissions.length === 0 ? (
+              <div className="text-center py-8 text-[#566375] text-xs">
+                NO SUBMISSIONS RECORDED YET
+              </div>
+            ) : (
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="text-[10px] text-[#566375] border-b border-[#1C2633] uppercase">
+                    <th className="pb-2">TARGET</th>
+                    <th className="pb-2">RESULT</th>
+                    <th className="pb-2 text-right">TIME</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#1C2633]/60">
+                  {submissions.slice(0, 8).map((sub) => (
+                    <tr key={sub.id} className="hover:bg-[#121923]/40">
+                      <td className="py-2 font-bold text-[#F4F5F7] truncate max-w-[120px]">{sub.title}</td>
+                      <td className="py-2">
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                          sub.status === 'VALID' ? 'bg-[#4FB286]/10 text-[#4FB286]' : 'bg-[#B85C5C]/10 text-[#B85C5C]'
+                        }`}>
+                          {sub.status}
+                        </span>
+                      </td>
+                      <td className="py-2 text-right text-[10px] text-[#566375]">{sub.timestamp}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* 6. MINIMAL RESET SIMULATION FOOTER */}
       <div className="pt-6 border-t border-[#1C2633] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#566375]">
         <div>
           CEC HEIST // OPERATIONAL SIMULATION ENGINE v2.4

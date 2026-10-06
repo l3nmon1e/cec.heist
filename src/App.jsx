@@ -72,11 +72,10 @@ function MainAppRoutes() {
     const path = location.pathname;
     if (path === '/') setActiveTab('home');
     else if (path.startsWith('/heist')) setActiveTab('heist');
-    else if (path === '/dashboard') setActiveTab('dashboard');
     else if (path === '/missions') setActiveTab('heist');
     else if (path === '/leaderboard') setActiveTab('leaderboard');
     else if (path === '/rules') setActiveTab('rules');
-    else if (path === '/profile') setActiveTab('profile');
+    else if (path === '/profile' || path === '/dashboard') setActiveTab('profile');
   }, [location.pathname, setActiveTab]);
 
   const openRegister = () => {
@@ -187,23 +186,8 @@ function MainAppRoutes() {
           } 
         />
 
-        <Route 
-          path="/dashboard" 
-          element={
-            <PortalLayout
-              onOpenRegister={openRegister}
-              onOpenLogin={openLogin}
-              onOpenFaq={() => setIsFaqModalOpen(true)}
-              onOpenContact={() => setIsContactModalOpen(true)}
-              onOpenLegal={openLegal}
-              isHeroReady={!isLoading}
-            >
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <DashboardView />
-              </div>
-            </PortalLayout>
-          } 
-        />
+        {/* Dashboard route redirects directly to the Operative Profile & Telemetry Hub */}
+        <Route path="/dashboard" element={<Navigate to="/profile" replace />} />
 
         {/* Missions route now redirects directly to the Digital Heist experience */}
         <Route path="/missions" element={<Navigate to="/heist" replace />} />

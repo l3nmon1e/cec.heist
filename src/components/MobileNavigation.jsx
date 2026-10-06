@@ -299,13 +299,6 @@ export default function MobileNavigation() {
       route: '/heist'
     },
     { 
-      id: 'dashboard', 
-      label: 'COMMAND', 
-      code: 'TELEMETRY',
-      icon: VaultDialIcon,
-      route: '/dashboard'
-    },
-    { 
       id: 'leaderboard', 
       label: 'SCORE', 
       code: 'RESERVE',
@@ -329,9 +322,6 @@ export default function MobileNavigation() {
     if (item.id === 'heist') {
       return currentPath.startsWith('/heist') || activeTab === 'heist';
     }
-    if (item.id === 'dashboard') {
-      return currentPath === '/dashboard' || activeTab === 'dashboard';
-    }
     if (item.id === 'leaderboard') {
       return currentPath === '/leaderboard' || activeTab === 'leaderboard';
     }
@@ -349,8 +339,8 @@ export default function MobileNavigation() {
       {/* Top Precision Brass Inlaid Line */}
       <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#C8A96B]/50 to-transparent pointer-events-none" />
 
-      {/* 5 Compact Engraved Vault Mechanical Navigation Buttons */}
-      <div className="grid grid-cols-5 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] font-mono">
+      {/* 4 Compact Engraved Vault Mechanical Navigation Buttons */}
+      <div className="grid grid-cols-4 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))] font-mono">
         {navItems.map((item) => {
           const { id, label, icon: IconComponent } = item;
           const isActive = isTabActive(item);

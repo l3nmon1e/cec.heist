@@ -89,21 +89,6 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
             </button>
 
 
-            {/* DASHBOARD */}
-            <button
-              onClick={() => handleNav('dashboard')}
-              className={`relative py-1 transition-colors cursor-pointer ${
-                activeTab === 'dashboard'
-                  ? 'text-[#C8A96B] font-bold'
-                  : 'text-[#8D98A8] hover:text-[#F4F5F7]'
-              }`}
-            >
-              <span>DASHBOARD</span>
-              {activeTab === 'dashboard' && (
-                <span className="absolute -bottom-2 left-0 right-0 h-[2px] bg-[#C8A96B]" />
-              )}
-            </button>
-
             {/* LEADERBOARD */}
             <button
               onClick={() => handleNav('leaderboard')}
@@ -215,15 +200,6 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
           >
             <span>DIGITAL HEIST (GAME)</span>
             <span className="text-[9px] bg-[#C8A96B] text-[#070B12] px-1.5 py-0.5 font-black uppercase rounded">ACTIVE</span>
-          </button>
-
-          <button
-            onClick={() => handleNav('dashboard')}
-            className={`w-full text-left px-3 py-2 rounded flex items-center justify-between ${
-              activeTab === 'dashboard' ? 'bg-[#C8A96B]/15 text-[#C8A96B] font-bold' : 'text-[#8D98A8] hover:text-[#F4F5F7]'
-            }`}
-          >
-            <span>DASHBOARD</span>
           </button>
 
           <button
