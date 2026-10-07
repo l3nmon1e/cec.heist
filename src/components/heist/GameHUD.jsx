@@ -61,17 +61,14 @@ export default function GameHUD({ onExitHeist, currentStageTitle }) {
           <div className="flex items-center space-x-3 sm:space-x-4">
             <div 
               onClick={onExitHeist}
-              className="flex items-center space-x-2 cursor-pointer group py-1"
+              className="flex items-center cursor-pointer group py-1"
               title="Return to Main Dashboard"
             >
               <img 
                 src={getAssetUrl('/images/logo.png')} 
                 alt="CEC HEIST" 
-                className="h-5 sm:h-6 object-contain group-hover:brightness-110 transition-all"
+                className="h-6 sm:h-7 object-contain group-hover:brightness-110 transition-all"
               />
-              <span className="font-black text-xs sm:text-sm tracking-wider text-[#F4F5F7] hidden sm:inline">
-                CEC HEIST
-              </span>
             </div>
 
             {/* Current Stage Badge */}

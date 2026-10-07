@@ -111,7 +111,7 @@ export default function HomePageView({ onOpenRegister, onOpenFaq, isHeroReady = 
               <div className={isHeroReady ? 'animate-hero-logo' : 'opacity-0'}>
                 <img 
                   src={getAssetUrl('/images/cec_heist_logo.png')} 
-                  alt="CEC HEIST - Cyber Security Challenge" 
+                  alt="CEC HEIST - Bug Bounty Challenge" 
                   className="w-full max-w-lg sm:max-w-xl lg:max-w-2xl object-contain py-1 drop-shadow-[0_0_35px_rgba(250,204,21,0.25)] hover:scale-[1.01] transition-transform duration-300"
                 />
               </div>

@@ -12,8 +12,7 @@ import {
   Pause, 
   Users, 
   Clock, 
-  CheckCircle2, 
-  Layers
+  CheckCircle2
 } from 'lucide-react';
 
 export const AdminOverview = ({ 
@@ -30,23 +29,22 @@ export const AdminOverview = ({
   } = useGame();
 
   const activeCrewsCount = leaderboard.filter(t => !t.isDisqualified).length;
+  // Calculate total verified solves across all teams / missions
   const totalCompletedSolves = missions.reduce((sum, m) => sum + (m.solvedCount || 0), 0);
-  const totalPossibleSolves = missions.length * Math.max(1, leaderboard.length);
 
   return (
-    <div className="space-y-6">
-      {/* 1. Four Compact Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Contest Status + Pause/Resume control */}
+    <div className="space-y-5">
+      {/* 1. Essential Top Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* Card 1: Contest Status */}
         <StatCard
           label="Contest Status"
           value={isGamePaused ? "PAUSED" : "RUNNING"}
           statusColor={isGamePaused ? "text-[#D6AA55]" : "text-[#4DBB91]"}
-          subtext={isGamePaused ? "Timer halted for contestants" : "Live competition in progress"}
           action={
             <button
               onClick={() => setIsGamePaused(!isGamePaused)}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-colors flex items-center gap-1.5 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-bold transition-colors flex items-center gap-1.5 cursor-pointer ${
                 isGamePaused
                   ? 'bg-[#4DBB91] text-[#070B12] hover:bg-[#5ec49d]'
                   : 'bg-[#111923] border border-[#202B38] text-[#D6AA55] hover:border-[#D6AA55]'
@@ -64,40 +62,35 @@ export const AdminOverview = ({
           value={formatTimer(secondsRemaining)}
           statusColor="text-[#F4F5F7]"
           icon={Clock}
-          subtext="Contest countdown active"
           action={
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => overrideTimer(secondsRemaining + 900)}
-                className="px-1.5 py-0.5 rounded bg-[#111923] border border-[#202B38] text-[#8994A4] hover:text-[#C8A96B] text-[10px] font-mono"
-                title="Add 15 minutes"
-              >
-                +15M
-              </button>
-            </div>
+            <button
+              onClick={() => overrideTimer(secondsRemaining + 900)}
+              className="px-2 py-0.5 rounded bg-[#111923] border border-[#202B38] hover:border-[#C8A96B] text-[#8994A4] hover:text-[#C8A96B] text-[11px] font-mono font-bold cursor-pointer transition-colors"
+              title="Add 15 minutes"
+            >
+              +15M
+            </button>
           }
         />
 
         {/* Card 3: Active Crews */}
         <StatCard
           label="Active Crews"
-          value={activeCrewsCount}
+          value={`${activeCrewsCount} / ${leaderboard.length}`}
           statusColor="text-[#C8A96B]"
           icon={Users}
-          subtext={`${leaderboard.length} total enrolled teams`}
         />
 
-        {/* Card 4: Completed Missions */}
+        {/* Card 4: Total Solves */}
         <StatCard
-          label="Completed Missions"
-          value={`${totalCompletedSolves} / ${totalPossibleSolves}`}
-          statusColor="text-[#F4F5F7]"
+          label="Total Solves"
+          value={totalCompletedSolves}
+          statusColor="text-[#4DBB91]"
           icon={CheckCircle2}
-          subtext={`${missions.length} active challenges in pool`}
         />
       </div>
 
-      {/* 2. Facility Progression (8 HEIST Sectors) */}
+      {/* 2. Streamlined Sector Pipeline (Minimal Horizontal Track) */}
       <FacilityProgress 
         onSelectSectorFilter={(secName) => {
           onSelectSectorFilter?.(secName);
@@ -105,28 +98,23 @@ export const AdminOverview = ({
         }}
       />
 
-      {/* 3. Operational Grid: Attention Required & Compact Live Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column: Attention Required + Broadcast Composer */}
-        <div className="space-y-6">
-          <AttentionPanel 
-            onNavigateToModeration={() => onNavigateToTab('moderation')}
-            onNavigateToTeams={() => onNavigateToTab('teams')}
-          />
+      {/* 3. Urgent Attention Alert (Renders only when issues exist) */}
+      <AttentionPanel 
+        onNavigateToModeration={() => onNavigateToTab('moderation')}
+        onNavigateToTeams={() => onNavigateToTab('teams')}
+      />
 
-          <BroadcastComposer />
-        </div>
+      {/* 4. Two-Column Live Operations: Announcements & Live Solves Feed */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <BroadcastComposer />
 
-        {/* Right Column: Compact Live Activity */}
-        <div>
-          <LiveActivity 
-            compact={true} 
-            onViewAll={() => onNavigateToTab('activity')}
-          />
-        </div>
+        <LiveActivity 
+          compact={true} 
+          onViewAll={() => onNavigateToTab('activity')}
+        />
       </div>
 
-      {/* 4. Danger Zone (Segregated at bottom) */}
+      {/* 5. Danger Zone (Safely positioned at the bottom) */}
       <DangerZone />
     </div>
   );

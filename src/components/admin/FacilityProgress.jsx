@@ -1,20 +1,17 @@
 import React from 'react';
 import { SECTORS_LIST } from './adminHelpers';
 import { useGame } from '../../context/GameContext';
-import { Check, Lock, Unlock, ChevronRight } from 'lucide-react';
+import { Check, Lock, ChevronRight } from 'lucide-react';
 
 export const FacilityProgress = ({ onSelectSectorFilter }) => {
   const { 
     unlockedRooms, 
     completedRooms, 
-    missions,
-    unlockRoom,
-    completeRoom
+    missions
   } = useGame();
 
   // Helper to get challenge counts per sector
   const getSectorProgress = (sectorId) => {
-    // Determine which missions correspond to this sector
     const sectorMissions = missions.filter(m => {
       if (sectorId === 'recon') return m.id === 'mission-14' || m.id === 'mission-15';
       if (sectorId === 'initial-access') return m.id === 'mission-01' || m.id === 'mission-04';
@@ -43,107 +40,85 @@ export const FacilityProgress = ({ onSelectSectorFilter }) => {
     return { total, solved, status };
   };
 
+  const clearedCount = SECTORS_LIST.filter(s => getSectorProgress(s.id).status === 'CLEARED').length;
+  const progressPercent = Math.round((clearedCount / SECTORS_LIST.length) * 100);
+
   return (
-    <div className="bg-[#0D131D] border border-[#202B38] rounded-md p-5 shadow-sm">
-      <div className="flex items-center justify-between pb-3 border-b border-[#202B38]">
-        <div>
+    <div className="bg-[#0D131D] border border-[#202B38] rounded-md p-4 shadow-sm">
+      {/* Header with quick stats */}
+      <div className="flex items-center justify-between pb-3 border-b border-[#202B38]/70">
+        <div className="flex items-center gap-3">
           <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#F4F5F7]">
-            Facility Progression
+            Sector Pipeline
           </h3>
-          <p className="text-[11px] font-mono text-[#8994A4] mt-0.5">
-            Real-time status of all 8 digital heist security rings
-          </p>
+          <span className="text-[11px] font-mono text-[#8994A4]">
+            {clearedCount} of {SECTORS_LIST.length} Sectors Cleared ({progressPercent}%)
+          </span>
+        </div>
+
+        {/* Global Progress Bar */}
+        <div className="hidden sm:flex items-center gap-2">
+          <div className="w-32 bg-[#1A2332] h-1.5 rounded-full overflow-hidden">
+            <div 
+              className="bg-[#4DBB91] h-full transition-all duration-500 rounded-full"
+              style={{ width: `${progressPercent}%` }}
+            />
+          </div>
+          <span className="text-[10px] font-mono font-bold text-[#4DBB91]">{progressPercent}%</span>
         </div>
       </div>
 
-      {/* Clean 8-Sector Grid / Row list */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-        {SECTORS_LIST.map((sector, index) => {
+      {/* Sleek Horizontal Sector Pipeline */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 mt-3">
+        {SECTORS_LIST.map((sector) => {
           const { total, solved, status } = getSectorProgress(sector.id);
 
           return (
-            <div
+            <button
               key={sector.id}
-              className={`p-3 rounded border transition-all ${
+              type="button"
+              onClick={() => onSelectSectorFilter?.(sector.shortName)}
+              title={`Click to view ${sector.name} challenges`}
+              className={`p-2.5 rounded border text-left transition-all cursor-pointer group flex flex-col justify-between ${
                 status === 'CLEARED'
-                  ? 'bg-[#111923] border-[#4DBB91]/40'
+                  ? 'bg-[#111923] border-[#4DBB91]/40 hover:border-[#4DBB91]'
                   : status === 'ACTIVE'
-                  ? 'bg-[#111923] border-[#D6AA55]/50'
-                  : 'bg-[#0A0E17] border-[#202B38] opacity-75'
+                  ? 'bg-[#161F2E] border-[#D6AA55]/50 hover:border-[#D6AA55]'
+                  : 'bg-[#0A0E17] border-[#202B38]/60 hover:border-[#202B38] opacity-60'
               }`}
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono font-bold text-[#8994A4]">
-                  {sector.number} {sector.name}
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] font-mono font-bold text-[#8994A4] group-hover:text-[#F4F5F7] transition-colors">
+                  {sector.number}
                 </span>
 
                 {status === 'CLEARED' && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-[#4DBB91]">
-                    <Check className="w-3 h-3" /> CLEARED
+                  <span className="flex items-center text-[#4DBB91]" title="Cleared">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
                   </span>
                 )}
                 {status === 'ACTIVE' && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-[#D6AA55]">
+                  <span className="flex items-center gap-1 text-[9px] font-mono font-bold text-[#D6AA55]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#D6AA55] animate-pulse" />
-                    ACTIVE
+                    LIVE
                   </span>
                 )}
                 {status === 'LOCKED' && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-mono text-[#8994A4]">
-                    <Lock className="w-3 h-3 text-[#8994A4]" /> LOCKED
+                  <span className="flex items-center text-[#586475]" title="Locked">
+                    <Lock className="w-2.5 h-2.5" />
                   </span>
                 )}
               </div>
 
-              <div className="mt-2.5 flex items-center justify-between text-xs font-mono">
-                <span className="text-[#8994A4]">Progress</span>
-                <span className="font-semibold text-[#F4F5F7]">
-                  {solved} / {total} challenges
-                </span>
+              <div className="mt-1.5">
+                <div className="text-[11px] font-mono font-bold text-[#F4F5F7] truncate">
+                  {sector.name}
+                </div>
+                <div className="text-[10px] font-mono text-[#8994A4] mt-0.5">
+                  {solved}/{total} solved
+                </div>
               </div>
-
-              {/* Minimal Progress Bar */}
-              <div className="w-full bg-[#202B38] h-1 rounded-full mt-2 overflow-hidden">
-                <div
-                  className={`h-full transition-all ${
-                    status === 'CLEARED' ? 'bg-[#4DBB91]' : 'bg-[#D6AA55]'
-                  }`}
-                  style={{ width: `${Math.min(100, Math.round((solved / total) * 100))}%` }}
-                />
-              </div>
-
-              {/* Quick Admin Override action (unlock toggle) */}
-              <div className="mt-2.5 pt-2 border-t border-[#202B38]/50 flex items-center justify-between text-[10px] font-mono">
-                <button
-                  type="button"
-                  onClick={() => onSelectSectorFilter?.(sector.shortName)}
-                  className="text-[#8994A4] hover:text-[#C8A96B] transition-colors flex items-center gap-0.5"
-                >
-                  <span>View Challenges</span>
-                  <ChevronRight className="w-3 h-3" />
-                </button>
-
-                {status === 'LOCKED' ? (
-                  <button
-                    type="button"
-                    onClick={() => unlockRoom(sector.id)}
-                    className="text-[#D6AA55] hover:underline"
-                    title="Force unlock this sector"
-                  >
-                    Force Unlock
-                  </button>
-                ) : status === 'ACTIVE' ? (
-                  <button
-                    type="button"
-                    onClick={() => completeRoom(sector.id)}
-                    className="text-[#4DBB91] hover:underline"
-                    title="Mark sector cleared"
-                  >
-                    Force Clear
-                  </button>
-                ) : null}
-              </div>
-            </div>
+            </button>
           );
         })}
       </div>
