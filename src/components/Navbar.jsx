@@ -50,9 +50,14 @@ export default function Navbar({ onOpenLogin, onOpenFaq }) {
           
           {/* Official CEC HEIST Brand Identity */}
           <div 
-            className="flex items-center space-x-3 cursor-pointer select-none py-1 group" 
+            className="flex items-center space-x-3 cursor-pointer select-none py-1 group -ml-6 sm:-ml-10 lg:-ml-16" 
             onClick={() => handleNav('home')}
           >
+            <img 
+              src={getAssetUrl('/images/cosc-logo.png')} 
+              alt="COSC Logo" 
+              className="h-8 sm:h-9 object-contain group-hover:brightness-110 transition-all"
+            />
             <img 
               src={getAssetUrl('/images/logo.png')} 
               alt="CEC HEIST - Digital Heist" 
